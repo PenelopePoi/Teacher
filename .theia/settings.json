@@ -16,8 +16,15 @@
     "editor.defaultFormatter": "davidanson.vscode-markdownlint"
   },
   "markdownlint.config": {
-    "MD032": false, // don't require blank line around lists 
-    "MD033": false, // allow inline html
-    "MD041": false // don't require h1 in first line
+    "MD032": false,
+    "MD033": false,
+    "MD041": false
   },
+
+  "ai-features.ollama.ollamaHost": "http://localhost:11434",
+  "ai-features.ollama.ollamaModels": [
+    "qwen2.5:7b",
+    "bonsai-8b"
+  ],
+  "ai-features.claudeCode.executablePath": "/opt/homebrew/bin/claude"
 }

@@ -112,3 +112,35 @@ For more information also look at:
 - `configs/build.eslintrc.json` - ESLint build rules (packages extend this)
 - `configs/mocharc.yml` - Mocha test runner config
 - `configs/nyc.json` - Test coverage config
+
+## Weatherspoon Configuration
+
+### Local Models (Ollama)
+- Host: http://localhost:11434
+- Primary: qwen2.5:7b (4.7GB, general purpose)
+- Fallback: bonsai-8b
+- Start: `ollama serve`
+
+### Skill Library
+306 skills symlinked at `.skills-library/` → `~/.claude/skills/`
+Categories: branding, client, music, security, AI/ML, ethics, meta, daily-ops, agents, deployment, legal, financial, creative
+
+### Local ASI
+Multi-agent swarm at `.local-asi/` → `~/local-asi/asi.py`
+- 5 parallel researcher agents + critic + synthesizer + improver + scorer
+- Self-accumulating knowledge base at `.knowledge/`
+- Run: `python3 .local-asi/asi.py`
+
+### Ethical Principles
+1. Truth over engagement
+2. Protect users as guardian
+3. Human agency first
+4. Transparency by default
+5. Access for all — free education and tools, paid professional services (XELA branding)
+
+### Meaningful Examples Convention
+No "Hello World" or "foo/bar". Every example serves human purpose.
+The code teaches the API; the examples remind us why we build.
+
+### Motto
+From Pain to Purpose. From Passion to Prophet.
