@@ -1,5 +1,27 @@
-/* Teacher IDE — Phase 2 Widget Styles */
+/* Teacher IDE — Eye UI Styles */
 /* Uses Theia CSS variables exclusively per coding guidelines */
+
+/* ===== Geist Font Family ===== */
+
+@font-face {
+    font-family: 'Geist';
+    src: url('./fonts/Geist-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Geist Mono';
+    src: url('./fonts/GeistMono-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+:root {
+    --theia-ui-font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    --theia-code-font-family: 'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace;
+    font-variant-numeric: tabular-nums;
+}
 
 /* ===== Welcome Widget ===== */
 
@@ -1767,96 +1789,120 @@
 }
 
 /* ===== Eye UI Glass Overrides ===== */
-/* Phase 1 — Glassmorphic Industrial design system */
-/* Uses --teacher-* custom properties for glass and motion tokens */
-/* Uses --theia-* variables for all color values per coding guidelines */
+/* Phase 2 — Warm Charcoal + Amber (Teenage Engineering inspired) */
+/* Glass ONLY on AI surfaces; sidebar/panels flat surface-2 */
+/* Uses --teacher-* custom properties for surface, accent, glass, motion */
 
 :root {
-    /* Glass effect tokens */
-    --teacher-glass-blur: 16px;
-    --teacher-glass-bg: rgba(20, 20, 35, 0.65);
-    --teacher-glass-border: rgba(255, 255, 255, 0.08);
-    --teacher-glass-highlight: rgba(255, 255, 255, 0.04);
-    --teacher-glass-elevated-bg: rgba(25, 25, 40, 0.75);
-    --teacher-glass-elevated-blur: 24px;
+    /* Surface */
+    --teacher-surface-0: #0B0D10;
+    --teacher-surface-1: #12151A;
+    --teacher-surface-2: #1A1D22;
+    --teacher-surface-3: #24282F;
+    --teacher-surface-4: #2A2E35;
+    --teacher-border-subtle: #23272E;
+    --teacher-border-strong: #34393F;
+    --teacher-text-primary: #F2F4F7;
+    --teacher-text-secondary: #B8BEC7;
+    --teacher-text-tertiary: #7A828E;
 
-    /* Motion tokens */
-    --teacher-spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --teacher-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-    --teacher-ease-micro: ease-out;
+    /* Accent */
+    --teacher-accent: #E8A948;
+    --teacher-accent-yellow: #F5C518;
+    --teacher-accent-hot: #F57B20;
+
+    /* AI State */
+    --teacher-ai-thinking: #7B9BD1;
+    --teacher-ai-suggesting: #E8A948;
+    --teacher-ai-confident: #4FB286;
+    --teacher-ai-listening: linear-gradient(115deg, #7B9BD1, #C79BE8 40%, #E8A948 75%, #F57B20);
+
+    /* Glass (AI surfaces only) */
+    --teacher-glass-bg: rgba(26, 29, 34, 0.6);
+    --teacher-glass-blur: 24px;
+    --teacher-glass-border: rgba(255, 255, 255, 0.06);
+    --teacher-glass-saturate: saturate(180%);
+
+    /* Elevated glass (modals, command palette) */
+    --teacher-glass-elevated-bg: rgba(26, 29, 34, 0.75);
+    --teacher-glass-elevated-blur: 32px;
+    --teacher-glass-elevated-saturate: saturate(200%);
+
+    /* Motion */
+    --teacher-ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+    --teacher-duration-micro: 120ms;
     --teacher-duration-fast: 150ms;
-    --teacher-duration-normal: 250ms;
+    --teacher-duration-normal: 220ms;
     --teacher-duration-slow: 400ms;
-    --teacher-duration-ambient: 3000ms;
+    --teacher-breathing-duration: 2400ms;
 
-    /* Typography tokens */
-    --teacher-font-code: 'Berkeley Mono', 'JetBrains Mono', 'Fira Code', monospace;
-    --teacher-font-ui: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-    --teacher-font-ui-body: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Typography */
+    --teacher-font-ui: "Geist", system-ui, -apple-system, sans-serif;
+    --teacher-font-mono: "Geist Mono", "JetBrains Mono", "Fira Code", monospace;
 }
 
-/* --- Glass utility class --- */
+/* --- Glass utility class (AI surfaces only) --- */
 
 .teacher-glass {
     background: var(--teacher-glass-bg);
-    backdrop-filter: blur(var(--teacher-glass-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-blur));
+    backdrop-filter: blur(var(--teacher-glass-blur)) var(--teacher-glass-saturate);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-blur)) var(--teacher-glass-saturate);
     border: 1px solid var(--teacher-glass-border);
-    box-shadow:
-        0 0 0 1px var(--teacher-glass-highlight) inset,
-        0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .teacher-glass-elevated {
     background: var(--teacher-glass-elevated-bg);
-    backdrop-filter: blur(var(--teacher-glass-elevated-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur));
+    backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
     box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.06) inset,
         0 16px 48px rgba(0, 0, 0, 0.4);
 }
 
-/* --- Sidebar panels — frosted glass --- */
+/* --- Sidebar panels — FLAT surface-2, no blur --- */
 
 #theia-left-side-panel,
 #theia-right-side-panel {
-    background: var(--teacher-glass-bg);
-    backdrop-filter: blur(var(--teacher-glass-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-blur));
+    background: var(--teacher-surface-2);
 }
 
-/* Sidebar panel section headers — frosted glass bar */
+/* Sidebar panel section headers — flat surface */
 
 #theia-left-side-panel .p-TabBar,
 #theia-right-side-panel .p-TabBar,
 .theia-sidebar-panel .theia-sidepanel-toolbar {
-    background: var(--teacher-glass-bg);
-    backdrop-filter: blur(var(--teacher-glass-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-blur));
-    border-bottom: 1px solid var(--teacher-glass-border);
+    background: var(--teacher-surface-2);
+    border-bottom: 1px solid var(--teacher-border-subtle);
 }
 
 /* View container headers */
 
 .theia-view-container .p-TabBar {
-    border-bottom: 1px solid var(--teacher-glass-border);
+    border-bottom: 1px solid var(--teacher-border-subtle);
 }
 
-/* --- Tab pills — capsule shape with active glow underline --- */
+/* --- Bottom panel — FLAT surface-2, no blur --- */
+
+#theia-bottom-content-panel {
+    background: var(--teacher-surface-2);
+}
+
+/* --- Tab pills — capsule shape with amber active underline --- */
 
 .p-TabBar .p-TabBar-tab {
     border-radius: 8px 8px 0 0;
-    transition: background var(--teacher-duration-fast) var(--teacher-ease-micro),
-                color var(--teacher-duration-fast) var(--teacher-ease-micro);
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios),
+                color var(--teacher-duration-fast) var(--teacher-ease-ios);
 }
 
 .p-TabBar .p-TabBar-tab.p-mod-current {
-    border-bottom: 2px solid var(--theia-focusBorder);
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+    border-bottom: 2px solid var(--teacher-accent);
+    box-shadow: 0 2px 8px rgba(232, 169, 72, 0.15);
 }
 
 .p-TabBar .p-TabBar-tab:hover:not(.p-mod-current) {
-    background: rgba(99, 102, 241, 0.08);
+    background: rgba(232, 169, 72, 0.08);
 }
 
 /* Editor tab bar — capsule pills */
@@ -1864,7 +1910,7 @@
 #theia-main-content-panel .p-TabBar-tab {
     border-radius: 10px 10px 0 0;
     margin: 0 1px;
-    transition: background var(--teacher-duration-fast) var(--teacher-ease-micro);
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios);
 }
 
 #theia-main-content-panel .p-TabBar-tab.p-mod-current {
@@ -1878,18 +1924,18 @@
     left: 8px;
     right: 8px;
     height: 2px;
-    background: var(--theia-focusBorder);
+    background: var(--teacher-accent);
     border-radius: 2px 2px 0 0;
-    box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 0 8px rgba(232, 169, 72, 0.4);
 }
 
-/* --- Context menus — rounded corners, glass bg --- */
+/* --- Context menus — rounded corners, glass bg (AI surface) --- */
 
 .p-Menu {
     border-radius: 8px !important;
     background: var(--teacher-glass-elevated-bg) !important;
-    backdrop-filter: blur(var(--teacher-glass-elevated-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur));
+    backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
     border: 1px solid var(--teacher-glass-border) !important;
     box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.06) inset,
@@ -1901,7 +1947,7 @@
 .p-Menu-item {
     border-radius: 4px;
     margin: 0 4px;
-    transition: background var(--teacher-duration-fast) var(--teacher-ease-micro);
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios);
 }
 
 .p-Menu-item[data-type='separator'] > div {
@@ -1909,16 +1955,16 @@
     margin: 4px 8px;
 }
 
-/* --- Notifications — glassmorphic cards with spring entrance --- */
+/* --- Notifications — glassmorphic cards (AI surface) --- */
 
 .theia-notifications-container {
     border-radius: 12px;
     background: var(--teacher-glass-elevated-bg);
-    backdrop-filter: blur(var(--teacher-glass-elevated-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur));
+    backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
     border: 1px solid var(--teacher-glass-border);
     box-shadow:
-        0 0 0 1px var(--teacher-glass-highlight) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
         0 16px 48px rgba(0, 0, 0, 0.4);
     overflow: hidden;
 }
@@ -1929,7 +1975,7 @@
 
 /* Notification enter animation */
 .theia-notifications-container.open {
-    animation: teacher-notification-enter var(--teacher-duration-slow) var(--teacher-spring-bounce);
+    animation: teacher-notification-enter var(--teacher-duration-slow) var(--teacher-ease-ios);
 }
 
 @keyframes teacher-notification-enter {
@@ -1943,16 +1989,16 @@
     }
 }
 
-/* --- Dialogs — rounded glass --- */
+/* --- Dialogs — rounded glass (AI surface) --- */
 
 .dialogBlock {
     border-radius: 12px;
     background: var(--teacher-glass-elevated-bg);
-    backdrop-filter: blur(var(--teacher-glass-elevated-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur));
+    backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
     border: 1px solid var(--teacher-glass-border);
     box-shadow:
-        0 0 0 1px var(--teacher-glass-highlight) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
         0 24px 64px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
@@ -1963,16 +2009,16 @@
     -webkit-backdrop-filter: blur(4px);
 }
 
-/* --- Quick Input / Command Palette --- */
+/* --- Quick Input / Command Palette — glass (AI surface) --- */
 
 .quick-input-widget {
     border-radius: 12px !important;
     background: var(--teacher-glass-elevated-bg) !important;
-    backdrop-filter: blur(var(--teacher-glass-elevated-blur));
-    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur));
+    backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-elevated-blur)) var(--teacher-glass-elevated-saturate);
     border: 1px solid var(--teacher-glass-border) !important;
     box-shadow:
-        0 0 0 1px var(--teacher-glass-highlight) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
         0 16px 48px rgba(0, 0, 0, 0.5) !important;
     overflow: hidden;
 }
@@ -1980,9 +2026,9 @@
 /* --- Scrollbars — thin, only visible on hover --- */
 
 .monaco-scrollable-element > .scrollbar {
-    transition: opacity var(--teacher-duration-normal) var(--teacher-ease-smooth),
-                width var(--teacher-duration-normal) var(--teacher-ease-smooth),
-                height var(--teacher-duration-normal) var(--teacher-ease-smooth);
+    transition: opacity var(--teacher-duration-normal) var(--teacher-ease-ios),
+                width var(--teacher-duration-normal) var(--teacher-ease-ios),
+                height var(--teacher-duration-normal) var(--teacher-ease-ios);
 }
 
 .monaco-scrollable-element > .scrollbar > .slider {
@@ -2020,13 +2066,13 @@
 #theia-right-side-panel ::-webkit-scrollbar-thumb,
 .theia-notifications-container ::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background: rgba(90, 88, 110, 0.3);
+    background: rgba(122, 130, 142, 0.3);
 }
 
 #theia-left-side-panel ::-webkit-scrollbar-thumb:hover,
 #theia-right-side-panel ::-webkit-scrollbar-thumb:hover,
 .theia-notifications-container ::-webkit-scrollbar-thumb:hover {
-    background: rgba(90, 88, 110, 0.5);
+    background: rgba(122, 130, 142, 0.5);
 }
 
 #theia-left-side-panel ::-webkit-scrollbar-track,
@@ -2035,76 +2081,83 @@
     background: transparent;
 }
 
-/* --- Monaco cursor — soft block with glow --- */
+/* --- Monaco cursor — amber glow --- */
 
 .monaco-editor .cursor {
-    box-shadow: 0 0 6px rgba(129, 140, 248, 0.4),
-                0 0 12px rgba(129, 140, 248, 0.15);
+    box-shadow: 0 0 6px rgba(232, 169, 72, 0.4),
+                0 0 12px rgba(232, 169, 72, 0.15);
     border-radius: 1px;
 }
 
-/* Slow pulse blink via cursor-smooth-caret-animation */
 .monaco-editor .cursor.cursor-block-outline-style,
 .monaco-editor .cursor.cursor-block-style {
-    box-shadow: 0 0 8px rgba(129, 140, 248, 0.35),
-                0 0 16px rgba(129, 140, 248, 0.1);
+    box-shadow: 0 0 8px rgba(232, 169, 72, 0.35),
+                0 0 16px rgba(232, 169, 72, 0.1);
 }
 
-/* --- Status bar — collapsed ambient line --- */
+/* --- Status bar — TE-style chiclet labels --- */
 
 #theia-statusBar {
     min-height: 22px;
     max-height: 22px;
     font-size: 11px;
-    border-top: 1px solid var(--teacher-glass-border);
-    transition: background var(--teacher-duration-normal) var(--teacher-ease-smooth);
+    font-family: var(--teacher-font-mono);
+    letter-spacing: 0.02em;
+    border-top: 1px solid var(--teacher-border-subtle);
+    transition: background var(--teacher-duration-normal) var(--teacher-ease-ios);
 }
 
-/* AI state pulse on status bar — thinking indicator */
+#theia-statusBar .area .element {
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin: 1px 2px;
+}
+
+/* AI state on status bar — amber/periwinkle indicators */
 #theia-statusBar.teacher-ai-thinking {
-    border-top-color: rgba(192, 132, 252, 0.5);
-    box-shadow: 0 -1px 8px rgba(192, 132, 252, 0.15);
+    border-top-color: rgba(123, 155, 209, 0.5);
+    box-shadow: 0 -1px 8px rgba(123, 155, 209, 0.15);
 }
 
 #theia-statusBar.teacher-ai-ready {
-    border-top-color: rgba(99, 102, 241, 0.3);
+    border-top-color: rgba(232, 169, 72, 0.3);
 }
 
 #theia-statusBar.teacher-ai-error {
-    border-top-color: rgba(245, 158, 11, 0.5);
-    box-shadow: 0 -1px 8px rgba(245, 158, 11, 0.1);
+    border-top-color: rgba(229, 72, 77, 0.5);
+    box-shadow: 0 -1px 8px rgba(229, 72, 77, 0.1);
 }
 
 /* --- Activity bar refinement --- */
 
 .p-TabBar.theia-app-left,
 .p-TabBar.theia-app-right {
-    border-right: 1px solid var(--teacher-glass-border);
+    border-right: 1px solid var(--teacher-border-subtle);
 }
 
 .p-TabBar.theia-app-left .p-TabBar-tab,
 .p-TabBar.theia-app-right .p-TabBar-tab {
     border-radius: 8px;
     margin: 2px 4px;
-    transition: background var(--teacher-duration-fast) var(--teacher-ease-micro);
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios);
 }
 
 .p-TabBar.theia-app-left .p-TabBar-tab:hover,
 .p-TabBar.theia-app-right .p-TabBar-tab:hover {
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(232, 169, 72, 0.1);
 }
 
 .p-TabBar.theia-app-left .p-TabBar-tab.p-mod-current,
 .p-TabBar.theia-app-right .p-TabBar-tab.p-mod-current {
-    background: rgba(99, 102, 241, 0.15);
-    box-shadow: inset 2px 0 0 var(--theia-focusBorder);
+    background: rgba(232, 169, 72, 0.15);
+    box-shadow: inset 2px 0 0 var(--teacher-accent);
 }
 
-/* --- Panel collapse/expand smooth spring --- */
+/* --- Panel collapse/expand smooth --- */
 
 #theia-left-side-panel .p-SplitPanel-child,
 #theia-right-side-panel .p-SplitPanel-child {
-    transition: flex var(--teacher-duration-slow) var(--teacher-spring-bounce);
+    transition: flex var(--teacher-duration-slow) var(--teacher-ease-ios);
 }
 
 /* --- Tooltip styling --- */
@@ -2112,28 +2165,28 @@
 .theia-tooltip,
 .monaco-editor .monaco-hover {
     border-radius: 8px;
-    border: 1px solid var(--teacher-glass-border);
+    border: 1px solid var(--teacher-border-subtle);
 }
 
-/* --- Editor minimap off by default hint (via CSS — actual setting in preferences) --- */
-/* Minimap background matches editor for clean look when visible */
+/* --- Editor minimap — clean look when visible --- */
+
 .monaco-editor .minimap {
     opacity: 0.7;
-    transition: opacity var(--teacher-duration-normal) var(--teacher-ease-smooth);
+    transition: opacity var(--teacher-duration-normal) var(--teacher-ease-ios);
 }
 
 .monaco-editor:hover .minimap {
     opacity: 1;
 }
 
-/* --- Ambient heartbeat animation on editor background --- */
+/* --- Breathing glow animation (replaces spinners) --- */
 
-@keyframes teacher-ambient-pulse {
-    0%, 100% { opacity: 0; }
-    50%      { opacity: 1; }
+@keyframes teacher-breathing-glow {
+    0%, 100% { opacity: 0.8; filter: blur(24px); }
+    50% { opacity: 1.0; filter: blur(32px); }
 }
 
-.teacher-ambient-glow {
+.teacher-breathing-glow {
     position: absolute;
     top: 0;
     left: 0;
@@ -2142,39 +2195,22 @@
     pointer-events: none;
     background: radial-gradient(
         ellipse at 50% 50%,
-        rgba(99, 102, 241, 0.02) 0%,
+        rgba(232, 169, 72, 0.03) 0%,
         transparent 70%
     );
-    animation: teacher-ambient-pulse var(--teacher-duration-ambient) ease-in-out infinite;
+    animation: teacher-breathing-glow 2.4s ease-in-out infinite;
     z-index: 0;
 }
 
-/* --- Reduced motion: respect user preference --- */
+/* --- Reduced motion: disable ALL animations --- */
 
 @media (prefers-reduced-motion: reduce) {
-    .theia-notifications-container.open {
-        animation: none;
-    }
-
-    .teacher-ambient-glow {
-        animation: none;
-        display: none;
-    }
-
-    .teacher-voice-dot {
-        animation: none;
-    }
-
-    .p-TabBar .p-TabBar-tab,
-    .p-Menu-item,
-    #theia-statusBar,
-    .monaco-scrollable-element > .scrollbar,
-    .monaco-editor .minimap,
-    #theia-left-side-panel .p-SplitPanel-child,
-    #theia-right-side-panel .p-SplitPanel-child,
-    .p-TabBar.theia-app-left .p-TabBar-tab,
-    .p-TabBar.theia-app-right .p-TabBar-tab {
-        transition: none;
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 
@@ -2257,3 +2293,402 @@
     justify-content: center;
     min-height: 32px;
 }
+
+/* ============================================================
+ * §1 Priority #5 — Status-bar rebuild
+ * Hide stock Theia confetti; keep Teacher's three entries.
+ * ============================================================ */
+
+body.teacher-status-rebuilt #theia-statusBar .element:not([id^="teacher.status."]):not([id*="problems"]):not([id*="debug"]):not([id*="open-editors"]):not([id*="notifications"]) {
+    display: none !important;
+}
+
+body.teacher-status-rebuilt #theia-statusBar {
+    background: var(--teacher-surface-2);
+    color: var(--teacher-text-secondary);
+    border-top: 1px solid var(--teacher-border-subtle);
+    height: 28px;
+    font-family: var(--teacher-font-ui);
+    font-size: 12px;
+}
+
+.teacher-status-pulse {
+    color: var(--teacher-ai-thinking) !important;
+    font-variant-numeric: tabular-nums;
+    padding: 0 10px;
+    gap: 6px;
+}
+
+.teacher-status-pulse-idle       { color: var(--teacher-ai-thinking)   !important; animation: teacher-breathing 2400ms ease-in-out infinite; }
+.teacher-status-pulse-listening  { color: var(--teacher-ai-thinking)   !important; animation: teacher-listening 1200ms ease-in-out infinite; }
+.teacher-status-pulse-thinking   { color: var(--teacher-ai-thinking)   !important; animation: teacher-thinking-breath 1800ms ease-in-out infinite; }
+.teacher-status-pulse-suggesting { color: var(--teacher-ai-suggesting) !important; animation: teacher-suggestion 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.teacher-status-pulse-error      { color: var(--teacher-semantic-error) !important; }
+
+.teacher-status-project {
+    color: var(--teacher-text-tertiary) !important;
+    padding: 0 10px;
+}
+
+.teacher-status-model {
+    padding: 0 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-status-model-up   { color: var(--teacher-ai-confident) !important; }
+.teacher-status-model-down { color: var(--teacher-text-tertiary) !important; }
+
+/* ============================================================
+ * §1 Priority #6 — Command palette re-theme
+ * Applies elevated glass + Teacher palette to Monaco quick input.
+ * ============================================================ */
+
+.quick-input-widget,
+.monaco-quick-input-widget {
+    background: var(--teacher-glass-elev-bg) !important;
+    backdrop-filter: blur(var(--teacher-glass-blur-elev)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-blur-elev)) saturate(200%);
+    border: 1px solid var(--teacher-glass-elev-border) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--teacher-shadow-elev) !important;
+    padding: 4px !important;
+}
+
+.quick-input-widget .monaco-inputbox,
+.monaco-quick-input-widget .monaco-inputbox {
+    background: var(--teacher-surface-3) !important;
+    border: 1px solid var(--teacher-border-subtle) !important;
+    border-radius: 8px !important;
+    color: var(--teacher-text-primary) !important;
+    font-family: var(--teacher-font-ui);
+}
+
+.quick-input-widget .monaco-list-row,
+.monaco-quick-input-widget .monaco-list-row {
+    border-radius: 6px;
+    padding: 4px 10px;
+    transition: background-color var(--teacher-dur-list) var(--teacher-curve-out);
+}
+
+.quick-input-widget .monaco-list-row.focused,
+.monaco-quick-input-widget .monaco-list-row.focused {
+    background: var(--teacher-surface-4) !important;
+    color: var(--teacher-text-primary) !important;
+}
+
+.quick-input-widget .monaco-list-row .label-name,
+.monaco-quick-input-widget .monaco-list-row .label-name {
+    font-family: var(--teacher-font-ui);
+    font-size: var(--teacher-size-sm);
+    color: var(--teacher-text-primary);
+}
+
+.quick-input-widget .monaco-list-row .label-description,
+.monaco-quick-input-widget .monaco-list-row .label-description {
+    color: var(--teacher-text-tertiary);
+    font-size: var(--teacher-size-micro);
+    font-family: var(--teacher-font-mono);
+    letter-spacing: var(--teacher-track-wide);
+    text-transform: uppercase;
+}
+
+.quick-input-widget .quick-input-title,
+.monaco-quick-input-widget .quick-input-title {
+    font-family: var(--teacher-font-mono);
+    font-size: var(--teacher-size-micro);
+    letter-spacing: var(--teacher-track-wide);
+    text-transform: uppercase;
+    color: var(--teacher-accent-yellow);
+}
+
+/* ============================================================
+ * §1 Priority #8 — Tab-bar renderer re-style
+ * 6px radius, 1px border, amber active-underline.
+ * ============================================================ */
+
+.theia-app-centers .p-TabBar-tab,
+.theia-app-main .p-TabBar-tab,
+.p-DockPanel-tabBar .p-TabBar-tab {
+    border-radius: 6px 6px 0 0 !important;
+    border: 1px solid transparent;
+    border-bottom: none;
+    margin-right: 2px;
+    padding: 6px 12px !important;
+    transition:
+        background-color var(--teacher-dur-tab) var(--teacher-curve-out),
+        border-color var(--teacher-dur-tab) var(--teacher-curve-out);
+    font-family: var(--teacher-font-ui);
+}
+
+.theia-app-centers .p-TabBar-tab:hover,
+.theia-app-main .p-TabBar-tab:hover,
+.p-DockPanel-tabBar .p-TabBar-tab:hover {
+    background: var(--teacher-surface-3) !important;
+    border-color: var(--teacher-border-subtle);
+}
+
+.theia-app-centers .p-TabBar-tab.p-mod-current,
+.theia-app-main .p-TabBar-tab.p-mod-current,
+.p-DockPanel-tabBar .p-TabBar-tab.p-mod-current {
+    background: var(--teacher-surface-1) !important;
+    border-color: var(--teacher-border-strong);
+    position: relative;
+}
+
+.theia-app-centers .p-TabBar-tab.p-mod-current::after,
+.theia-app-main .p-TabBar-tab.p-mod-current::after,
+.p-DockPanel-tabBar .p-TabBar-tab.p-mod-current::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: -1px;
+    height: 2px;
+    background: var(--teacher-accent-amber);
+    border-radius: 1px;
+    box-shadow: 0 0 6px rgba(232, 169, 72, 0.45);
+}
+
+/* ============================================================
+ * §2 item #3 — Drag-to-Ask floating orb
+ * ============================================================ */
+
+.teacher-drag-to-ask {
+    position: fixed;
+    right: 24px;
+    bottom: 56px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px 10px 12px;
+    border-radius: 999px;
+    background: var(--teacher-glass-elev-bg);
+    backdrop-filter: blur(var(--teacher-glass-blur-elev)) saturate(200%);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-blur-elev)) saturate(200%);
+    border: 1px solid var(--teacher-glass-elev-border);
+    box-shadow: var(--teacher-shadow-menu);
+    cursor: pointer;
+    user-select: none;
+    font-family: var(--teacher-font-ui);
+    font-size: var(--teacher-size-sm);
+    color: var(--teacher-text-primary);
+    transition:
+        transform var(--teacher-dur-pulse) var(--teacher-curve-spring),
+        background-color var(--teacher-dur-tab) var(--teacher-curve-out);
+}
+
+.teacher-drag-to-ask:hover {
+    transform: scale(1.04);
+}
+
+.teacher-drag-to-ask--hot {
+    transform: scale(1.12);
+    background: rgba(232, 169, 72, 0.22);
+    border-color: var(--teacher-accent-amber);
+    box-shadow: var(--teacher-glow-amber);
+}
+
+.teacher-drag-to-ask-orb {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--teacher-ai-thinking);
+    filter: drop-shadow(0 0 12px rgba(123, 155, 209, 0.55));
+}
+
+.teacher-drag-to-ask-label {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+/* ============================================================
+ * §2 item #6 — Teachable Moments
+ * ============================================================ */
+
+.teacher-teachable {
+    position: relative;
+    display: inline;
+    cursor: help;
+}
+
+.teacher-teachable-anchor {
+    background-image: linear-gradient(transparent 65%, rgba(245, 197, 24, 0.45) 65%);
+    background-size: 100% 100%;
+    transition: background-size var(--teacher-dur-tab) var(--teacher-curve-out);
+}
+
+.teacher-teachable--open .teacher-teachable-anchor {
+    background-image: linear-gradient(transparent 60%, rgba(245, 197, 24, 0.7) 60%);
+}
+
+.teacher-teachable-card {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 8px);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 14px;
+    min-width: 260px;
+    max-width: 360px;
+    background: var(--teacher-glass-elev-bg);
+    backdrop-filter: blur(var(--teacher-glass-blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-blur)) saturate(180%);
+    border: 1px solid var(--teacher-glass-elev-border);
+    border-radius: 8px;
+    box-shadow: var(--teacher-shadow-menu);
+    cursor: default;
+    font-family: var(--teacher-font-ui);
+    font-size: var(--teacher-size-sm);
+    color: var(--teacher-text-primary);
+}
+
+.teacher-teachable-term {
+    font-family: var(--teacher-font-mono);
+    font-size: var(--teacher-size-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--teacher-track-wide);
+    color: var(--teacher-accent-yellow);
+}
+
+.teacher-teachable-body {
+    line-height: 1.5;
+}
+
+.teacher-teachable-dismiss {
+    align-self: flex-end;
+    padding: 3px 10px;
+    font-family: var(--teacher-font-ui);
+    font-size: var(--teacher-size-micro);
+    font-weight: 500;
+    border: 1px solid var(--teacher-border-subtle);
+    background: var(--teacher-surface-3);
+    color: var(--teacher-text-primary);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color var(--teacher-dur-tab) var(--teacher-curve-out);
+}
+
+.teacher-teachable-dismiss:hover {
+    background: var(--teacher-accent-amber);
+    color: var(--teacher-surface-0);
+    border-color: var(--teacher-accent-amber);
+}
+
+/* ============================================================
+ * §2 item #2 — Ghost Timeline
+ * ============================================================ */
+
+.teacher-ghost-timeline-widget {
+    overflow: hidden;
+    background: var(--teacher-surface-1);
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-ghost-empty {
+    padding: 24px;
+    color: var(--teacher-text-tertiary);
+    font-size: var(--teacher-size-sm);
+    text-align: center;
+}
+
+.teacher-ghost-empty-hint {
+    font-size: var(--teacher-size-micro);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.teacher-ghost-scroll {
+    padding: 8px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-ghost-ruler {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--teacher-font-mono);
+    font-size: var(--teacher-size-micro);
+    color: var(--teacher-text-tertiary);
+    letter-spacing: var(--teacher-track-wide);
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-ghost-ruler-now {
+    color: var(--teacher-accent-yellow);
+}
+
+.teacher-ghost-track {
+    position: relative;
+    height: 48px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--teacher-border-subtle) 0 1px,
+        transparent 1px 10%
+    );
+    border-radius: 4px;
+}
+
+.teacher-ghost-clip {
+    position: absolute;
+    top: 4px;
+    transform: translateX(0);
+    min-width: 120px;
+    max-width: 220px;
+    height: 40px;
+    padding: 4px 8px;
+    border: 1px solid var(--teacher-border-strong);
+    border-left: 3px solid var(--teacher-accent-amber);
+    border-radius: 4px;
+    background: var(--teacher-surface-3);
+    color: var(--teacher-text-primary);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--teacher-font-ui);
+    transition:
+        transform var(--teacher-dur-tab) var(--teacher-curve-out),
+        border-color var(--teacher-dur-tab) var(--teacher-curve-out);
+}
+
+.teacher-ghost-clip:hover {
+    transform: translateY(-2px);
+    border-left-color: var(--teacher-accent-yellow);
+}
+
+.teacher-ghost-clip--muted {
+    opacity: 0.35;
+    border-left-color: var(--teacher-text-tertiary);
+}
+
+.teacher-ghost-clip-kind {
+    font-family: var(--teacher-font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: var(--teacher-track-wide);
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-ghost-clip-title {
+    font-size: var(--teacher-size-micro);
+    font-weight: 500;
+    color: var(--teacher-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-ghost-clip--table       { border-left-color: var(--teacher-accent-amber); }
+.teacher-ghost-clip--markdown    { border-left-color: var(--teacher-text-secondary); }
+.teacher-ghost-clip--code        { border-left-color: var(--teacher-ai-thinking); }
+.teacher-ghost-clip--list        { border-left-color: var(--teacher-accent-yellow); }
+.teacher-ghost-clip--keyValue    { border-left-color: var(--teacher-ai-confident); }
+.teacher-ghost-clip--chart       { border-left-color: var(--teacher-accent-hot); }
+.teacher-ghost-clip--connections { border-left-color: #C79BE8; }

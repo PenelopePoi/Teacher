@@ -29,6 +29,10 @@ import { CanvasWidget } from './widgets/canvas-widget';
 import { CanvasContribution } from './widgets/canvas-contribution';
 import { CanvasService } from './canvas-service';
 import { PulseService } from './pulse/pulse-service';
+import { TeacherStatusContribution } from './status/teacher-status-contribution';
+import { DragToAskContribution } from './components/drag-to-ask-contribution';
+import { GhostTimelineWidget } from './widgets/ghost-timeline-widget';
+import { GhostTimelineContribution } from './widgets/ghost-timeline-contribution';
 import { LessonCommandContribution } from './commands/lesson-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
@@ -125,6 +129,22 @@ export default new ContainerModule(bind => {
 
     // Pulse — §6 signature primitive (breathing orb service)
     bind(PulseService).toSelf().inSingletonScope();
+
+    // §1 P#5 — Status bar rebuild (hide stock confetti, add Pulse + project + model)
+    bind(TeacherStatusContribution).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(TeacherStatusContribution);
+
+    // §2 item #3 — Drag-to-Ask floating orb (always-mounted body overlay)
+    bind(DragToAskContribution).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(DragToAskContribution);
+
+    // §2 item #2 — Ghost Timeline widget (bottom dock area)
+    bind(GhostTimelineWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: GhostTimelineWidget.ID,
+        createWidget: () => context.container.get<GhostTimelineWidget>(GhostTimelineWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, GhostTimelineContribution);
 
     // Canvas — service + widget + view contribution (Cursor-inspired)
     bind(CanvasService).toSelf().inSingletonScope();
