@@ -1,0 +1,230 @@
+{
+  "Console Log": {
+    "prefix": "log",
+    "body": [
+      "// console.log() prints values to the browser console or terminal",
+      "console.log(${1:\"Hello, World!\"});",
+      "$0"
+    ],
+    "description": "Console log with explanation"
+  },
+  "Function Declaration": {
+    "prefix": "func",
+    "body": [
+      "// A function declaration — hoisted, so you can call it before it's defined",
+      "function ${1:functionName}(${2:parameters}) {",
+      "  ${3:// Function body}",
+      "  return ${4:undefined};",
+      "}",
+      "$0"
+    ],
+    "description": "Function declaration with teaching comment"
+  },
+  "Arrow Function": {
+    "prefix": "arrow",
+    "body": [
+      "// Arrow functions are a shorter syntax for functions",
+      "// They also inherit 'this' from their surrounding scope",
+      "const ${1:functionName} = (${2:parameters}) => {",
+      "  ${3:// Function body}",
+      "  return ${4:undefined};",
+      "};",
+      "$0"
+    ],
+    "description": "Arrow function with explanation"
+  },
+  "For...of Loop": {
+    "prefix": "forof",
+    "body": [
+      "// for...of iterates over VALUES in an iterable (arrays, strings, etc.)",
+      "for (const ${1:item} of ${2:array}) {",
+      "  ${3:console.log(${1:item})};",
+      "}",
+      "$0"
+    ],
+    "description": "For...of loop over iterable values"
+  },
+  "For...in Loop": {
+    "prefix": "forin",
+    "body": [
+      "// for...in iterates over KEYS (property names) of an object",
+      "// Use for...of for arrays; for...in is best for objects",
+      "for (const ${1:key} in ${2:object}) {",
+      "  if (${2:object}.hasOwnProperty(${1:key})) {",
+      "    console.log(${1:key}, ${2:object}[${1:key}]);",
+      "  }",
+      "}",
+      "$0"
+    ],
+    "description": "For...in loop over object keys"
+  },
+  "Array Map": {
+    "prefix": "map",
+    "body": [
+      "// .map() creates a NEW array by transforming each element",
+      "// The original array is NOT modified",
+      "const ${1:result} = ${2:array}.map((${3:item}) => {",
+      "  return ${4:item};",
+      "});",
+      "$0"
+    ],
+    "description": "Array map with teaching comment"
+  },
+  "Array Filter": {
+    "prefix": "filter",
+    "body": [
+      "// .filter() creates a NEW array with only elements that pass the test",
+      "// Return true to keep an element, false to exclude it",
+      "const ${1:result} = ${2:array}.filter((${3:item}) => {",
+      "  return ${4:true};",
+      "});",
+      "$0"
+    ],
+    "description": "Array filter with teaching comment"
+  },
+  "Array Reduce": {
+    "prefix": "reduce",
+    "body": [
+      "// .reduce() combines all elements into a single value",
+      "// 'accumulator' holds the running result; 'current' is the current element",
+      "const ${1:result} = ${2:array}.reduce((${3:accumulator}, ${4:current}) => {",
+      "  return ${3:accumulator} + ${4:current};",
+      "}, ${5:0}); // ${5:0} is the initial value of the accumulator",
+      "$0"
+    ],
+    "description": "Array reduce with teaching comment"
+  },
+  "Promise": {
+    "prefix": "promise",
+    "body": [
+      "// A Promise represents a value that may not be available yet",
+      "// resolve() = success, reject() = failure",
+      "const ${1:myPromise} = new Promise((resolve, reject) => {",
+      "  ${2:// Do async work here}",
+      "  if (${3:true}) {",
+      "    resolve(${4:\"Success!\"});",
+      "  } else {",
+      "    reject(new Error(${5:\"Something went wrong\"}));",
+      "  }",
+      "});",
+      "",
+      "${1:myPromise}",
+      "  .then((result) => console.log(result))",
+      "  .catch((error) => console.error(error));",
+      "$0"
+    ],
+    "description": "Promise with resolve, reject, then, catch"
+  },
+  "Async Function": {
+    "prefix": "asyncfunc",
+    "body": [
+      "// async/await makes asynchronous code look like synchronous code",
+      "// 'await' pauses execution until the Promise resolves",
+      "async function ${1:functionName}(${2:parameters}) {",
+      "  try {",
+      "    const ${3:result} = await ${4:someAsyncOperation()};",
+      "    return ${3:result};",
+      "  } catch (error) {",
+      "    console.error(\"Error:\", error.message);",
+      "    throw error;",
+      "  }",
+      "}",
+      "$0"
+    ],
+    "description": "Async function with try/catch"
+  },
+  "Class": {
+    "prefix": "class",
+    "body": [
+      "// Classes are blueprints for creating objects with shared methods",
+      "class ${1:ClassName} {",
+      "  constructor(${2:parameters}) {",
+      "    // 'this' refers to the instance being created",
+      "    this.${3:property} = ${2:parameters};",
+      "  }",
+      "",
+      "  ${4:methodName}() {",
+      "    ${5:// Method body}",
+      "    return this.${3:property};",
+      "  }",
+      "}",
+      "",
+      "// Create an instance:",
+      "// const my${1:ClassName} = new ${1:ClassName}(${6:value});",
+      "$0"
+    ],
+    "description": "Class with constructor and method"
+  },
+  "Import": {
+    "prefix": "import",
+    "body": [
+      "// ES6 import: pull specific exports from a module",
+      "// Use curly braces for named exports, no braces for default export",
+      "import { ${1:name} } from \"${2:./module}\";",
+      "$0"
+    ],
+    "description": "ES6 import statement"
+  },
+  "Export": {
+    "prefix": "export",
+    "body": [
+      "// 'export default' = the main thing this module provides",
+      "// Other files import it without curly braces",
+      "export default ${1:function ${2:name}(${3:parameters}) {",
+      "  ${4:// Implementation}",
+      "}};",
+      "$0"
+    ],
+    "description": "Export default with explanation"
+  },
+  "Fetch": {
+    "prefix": "fetch",
+    "body": [
+      "// fetch() makes HTTP requests to APIs and returns a Promise",
+      "// Always check response.ok to handle HTTP errors",
+      "async function ${1:fetchData}(${2:url}) {",
+      "  try {",
+      "    const response = await fetch(${2:url});",
+      "",
+      "    if (!response.ok) {",
+      "      throw new Error(`HTTP error! Status: \\${response.status}`);",
+      "    }",
+      "",
+      "    const data = await response.json(); // Parse JSON body",
+      "    return data;",
+      "  } catch (error) {",
+      "    console.error(\"Fetch failed:\", error.message);",
+      "  }",
+      "}",
+      "$0"
+    ],
+    "description": "Fetch API call with error handling"
+  },
+  "Try Catch": {
+    "prefix": "trycatch",
+    "body": [
+      "// try/catch handles errors gracefully instead of crashing",
+      "try {",
+      "  ${1:// Code that might throw an error}",
+      "} catch (${2:error}) {",
+      "  // This runs if an error is thrown in the try block",
+      "  console.error(${2:error}.message);",
+      "} finally {",
+      "  // This ALWAYS runs, error or not — good for cleanup",
+      "  ${3:// Cleanup code}",
+      "}",
+      "$0"
+    ],
+    "description": "Try/catch/finally with teaching comments"
+  },
+  "Destructuring Assignment": {
+    "prefix": "destructure",
+    "body": [
+      "// Destructuring extracts values from objects/arrays into variables",
+      "// Object destructuring (names must match property names):",
+      "const { ${1:property1}, ${2:property2} } = ${3:object};",
+      "$0"
+    ],
+    "description": "Object destructuring with explanation"
+  }
+}

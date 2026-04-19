@@ -1,0 +1,28 @@
+{
+  "name": "teacher-theme",
+  "displayName": "Teacher IDE Theme",
+  "description": "Custom dark and light color themes for Teacher IDE with indigo/purple brand colors",
+  "version": "1.0.0",
+  "publisher": "teacher-ide",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Teacher Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/teacher-dark.json"
+      },
+      {
+        "label": "Teacher Light",
+        "uiTheme": "vs",
+        "path": "./themes/teacher-light.json"
+      }
+    ]
+  }
+}

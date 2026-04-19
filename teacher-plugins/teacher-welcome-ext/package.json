@@ -1,0 +1,91 @@
+{
+  "name": "teacher-welcome-ext",
+  "displayName": "Teacher Welcome Walkthrough",
+  "description": "Getting Started walkthrough for Teacher IDE with guided steps for new users",
+  "version": "1.0.0",
+  "publisher": "teacher-ide",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "walkthroughs": [
+      {
+        "id": "teacher.welcome",
+        "title": "Getting Started with Teacher",
+        "description": "Learn how to use Teacher IDE to accelerate your coding journey with AI-powered tutoring, lessons, and progress tracking.",
+        "steps": [
+          {
+            "id": "teacher.welcome.intro",
+            "title": "Welcome to Teacher IDE",
+            "description": "Teacher IDE is your personal coding classroom. It combines a full-featured code editor with AI tutoring, structured curriculum, and real-time assessments.\n\n[Open Teacher Dashboard](command:teacher.openDashboard)",
+            "media": {
+              "markdown": "Welcome to Teacher IDE — where learning to code meets intelligent guidance."
+            }
+          },
+          {
+            "id": "teacher.welcome.tutor",
+            "title": "Meet Your Tutor",
+            "description": "Your AI tutor adapts to your skill level and learning style. Ask questions, get hints, or request explanations — all without leaving the editor.\n\n[Start a Tutor Session](command:teacher.startTutor)",
+            "media": {
+              "markdown": "The AI tutor is always available in the sidebar to help you understand concepts and debug your code."
+            }
+          },
+          {
+            "id": "teacher.welcome.lesson",
+            "title": "Your First Lesson",
+            "description": "Lessons are structured coding exercises that teach concepts step by step. Start with the basics and work your way up.\n\n[Browse Lessons](command:teacher.browseLessons)",
+            "media": {
+              "markdown": "Each lesson includes objectives, guided instructions, and practice exercises."
+            }
+          },
+          {
+            "id": "teacher.welcome.assessment",
+            "title": "Check Your Work",
+            "description": "Assessments verify your understanding with automated tests and AI-powered code review. Get instant feedback on your solutions.\n\n[Run Assessment](command:teacher.runAssessment)",
+            "media": {
+              "markdown": "Assessments give you immediate, actionable feedback so you can improve continuously."
+            }
+          },
+          {
+            "id": "teacher.welcome.progress",
+            "title": "Track Your Progress",
+            "description": "View your learning progress, completed lessons, assessment scores, and skill growth over time.\n\n[View Progress](command:teacher.viewProgress)",
+            "media": {
+              "markdown": "Your progress dashboard shows completed topics, time spent, and areas for improvement."
+            }
+          }
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "teacher.openDashboard",
+        "title": "Teacher: Open Dashboard"
+      },
+      {
+        "command": "teacher.startTutor",
+        "title": "Teacher: Start Tutor Session"
+      },
+      {
+        "command": "teacher.browseLessons",
+        "title": "Teacher: Browse Lessons"
+      },
+      {
+        "command": "teacher.runAssessment",
+        "title": "Teacher: Run Assessment"
+      },
+      {
+        "command": "teacher.viewProgress",
+        "title": "Teacher: View Progress"
+      }
+    ]
+  }
+}

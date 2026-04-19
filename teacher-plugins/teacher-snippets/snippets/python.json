@@ -1,0 +1,230 @@
+{
+  "Hello World": {
+    "prefix": "hello",
+    "body": [
+      "# print() sends text to the console — your first line of Python!",
+      "# The text inside quotes is called a \"string\"",
+      "print(\"Hello, World!\")",
+      "$0"
+    ],
+    "description": "Print Hello World with explanation"
+  },
+  "For Loop": {
+    "prefix": "forloop",
+    "body": [
+      "# range(n) generates numbers from 0 to n-1",
+      "# The loop variable '${1:i}' takes each value in turn",
+      "for ${1:i} in range(${2:10}):",
+      "    ${3:print(${1:i})}",
+      "$0"
+    ],
+    "description": "For loop with range and teaching comments"
+  },
+  "While Loop": {
+    "prefix": "whileloop",
+    "body": [
+      "# A while loop repeats as long as its condition is True",
+      "# Make sure the condition eventually becomes False, or you get an infinite loop!",
+      "${1:counter} = ${2:0}",
+      "while ${1:counter} < ${3:10}:",
+      "    ${4:print(${1:counter})}",
+      "    ${1:counter} += 1",
+      "$0"
+    ],
+    "description": "While loop with counter and teaching comments"
+  },
+  "Function Definition": {
+    "prefix": "function",
+    "body": [
+      "def ${1:function_name}(${2:parameters}):",
+      "    \"\"\"${3:Brief description of what this function does.}",
+      "",
+      "    Args:",
+      "        ${2:parameters}: ${4:Description of parameters}",
+      "",
+      "    Returns:",
+      "        ${5:Description of return value}",
+      "    \"\"\"",
+      "    ${6:pass}",
+      "$0"
+    ],
+    "description": "Function with docstring template"
+  },
+  "Class Definition": {
+    "prefix": "class",
+    "body": [
+      "class ${1:ClassName}:",
+      "    \"\"\"${2:Brief description of the class.}\"\"\"",
+      "",
+      "    def __init__(self, ${3:parameters}):",
+      "        \"\"\"Initialize a new ${1:ClassName}.",
+      "",
+      "        Args:",
+      "            ${3:parameters}: ${4:Description}",
+      "        \"\"\"",
+      "        # 'self' refers to the instance being created",
+      "        self.${5:attribute} = ${3:parameters}",
+      "",
+      "    def ${6:method_name}(self):",
+      "        \"\"\"${7:What this method does.}\"\"\"",
+      "        ${8:pass}",
+      "$0"
+    ],
+    "description": "Class with __init__ and method"
+  },
+  "Try Except": {
+    "prefix": "tryexcept",
+    "body": [
+      "# try/except handles errors gracefully instead of crashing",
+      "try:",
+      "    ${1:# Code that might raise an error}",
+      "    ${2:pass}",
+      "except ${3:Exception} as ${4:e}:",
+      "    # This runs if an error occurs in the try block",
+      "    print(f\"Error: {${4:e}}\")",
+      "finally:",
+      "    # This ALWAYS runs, error or not — good for cleanup",
+      "    ${5:pass}",
+      "$0"
+    ],
+    "description": "Try/except/finally with teaching comments"
+  },
+  "List Comprehension": {
+    "prefix": "listcomp",
+    "body": [
+      "# List comprehension: a concise way to create lists",
+      "# Equivalent to a for loop that appends to a list",
+      "${1:result} = [${2:expression} for ${3:item} in ${4:iterable}${5: if ${6:condition}}]",
+      "$0"
+    ],
+    "description": "List comprehension with explanation"
+  },
+  "Dictionary Comprehension": {
+    "prefix": "dictcomp",
+    "body": [
+      "# Dict comprehension: create a dictionary in one line",
+      "# Format: {key: value for item in iterable}",
+      "${1:result} = {${2:key}: ${3:value} for ${4:item} in ${5:iterable}}",
+      "$0"
+    ],
+    "description": "Dictionary comprehension with explanation"
+  },
+  "File Read": {
+    "prefix": "fileread",
+    "body": [
+      "# 'with' automatically closes the file when done — always use it!",
+      "# 'r' means read mode (default)",
+      "with open(\"${1:filename.txt}\", \"r\") as ${2:file}:",
+      "    ${3:content} = ${2:file}.read()",
+      "    print(${3:content})",
+      "$0"
+    ],
+    "description": "Read a file with context manager"
+  },
+  "File Write": {
+    "prefix": "filewrite",
+    "body": [
+      "# 'w' means write mode — WARNING: this overwrites existing content!",
+      "# Use 'a' instead of 'w' to append without overwriting",
+      "with open(\"${1:filename.txt}\", \"w\") as ${2:file}:",
+      "    ${2:file}.write(\"${3:Hello, file!}\\n\")",
+      "$0"
+    ],
+    "description": "Write to a file with context manager"
+  },
+  "If Main": {
+    "prefix": "ifmain",
+    "body": [
+      "# This block only runs when the script is executed directly,",
+      "# NOT when it's imported as a module by another script",
+      "if __name__ == \"__main__\":",
+      "    ${1:main()}",
+      "$0"
+    ],
+    "description": "if __name__ == '__main__' guard"
+  },
+  "Import Statement": {
+    "prefix": "import",
+    "body": [
+      "# Import a module to use its functions and classes",
+      "# 'as' creates a shorter alias for convenience",
+      "import ${1:module}${2: as ${3:alias}}",
+      "$0"
+    ],
+    "description": "Import with optional alias"
+  },
+  "Unit Test": {
+    "prefix": "unittest",
+    "body": [
+      "import unittest",
+      "",
+      "",
+      "class Test${1:Feature}(unittest.TestCase):",
+      "    \"\"\"Tests for ${2:the feature being tested}.\"\"\"",
+      "",
+      "    def setUp(self):",
+      "        \"\"\"Set up test fixtures — runs before each test method.\"\"\"",
+      "        ${3:pass}",
+      "",
+      "    def test_${4:something}(self):",
+      "        \"\"\"Test that ${5:expected behavior occurs}.\"\"\"",
+      "        # Arrange: set up the test data",
+      "        ${6:expected} = ${7:True}",
+      "        # Act: call the code being tested",
+      "        ${8:result} = ${9:True}",
+      "        # Assert: verify the result matches expectations",
+      "        self.assertEqual(${8:result}, ${6:expected})",
+      "",
+      "",
+      "if __name__ == \"__main__\":",
+      "    unittest.main()",
+      "$0"
+    ],
+    "description": "Unit test class with setUp and test method"
+  },
+  "Argparse": {
+    "prefix": "argparse",
+    "body": [
+      "import argparse",
+      "",
+      "# argparse handles command-line arguments for your script",
+      "parser = argparse.ArgumentParser(description=\"${1:Description of your program}\")",
+      "",
+      "# Required argument (positional)",
+      "parser.add_argument(\"${2:input}\", help=\"${3:Description of this argument}\")",
+      "",
+      "# Optional argument (uses -- prefix)",
+      "parser.add_argument(\"--${4:verbose}\", action=\"store_true\", help=\"${5:Enable verbose output}\")",
+      "",
+      "args = parser.parse_args()",
+      "print(args.${2:input})",
+      "$0"
+    ],
+    "description": "Argparse template with positional and optional arguments"
+  },
+  "Enumerate": {
+    "prefix": "enumerate",
+    "body": [
+      "# enumerate() gives you both the index AND the value in a loop",
+      "# Much cleaner than manually tracking an index counter!",
+      "for ${1:index}, ${2:value} in enumerate(${3:iterable}):",
+      "    print(f\"{${1:index}}: {${2:value}}\")",
+      "$0"
+    ],
+    "description": "Enumerate loop with index and value"
+  },
+  "Zip Loop": {
+    "prefix": "ziploop",
+    "body": [
+      "# zip() pairs up elements from two (or more) lists",
+      "# It stops at the shortest list's length",
+      "${1:names} = [${2:\"Alice\", \"Bob\", \"Charlie\"}]",
+      "${3:scores} = [${4:95, 87, 92}]",
+      "",
+      "for ${5:name}, ${6:score} in zip(${1:names}, ${3:scores}):",
+      "    print(f\"{${5:name}}: {${6:score}}\")",
+      "$0"
+    ],
+    "description": "Zip loop to iterate over parallel lists"
+  }
+}
