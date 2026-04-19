@@ -581,8 +581,8 @@ Update [DEPENDENCY_NAME] to stay up-to-date and consume (security) fixes.
 - Current version: [CURRENT_VERSION]
 - Target version: [TARGET_VERSION]
 
-After updating the dependency, please [open a ticket for the Theia IDE](https://github.com/eclipse-theia/theia-ide/issues/new?template=feature_request.md) and assign the `toDoWithRelease` and `dependencies` labels.
-This indicates that the update needs to be done in Theia IDE as well and ensures it will be addressed with the next release.
+After updating the dependency, please [open a ticket for the Teacher IDE](https://github.com/eclipse-theia/theia-ide/issues/new?template=feature_request.md) and assign the `toDoWithRelease` and `dependencies` labels.
+This indicates that the update needs to be done in Teacher IDE as well and ensures it will be addressed with the next release.
 ```
 
 If certain updates need to be done together (e.g. new electron version requires newer node version) feel free to group the tickets together.

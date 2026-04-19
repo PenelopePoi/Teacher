@@ -24,7 +24,7 @@ export const aiLlamafilePreferencesSchema: PreferenceSchema = {
     properties: {
         [PREFERENCE_LLAMAFILE]: {
             title: AI_LLAMAFILE_PREFERENCES_TITLE,
-            markdownDescription: nls.localize('theia/ai/llamaFile/prefs/mdDescription', 'This setting allows you to configure and manage LlamaFile models in Theia IDE.\
+            markdownDescription: nls.localize('theia/ai/llamaFile/prefs/mdDescription', 'This setting allows you to configure and manage LlamaFile models in Teacher IDE.\
             \n\
             Each entry requires a user-friendly `name`, the file `uri` pointing to your LlamaFile, and the `port` on which it will run.\
             \n\
@@ -32,7 +32,7 @@ export const aiLlamafilePreferencesSchema: PreferenceSchema = {
             \n\
             If you edit an entry (e.g., change the port), any running instance will stop, and you will need to manually start it again.\
             \n\
-            [Learn more about configuring and managing LlamaFiles in the Theia IDE documentation](https://theia-ide.org/docs/user_ai/#llamafile-models).'),
+            [Learn more about configuring and managing LlamaFiles in the Teacher IDE documentation](https://theia-ide.org/docs/user_ai/#llamafile-models).'),
             type: 'array',
             default: [],
             items: {

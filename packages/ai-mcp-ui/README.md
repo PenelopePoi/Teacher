@@ -58,7 +58,7 @@ See the Theia MCP package (`@theia/ai-mcp`) README for more information.
 ### More Information
 
 [Theia AI MCP README](https://github.com/eclipse-theia/theia/tree/master/packages/ai-mcp)
-[User documentation on MCP in the Theia IDE](https://theia-ide.org/docs/user_ai/#mcp-integration)
+[User documentation on MCP in the Teacher IDE](https://theia-ide.org/docs/user_ai/#mcp-integration)
 [List of available MCP servers](https://github.com/modelcontextprotocol/servers)
 
 ## Additional Information

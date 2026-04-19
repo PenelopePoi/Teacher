@@ -501,7 +501,7 @@
       },
       "completion": {
         "agent": {
-          "description": "Ez az ügynök inline kódkiegészítést biztosít a Theia IDE kódszerkesztőjében.",
+          "description": "Ez az ügynök inline kódkiegészítést biztosít a Teacher IDE kódszerkesztőjében.",
           "vars": {
             "file": {
               "description": "A szerkesztett fájl URI-je"
@@ -1030,7 +1030,7 @@
             "label": "AI parancs",
             "message": "Visszahívás végrehajtása args {0} paraméterekkel. Az első arg a dinamikusan regisztrált parancshoz regisztrált parancsazonosító. A többi arg a kezelő tényleges paraméterei."
           },
-          "description": "Ez az ügynök ismeri az összes parancsot, amelyet a felhasználó végrehajthat a Theia IDE-ben, azaz abban az eszközben, amellyel a felhasználó éppen dolgozik. A felhasználó kérésének alapján megtalálja a megfelelő parancsot, majd lehetővé teszi a felhasználó számára annak végrehajtását.",
+          "description": "Ez az ügynök ismeri az összes parancsot, amelyet a felhasználó végrehajthat a Teacher IDE-ben, azaz abban az eszközben, amellyel a felhasználó éppen dolgozik. A felhasználó kérésének alapján megtalálja a megfelelő parancsot, majd lehetővé teszi a felhasználó számára annak végrehajtását.",
           "response": {
             "customHandler": "Próbálja meg végrehajtani ezt:",
             "noCommand": "Sajnálom, nem találom ezt a parancsot.",
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "Ez a beállítás lehetővé teszi a LlamaFile modellek konfigurálását és kezelését a Theia IDE-ben.            \n            Minden bejegyzéshez szükséges egy felhasználóbarát „név”, a LlamaFile-ra mutató „uri” fájl és a futtatáshoz szükséges „port”.            \n            A LlamaFile elindításához használja a „Start LlamaFile” parancsot, amely lehetővé teszi a kívánt modell kiválasztását.            \n            Ha egy bejegyzést szerkeszt (pl. megváltoztatja a portot), akkor minden futó példány leáll, és manuálisan kell újra elindítania.            \n            [További információk a LlamaFiles konfigurálásáról és kezeléséről a Theia IDE dokumentációjában találhatók](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "Ez a beállítás lehetővé teszi a LlamaFile modellek konfigurálását és kezelését a Teacher IDE-ben.            \n            Minden bejegyzéshez szükséges egy felhasználóbarát „név”, a LlamaFile-ra mutató „uri” fájl és a futtatáshoz szükséges „port”.            \n            A LlamaFile elindításához használja a „Start LlamaFile” parancsot, amely lehetővé teszi a kívánt modell kiválasztását.            \n            Ha egy bejegyzést szerkeszt (pl. megváltoztatja a portot), akkor minden futó példány leáll, és manuálisan kell újra elindítania.            \n            [További információk a LlamaFiles konfigurálásáról és kezeléséről a Teacher IDE dokumentációjában találhatók](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "A Llamafile-hoz használandó modellnév."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "A Theia IDE-be integrált AI-asszisztens, amelynek célja a szoftverfejlesztők segítése. Ez az ügynök hozzáférhet a felhasználók munkaterületéhez, lekérheti az összes elérhető fájl és mappa listáját, és letöltheti azok tartalmát. Ezenkívül fájlmodifikációkat is javasolhat a felhasználónak. Így segítheti a felhasználót a kódolási feladatokban vagy más, fájlváltoztatásokkal járó feladatokban."
+          "description": "A Teacher IDE-be integrált AI-asszisztens, amelynek célja a szoftverfejlesztők segítése. Ez az ügynök hozzáférhet a felhasználók munkaterületéhez, lekérheti az összes elérhető fájl és mappa listáját, és letöltheti azok tartalmát. Ezenkívül fájlmodifikációkat is javasolhat a felhasználónak. Így segítheti a felhasználót a kódolási feladatokban vagy más, fájlváltoztatásokkal járó feladatokban."
         },
         "considerGitignore": {
           "description": "Ha engedélyezve van, kizárja a globális .gitignore fájlban megadott fájlokat/mappákat (a várható hely a munkaterület gyökérkönyvtára).",
@@ -1506,7 +1506,7 @@
           "title": "Maximális keresési eredmények"
         },
         "workspaceAgent": {
-          "description": "A Theia IDE-be integrált AI-asszisztens, amelynek célja a szoftverfejlesztők segítése. Ez az ügynök hozzáférhet a felhasználók munkaterületéhez, lekérheti az összes elérhető fájl és mappa listáját, és letöltheti azok tartalmát. Fájlokat nem módosíthat. Ezért válaszolhat a munkaterületen található aktuális projektre, projektfájlokra és forráskódra vonatkozó kérdésekre, például hogy hogyan kell összeállítani a projektet, hova kell tenni a forráskódot, hol találhatók bizonyos kódok vagy konfigurációk stb."
+          "description": "A Teacher IDE-be integrált AI-asszisztens, amelynek célja a szoftverfejlesztők segítése. Ez az ügynök hozzáférhet a felhasználók munkaterületéhez, lekérheti az összes elérhető fájl és mappa listáját, és letöltheti azok tartalmát. Fájlokat nem módosíthat. Ezért válaszolhat a munkaterületen található aktuális projektre, projektfájlokra és forráskódra vonatkozó kérdésekre, például hogy hogyan kell összeállítani a projektet, hova kell tenni a forráskódot, hol találhatók bizonyos kódok vagy konfigurációk stb."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "A menü kompakt gombként jelenik meg az oldalsávon. Ez az érték figyelmen kívül marad, h {0} értéke {1}."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Válassza ki a munkaterület gyökérkönyvtárát a konfiguráció hozzáadásához.",
       "breakpoint": "breakpoint",
       "cannotRunToThisLocation": "A jelenlegi szálat nem lehetett a megadott helyre futtatni.",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "Az AI támogatás elérhető a Theia IDE-ben!",
+        "header": "Az AI támogatás elérhető a Teacher IDE-ben!",
         "openAIChatView": "Nyissa meg most az AI Chat View-t, hogy megtudja, hogyan kezdje el!"
       },
       "apiComparator": "{0} API-kompatibilitás",

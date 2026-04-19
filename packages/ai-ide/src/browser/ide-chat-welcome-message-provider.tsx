@@ -198,7 +198,7 @@ export class IdeChatWelcomeMessageProvider implements ChatWelcomeMessageProvider
             <LocalizedMarkdown
                 localizationKey="theia/ai/ide/chatWelcomeMessage"
                 defaultMarkdown={`
-## Ask the Theia IDE AI
+## Ask the Teacher IDE AI
 
 Use *@AgentName* to talk to a specialized agent, like *@{0}*, *@{1}*, or *@{2}*.
 

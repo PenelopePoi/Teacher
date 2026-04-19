@@ -12,7 +12,7 @@
 
 ## Description
 
-The `@theia/ai-ide` package consolidates various AI agents for use within IDEs like the Theia IDE.
+The `@theia/ai-ide` package consolidates various AI agents for use within IDEs like the Teacher IDE.
 
 ## Agents
 
@@ -22,9 +22,9 @@ The package includes the following agents:
 
 - **Universal Chat Agent**: Provides general programming support. It answers broad programming-related questions and serves as a fallback for generic inquiries, without specific access to the user context or workspace. This agent is used as the preferred fallback in case the default agent is not available.
 
-- **Coder Agent**: Assists software developers with code-related tasks in the Theia IDE. It utilizes AI to provide recommendations and improvements, leveraging a suite of functions to interact with the workspace.
+- **Coder Agent**: Assists software developers with code-related tasks in the Teacher IDE. It utilizes AI to provide recommendations and improvements, leveraging a suite of functions to interact with the workspace.
 
-- **Command Chat Agent**: This agent helps users execute commands within the Theia IDE based on user requests. It identifies the correct command from Theia's command registry and facilitates its execution, providing users with a seamless command interaction experience.
+- **Command Chat Agent**: This agent helps users execute commands within the Teacher IDE based on user requests. It identifies the correct command from Theia's command registry and facilitates its execution, providing users with a seamless command interaction experience.
 
 - **Architect Agent**: The agent is able to inspect the current files of the workspace, including their content, to answer questions.
 

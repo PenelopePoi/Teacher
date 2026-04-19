@@ -501,7 +501,7 @@
       },
       "completion": {
         "agent": {
-          "description": "Dieser Agent bietet Inline-Code-Vervollständigung im Code-Editor der Theia IDE.",
+          "description": "Dieser Agent bietet Inline-Code-Vervollständigung im Code-Editor der Teacher IDE.",
           "vars": {
             "file": {
               "description": "Die URI der zu bearbeitenden Datei"
@@ -1030,7 +1030,7 @@
             "label": "KI-Befehl",
             "message": "Ausführen eines Callbacks mit Argumenten {0}. Das erste Argument ist die Befehls-ID, die für den dynamisch registrierten Befehl registriert wurde. Die anderen Argumente sind die tatsächlichen Argumente für den Handler."
           },
-          "description": "Dieser Agent kennt alle Befehle, die der Benutzer innerhalb der Theia IDE, dem Tool, mit dem der Benutzer gerade arbeitet, ausführen kann. Basierend auf der Benutzeranforderung kann er den richtigen Befehl finden und den Benutzer diesen dann ausführen lassen.",
+          "description": "Dieser Agent kennt alle Befehle, die der Benutzer innerhalb der Teacher IDE, dem Tool, mit dem der Benutzer gerade arbeitet, ausführen kann. Basierend auf der Benutzeranforderung kann er den richtigen Befehl finden und den Benutzer diesen dann ausführen lassen.",
           "response": {
             "customHandler": "Versuchen Sie Folgendes auszuführen:",
             "noCommand": "Leider kann ich einen solchen Befehl nicht finden.",
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "Mit dieser Einstellung können Sie LlamaFile-Modelle in Theia IDE konfigurieren und verwalten.            \n            Jeder Eintrag erfordert einen benutzerfreundlichen „Namen“, die Datei „uri“, die auf Ihre LlamaFile verweist, und den „Port“, auf dem sie ausgeführt wird.            \n            Um eine LlamaFile zu starten, verwenden Sie den Befehl „Start LlamaFile“, mit dem Sie das gewünschte Modell auswählen können.            \n            Wenn Sie einen Eintrag bearbeiten (z. B. den Port ändern), werden alle laufenden Instanzen angehalten und Sie müssen sie manuell neu starten.            \n            [Weitere Informationen zum Konfigurieren und Verwalten von LlamaFiles finden Sie in der Theia IDE-Dokumentation](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "Mit dieser Einstellung können Sie LlamaFile-Modelle in Teacher IDE konfigurieren und verwalten.            \n            Jeder Eintrag erfordert einen benutzerfreundlichen „Namen“, die Datei „uri“, die auf Ihre LlamaFile verweist, und den „Port“, auf dem sie ausgeführt wird.            \n            Um eine LlamaFile zu starten, verwenden Sie den Befehl „Start LlamaFile“, mit dem Sie das gewünschte Modell auswählen können.            \n            Wenn Sie einen Eintrag bearbeiten (z. B. den Port ändern), werden alle laufenden Instanzen angehalten und Sie müssen sie manuell neu starten.            \n            [Weitere Informationen zum Konfigurieren und Verwalten von LlamaFiles finden Sie in der Teacher IDE-Dokumentation](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "Der für diese Llamafile zu verwendende Modellname."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "Ein in Theia IDE integrierter KI-Assistent, der Softwareentwickler unterstützen soll. Dieser Agent kann auf den Arbeitsbereich des Benutzers zugreifen, eine Liste aller verfügbaren Dateien und Ordner abrufen und deren Inhalt anzeigen. Darüber hinaus kann er dem Benutzer Änderungen an Dateien vorschlagen. Er kann den Benutzer somit bei Codierungsaufgaben oder anderen Aufgaben unterstützen, die Dateiänderungen erfordern."
+          "description": "Ein in Teacher IDE integrierter KI-Assistent, der Softwareentwickler unterstützen soll. Dieser Agent kann auf den Arbeitsbereich des Benutzers zugreifen, eine Liste aller verfügbaren Dateien und Ordner abrufen und deren Inhalt anzeigen. Darüber hinaus kann er dem Benutzer Änderungen an Dateien vorschlagen. Er kann den Benutzer somit bei Codierungsaufgaben oder anderen Aufgaben unterstützen, die Dateiänderungen erfordern."
         },
         "considerGitignore": {
           "description": "Wenn aktiviert, werden Dateien/Ordner ausgeschlossen, die in einer globalen .gitignore-Datei angegeben sind (erwarteter Speicherort ist das Stammverzeichnis des Arbeitsbereichs).",
@@ -1506,7 +1506,7 @@
           "title": "Maximale Suchergebnisse"
         },
         "workspaceAgent": {
-          "description": "Ein in Theia IDE integrierter KI-Assistent, der Softwareentwickler unterstützen soll. Dieser Agent kann auf den Arbeitsbereich des Benutzers zugreifen, eine Liste aller verfügbaren Dateien und Ordner abrufen und deren Inhalt anzeigen. Er kann keine Dateien ändern. Daher kann er Fragen zum aktuellen Projekt, zu Projektdateien und zum Quellcode im Arbeitsbereich beantworten, z. B. wie das Projekt erstellt wird, wo der Quellcode abgelegt wird, wo bestimmte Codes oder Konfigurationen zu finden sind usw."
+          "description": "Ein in Teacher IDE integrierter KI-Assistent, der Softwareentwickler unterstützen soll. Dieser Agent kann auf den Arbeitsbereich des Benutzers zugreifen, eine Liste aller verfügbaren Dateien und Ordner abrufen und deren Inhalt anzeigen. Er kann keine Dateien ändern. Daher kann er Fragen zum aktuellen Projekt, zu Projektdateien und zum Quellcode im Arbeitsbereich beantworten, z. B. wie das Projekt erstellt wird, wo der Quellcode abgelegt wird, wo bestimmte Codes oder Konfigurationen zu finden sind usw."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "Das Menü wird als kompakte Schaltfläche in der Seitenleiste angezeigt. Dieser Wert wird ignoriert, wenn „{0}“ auf „{1}“ gesetzt ist."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Wählen Sie den Arbeitsbereichsstamm aus, um die Konfiguration hinzuzufügen.",
       "breakpoint": "Breakpoint",
       "cannotRunToThisLocation": "Der aktuelle Thread konnte nicht an der angegebenen Stelle ausgeführt werden.",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "AI-Unterstützung in der Theia IDE ist verfügbar!",
+        "header": "AI-Unterstützung in der Teacher IDE ist verfügbar!",
         "openAIChatView": "Öffnen Sie jetzt die KI-Chat-Ansicht, um zu erfahren, wie Sie beginnen können!"
       },
       "apiComparator": "{0} API-Kompatibilität",

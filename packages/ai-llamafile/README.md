@@ -1,6 +1,6 @@
 # AI Llamafile Integration
 
-The AI Llamafile package provides an integration that allows users to manage and interact with Llamafile language models within Theia IDE.
+The AI Llamafile package provides an integration that allows users to manage and interact with Llamafile language models within Teacher IDE.
 
 ## Features
 

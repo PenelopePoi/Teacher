@@ -501,7 +501,7 @@
       },
       "completion": {
         "agent": {
-          "description": "This agent provides inline code completion in the code editor in the Theia IDE.",
+          "description": "This agent provides inline code completion in the code editor in the Teacher IDE.",
           "vars": {
             "file": {
               "description": "The URI of the file being edited"
@@ -1030,7 +1030,7 @@
             "label": "AI command",
             "message": "Executing callback with args {0}. The first arg is the command id registered for the dynamically registered command. The other args are the actual args for the handler."
           },
-          "description": "This agent is aware of all commands that the user can execute within the Theia IDE, the tool that the user is currently working with. Based on the user request, it can find the right command and then let the user execute it.",
+          "description": "This agent is aware of all commands that the user can execute within the Teacher IDE, the tool that the user is currently working with. Based on the user request, it can find the right command and then let the user execute it.",
           "response": {
             "customHandler": "Try executing this:",
             "noCommand": "Sorry, I can't find such a command",
@@ -1054,7 +1054,7 @@
         },
         "deleteChat": "Delete Chat",
         "enableAI": {
-          "mdDescription": "This setting allows you to access the AI capabilities of Theia IDE.            \n            Please be aware that AI features may generate            continuous requests to the language models (LLMs) you provide access to. This might incur costs that you            need to monitor closely. By enabling this option, you acknowledge these risks.            \n            **Please note! The settings below in this section will only take effect\n            once the main feature setting is enabled. After enabling the feature, you need to configure at least one            LLM provider below. Also see [the documentation](https://theia-ide.org/docs/user_ai/)**."
+          "mdDescription": "This setting allows you to access the AI capabilities of Teacher IDE.            \n            Please be aware that AI features may generate            continuous requests to the language models (LLMs) you provide access to. This might incur costs that you            need to monitor closely. By enabling this option, you acknowledge these risks.            \n            **Please note! The settings below in this section will only take effect\n            once the main feature setting is enabled. After enabling the feature, you need to configure at least one            LLM provider below. Also see [the documentation](https://theia-ide.org/docs/user_ai/)**."
         },
         "exploreAgent": {
           "description": "A codebase exploration assistant that extracts and distills information from the codebase.         Reports facts about what exists, provides code excerpts, and describes observed patterns."
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "This setting allows you to configure and manage LlamaFile models in Theia IDE.            \n            Each entry requires a user-friendly `name`, the file `uri` pointing to your LlamaFile, and the `port` on which it will run.            \n            To start a LlamaFile, use the \"Start LlamaFile\" command, which enables you to select the desired model.            \n            If you edit an entry (e.g., change the port), any running instance will stop, and you will need to manually start it again.            \n            [Learn more about configuring and managing LlamaFiles in the Theia IDE documentation](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "This setting allows you to configure and manage LlamaFile models in Teacher IDE.            \n            Each entry requires a user-friendly `name`, the file `uri` pointing to your LlamaFile, and the `port` on which it will run.            \n            To start a LlamaFile, use the \"Start LlamaFile\" command, which enables you to select the desired model.            \n            If you edit an entry (e.g., change the port), any running instance will stop, and you will need to manually start it again.            \n            [Learn more about configuring and managing LlamaFiles in the Teacher IDE documentation](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "The model name to use for this Llamafile."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "An AI assistant integrated into Theia IDE, designed to assist software developers. This agent can access the users workspace, it can get a list of all available files         and folders and retrieve their content. Furthermore, it can suggest modifications of files to the user. It can therefore assist the user with coding tasks or other         tasks involving file changes."
+          "description": "An AI assistant integrated into Teacher IDE, designed to assist software developers. This agent can access the users workspace, it can get a list of all available files         and folders and retrieve their content. Furthermore, it can suggest modifications of files to the user. It can therefore assist the user with coding tasks or other         tasks involving file changes."
         },
         "considerGitignore": {
           "description": "If enabled, excludes files/folders specified in a global .gitignore file (expected location is the workspace root).",
@@ -1506,7 +1506,7 @@
           "title": "Maximum Search Results"
         },
         "workspaceAgent": {
-          "description": "An AI assistant integrated into Theia IDE, designed to assist software developers. This agent can access the users workspace, it can get a list of all available files          and folders and retrieve their content. It cannot modify files. It can therefore answer questions about the current project, project files and source code in the          workspace, such as how to build the project, where to put source code, where to find specific code or configurations, etc."
+          "description": "An AI assistant integrated into Teacher IDE, designed to assist software developers. This agent can access the users workspace, it can get a list of all available files          and folders and retrieve their content. It cannot modify files. It can therefore answer questions about the current project, project files and source code in the          workspace, such as how to build the project, where to put source code, where to find specific code or configurations, etc."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "Menu is displayed as a compact button in the side bar. This value is ignored when {0} is {1}."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Select workspace root to add configuration to",
       "breakpoint": "breakpoint",
       "cannotRunToThisLocation": "Could not run the current thread to the specified location.",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "AI Support in the Theia IDE is available!",
+        "header": "AI Support in the Teacher IDE is available!",
         "openAIChatView": "Open the AI Chat View now to learn how to start!"
       },
       "apiComparator": "{0} API Compatibility",

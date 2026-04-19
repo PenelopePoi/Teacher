@@ -1030,7 +1030,7 @@
             "label": "Polecenie AI",
             "message": "Wykonanie wywołania zwrotnego z argumentami {0}. Pierwszy argument to identyfikator polecenia zarejestrowanego dla polecenia rejestrowanego dynamicznie. Pozostałe argumenty to rzeczywiste argumenty dla procedury obsługi."
           },
-          "description": "Agent ten zna wszystkie polecenia, które użytkownik może wykonać w środowisku Theia IDE, narzędziu, z którego obecnie korzysta. Na podstawie żądania użytkownika może znaleźć odpowiednie polecenie, a następnie umożliwić użytkownikowi jego wykonanie.",
+          "description": "Agent ten zna wszystkie polecenia, które użytkownik może wykonać w środowisku Teacher IDE, narzędziu, z którego obecnie korzysta. Na podstawie żądania użytkownika może znaleźć odpowiednie polecenie, a następnie umożliwić użytkownikowi jego wykonanie.",
           "response": {
             "customHandler": "Spróbuj wykonać następujące polecenie:",
             "noCommand": "Przepraszam, nie mogę znaleźć takiego polecenia.",
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "To ustawienie pozwala konfigurować modele LlamaFile i zarządzać nimi w środowisku Theia IDE.            \n            Każdy wpis wymaga przyjaznej dla użytkownika nazwy „name”, pliku „uri” wskazującego na plik LlamaFile oraz portu „port”, na którym będzie on działał.            \n            Aby uruchomić plik LlamaFile, użyj polecenia „Start LlamaFile”, które umożliwia wybranie żądanego modelu.            \n            W przypadku edycji wpisu (np. zmiany portu) wszystkie uruchomione instancje zostaną zatrzymane i konieczne będzie ręczne ponowne ich uruchomienie.            \n            [Więcej informacji na temat konfigurowania i zarządzania plikami LlamaFile można znaleźć w dokumentacji środowiska Theia IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "To ustawienie pozwala konfigurować modele LlamaFile i zarządzać nimi w środowisku Teacher IDE.            \n            Każdy wpis wymaga przyjaznej dla użytkownika nazwy „name”, pliku „uri” wskazującego na plik LlamaFile oraz portu „port”, na którym będzie on działał.            \n            Aby uruchomić plik LlamaFile, użyj polecenia „Start LlamaFile”, które umożliwia wybranie żądanego modelu.            \n            W przypadku edycji wpisu (np. zmiany portu) wszystkie uruchomione instancje zostaną zatrzymane i konieczne będzie ręczne ponowne ich uruchomienie.            \n            [Więcej informacji na temat konfigurowania i zarządzania plikami LlamaFile można znaleźć w dokumentacji środowiska Teacher IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "Nazwa modelu, której należy używać dla tego pliku Llamafile."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "Asystent AI zintegrowany z Theia IDE, zaprojektowany, aby pomagać programistom. Agent ten ma dostęp do obszaru roboczego użytkownika, może uzyskać listę wszystkich dostępnych plików i folderów oraz pobrać ich zawartość. Ponadto może sugerować użytkownikowi modyfikacje plików. Może zatem pomagać użytkownikowi w zadaniach związanych z kodowaniem lub innych zadaniach wymagających zmian w plikach."
+          "description": "Asystent AI zintegrowany z Teacher IDE, zaprojektowany, aby pomagać programistom. Agent ten ma dostęp do obszaru roboczego użytkownika, może uzyskać listę wszystkich dostępnych plików i folderów oraz pobrać ich zawartość. Ponadto może sugerować użytkownikowi modyfikacje plików. Może zatem pomagać użytkownikowi w zadaniach związanych z kodowaniem lub innych zadaniach wymagających zmian w plikach."
         },
         "considerGitignore": {
           "description": "Jeśli opcja jest włączona, wyklucza pliki/foldery określone w globalnym pliku .gitignore (oczekiwana lokalizacja to katalog główny obszaru roboczego).",
@@ -1506,7 +1506,7 @@
           "title": "Maksymalna liczba wyników wyszukiwania"
         },
         "workspaceAgent": {
-          "description": "Asystent AI zintegrowany z Theia IDE, zaprojektowany, aby pomagać programistom. Agent ten ma dostęp do obszaru roboczego użytkownika, może uzyskać listę wszystkich dostępnych plików i folderów oraz pobrać ich zawartość. Nie może modyfikować plików. Może zatem odpowiadać na pytania dotyczące bieżącego projektu, plików projektu i kodu źródłowego w obszarze roboczym, np. jak zbudować projekt, gdzie umieścić kod źródłowy, gdzie znaleźć konkretny kod lub konfiguracje itp."
+          "description": "Asystent AI zintegrowany z Teacher IDE, zaprojektowany, aby pomagać programistom. Agent ten ma dostęp do obszaru roboczego użytkownika, może uzyskać listę wszystkich dostępnych plików i folderów oraz pobrać ich zawartość. Nie może modyfikować plików. Może zatem odpowiadać na pytania dotyczące bieżącego projektu, plików projektu i kodu źródłowego w obszarze roboczym, np. jak zbudować projekt, gdzie umieścić kod źródłowy, gdzie znaleźć konkretny kod lub konfiguracje itp."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "Menu jest wyświetlane jako kompaktowy przycisk na pasku bocznym. Ta wartość jest ignorowana, gdy {0} ma wartość {1}."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Wybierz katalog główny obszaru roboczego, aby dodać konfigurację do",
       "breakpoint": "breakpoint",
       "cannotRunToThisLocation": "Nie można uruchomić bieżącego wątku w określonej lokalizacji.",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "Wsparcie AI w Theia IDE jest już dostępne!",
+        "header": "Wsparcie AI w Teacher IDE jest już dostępne!",
         "openAIChatView": "Otwórz teraz widok czatu AI, aby dowiedzieć się, jak zacząć!"
       },
       "apiComparator": "{0} Zgodność API",

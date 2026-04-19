@@ -1030,7 +1030,7 @@
             "label": "Comando de IA",
             "message": "Executando callback com argumentos {0}. O primeiro argumento é o ID do comando registrado para o comando registrado dinamicamente. Os outros argumentos são os argumentos reais para o manipulador."
           },
-          "description": "Este agente está ciente de todos os comandos que o usuário pode executar dentro do Theia IDE, a ferramenta com a qual o usuário está trabalhando atualmente. Com base na solicitação do usuário, ele pode encontrar o comando certo e permitir que o usuário o execute.",
+          "description": "Este agente está ciente de todos os comandos que o usuário pode executar dentro do Teacher IDE, a ferramenta com a qual o usuário está trabalhando atualmente. Com base na solicitação do usuário, ele pode encontrar o comando certo e permitir que o usuário o execute.",
           "response": {
             "customHandler": "Tente executar isto:",
             "noCommand": "Desculpe, não consigo encontrar esse comando.",
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "Essa configuração permite que você configure e gerencie modelos LlamaFile no Theia IDE.            \n            Cada entrada requer um `nome` fácil de usar, o `uri` do arquivo apontando para o seu LlamaFile e a `porta` na qual ele será executado.            \n            Para iniciar um LlamaFile, use o comando “Iniciar LlamaFile”, que permite selecionar o modelo desejado.            \n            Se você editar uma entrada (por exemplo, alterar a porta), qualquer instância em execução será interrompida e você precisará iniciá-la manualmente novamente.            \n            [Saiba mais sobre como configurar e gerenciar LlamaFiles na documentação do Theia IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "Essa configuração permite que você configure e gerencie modelos LlamaFile no Teacher IDE.            \n            Cada entrada requer um `nome` fácil de usar, o `uri` do arquivo apontando para o seu LlamaFile e a `porta` na qual ele será executado.            \n            Para iniciar um LlamaFile, use o comando “Iniciar LlamaFile”, que permite selecionar o modelo desejado.            \n            Se você editar uma entrada (por exemplo, alterar a porta), qualquer instância em execução será interrompida e você precisará iniciá-la manualmente novamente.            \n            [Saiba mais sobre como configurar e gerenciar LlamaFiles na documentação do Teacher IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "O nome do modelo a ser usado para este Llamafile."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "Um assistente de IA integrado ao Theia IDE, projetado para auxiliar desenvolvedores de software. Esse agente pode acessar o espaço de trabalho do usuário, obter uma lista de todos os arquivos e pastas disponíveis e recuperar seu conteúdo. Além disso, ele pode sugerir modificações de arquivos ao usuário. Portanto, ele pode auxiliar o usuário em tarefas de codificação ou outras tarefas que envolvam alterações de arquivos."
+          "description": "Um assistente de IA integrado ao Teacher IDE, projetado para auxiliar desenvolvedores de software. Esse agente pode acessar o espaço de trabalho do usuário, obter uma lista de todos os arquivos e pastas disponíveis e recuperar seu conteúdo. Além disso, ele pode sugerir modificações de arquivos ao usuário. Portanto, ele pode auxiliar o usuário em tarefas de codificação ou outras tarefas que envolvam alterações de arquivos."
         },
         "considerGitignore": {
           "description": "Se ativado, exclui arquivos/pastas especificados em um arquivo .gitignore global (o local esperado é a raiz do espaço de trabalho).",
@@ -1506,7 +1506,7 @@
           "title": "Resultados máximos da pesquisa"
         },
         "workspaceAgent": {
-          "description": "Um assistente de IA integrado ao Theia IDE, projetado para auxiliar desenvolvedores de software. Esse agente pode acessar o espaço de trabalho do usuário, obter uma lista de todos os arquivos e pastas disponíveis e recuperar seu conteúdo. Ele não pode modificar arquivos. Portanto, ele pode responder a perguntas sobre o projeto atual, os arquivos do projeto e o código-fonte no espaço de trabalho, como por exemplo, como construir o projeto, onde colocar o código-fonte, onde encontrar códigos ou configurações específicas, etc."
+          "description": "Um assistente de IA integrado ao Teacher IDE, projetado para auxiliar desenvolvedores de software. Esse agente pode acessar o espaço de trabalho do usuário, obter uma lista de todos os arquivos e pastas disponíveis e recuperar seu conteúdo. Ele não pode modificar arquivos. Portanto, ele pode responder a perguntas sobre o projeto atual, os arquivos do projeto e o código-fonte no espaço de trabalho, como por exemplo, como construir o projeto, onde colocar o código-fonte, onde encontrar códigos ou configurações específicas, etc."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "O menu é exibido como um botão compacto na barra lateral. Este valor é ignorado quando {0} é {1}."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Selecione a raiz do espaço de trabalho para adicionar a configuração a",
       "breakpoint": "breakpoint",
       "cannotRunToThisLocation": "Não foi possível executar o thread atual no local especificado.",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "O suporte a IA no Theia IDE está disponível!",
+        "header": "O suporte a IA no Teacher IDE está disponível!",
         "openAIChatView": "Abra a Visualização do Chat de IA agora para saber como começar!"
       },
       "apiComparator": "{0} Compatibilidade com API",

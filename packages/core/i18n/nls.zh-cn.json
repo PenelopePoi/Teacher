@@ -501,7 +501,7 @@
       },
       "completion": {
         "agent": {
-          "description": "该代理为Theia IDE的代码编辑器提供内联代码补全功能。",
+          "description": "该代理为Teacher IDE的代码编辑器提供内联代码补全功能。",
           "vars": {
             "file": {
               "description": "正在编辑的文件的URI"
@@ -1030,7 +1030,7 @@
             "label": "AI命令",
             "message": "执行回调函数时传入参数{0}。第一个参数是动态注册命令对应的命令ID,其余参数为处理程序的实际参数。"
           },
-          "description": "该代理程序能识别用户在Theia IDE(用户当前使用的开发工具)中可执行的所有命令。根据用户请求,它能定位对应命令并引导用户执行。",
+          "description": "该代理程序能识别用户在Teacher IDE(用户当前使用的开发工具)中可执行的所有命令。根据用户请求,它能定位对应命令并引导用户执行。",
           "response": {
             "customHandler": "请尝试执行以下操作:",
             "noCommand": "抱歉,找不到这样的命令",
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "此设置允许您在Theia IDE中配置和管理LlamaFile模型。            \n            每个条目需包含:用户友好的`名称`、指向LlamaFile的文件`URI`以及运行端口`port`。            \n            启动LlamaFile时请使用\"启动LlamaFile\"命令,该命令支持选择目标模型。            \n            若编辑条目(如修改端口),所有运行实例将停止,需手动重新启动。            \n            [更多LlamaFile配置与管理指南详见Theia IDE文档](https://theia-ide.org/docs/user_ai/#llamafile-models)。",
+          "mdDescription": "此设置允许您在Teacher IDE中配置和管理LlamaFile模型。            \n            每个条目需包含:用户友好的`名称`、指向LlamaFile的文件`URI`以及运行端口`port`。            \n            启动LlamaFile时请使用\"启动LlamaFile\"命令,该命令支持选择目标模型。            \n            若编辑条目(如修改端口),所有运行实例将停止,需手动重新启动。            \n            [更多LlamaFile配置与管理指南详见Teacher IDE文档](https://theia-ide.org/docs/user_ai/#llamafile-models)。",
           "name": {
             "description": "此 Llamafile 应使用的模型名称。"
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "Theia IDE内置的AI助手,专为协助软件开发者设计。该智能体可访问用户工作区,获取所有可用文件及文件夹列表并检索其内容。此外,它能向用户建议文件修改方案,从而协助完成编码任务或其他涉及文件变更的操作。"
+          "description": "Teacher IDE内置的AI助手,专为协助软件开发者设计。该智能体可访问用户工作区,获取所有可用文件及文件夹列表并检索其内容。此外,它能向用户建议文件修改方案,从而协助完成编码任务或其他涉及文件变更的操作。"
         },
         "considerGitignore": {
           "description": "若启用此选项,将排除全局 .gitignore 文件(预期位置为工作区根目录)中指定的文件/文件夹。",
@@ -1506,7 +1506,7 @@
           "title": "最大搜索结果"
         },
         "workspaceAgent": {
-          "description": "Theia IDE内置的AI助手,专为协助软件开发者设计。该智能体可访问用户工作区,获取所有可用文件和文件夹列表并检索其内容,但无法修改文件。因此它能回答关于当前项目、项目文件及工作区源代码的问题,例如如何构建项目、源代码存放位置、特定代码或配置的查找路径等。"
+          "description": "Teacher IDE内置的AI助手,专为协助软件开发者设计。该智能体可访问用户工作区,获取所有可用文件和文件夹列表并检索其内容,但无法修改文件。因此它能回答关于当前项目、项目文件及工作区源代码的问题,例如如何构建项目、源代码存放位置、特定代码或配置的查找路径等。"
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "菜单以紧凑按钮形式显示在侧边栏中。当{0}设置为{1}时,此值将被忽略。"
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "选择工作区根目录以添加配置",
       "breakpoint": "断点",
       "cannotRunToThisLocation": "无法将当前线程运行至指定位置。",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "Theia IDE 的 AI 支持功能现已推出！",
+        "header": "Teacher IDE 的 AI 支持功能现已推出！",
         "openAIChatView": "立即打开AI聊天视图,了解如何开始！"
       },
       "apiComparator": "{0} API兼容性",

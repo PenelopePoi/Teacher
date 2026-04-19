@@ -51,7 +51,7 @@ export class CoderAgent extends AbstractModeAwareChatAgent {
     override iconClass: string = 'codicon codicon-code';
 
     override description = nls.localize('theia/ai/workspace/coderAgent/description',
-        'An AI assistant integrated into Theia IDE, designed to assist software developers. This agent can access the users workspace, it can get a list of all available files \
+        'An AI assistant integrated into Teacher IDE, designed to assist software developers. This agent can access the users workspace, it can get a list of all available files \
         and folders and retrieve their content. Furthermore, it can suggest modifications of files to the user. It can therefore assist the user with coding tasks or other \
         tasks involving file changes.');
 

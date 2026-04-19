@@ -26,7 +26,7 @@ export const aiIdePreferenceSchema: PreferenceSchema = {
         [PREFERENCE_NAME_ENABLE_AI]: {
             title: AI_CORE_PREFERENCES_TITLE,
             markdownDescription: '❗ ' + nls.localize('theia/ai/ide/enableAI/mdDescription',
-                'This setting allows you to access the AI capabilities of Theia IDE.\
+                'This setting allows you to access the AI capabilities of Teacher IDE.\
             \n\
             Please be aware that AI features may generate\
             continuous requests to the language models (LLMs) you provide access to. This might incur costs that you\

@@ -58,7 +58,7 @@ export class CommandChatAgent extends AbstractTextToModelParsingChatAgent<Parsed
     protected defaultLanguageModelPurpose: string = 'command';
 
     override description = nls.localize('theia/ai/ide/commandAgent/description',
-        'This agent is aware of all commands that the user can execute within the Theia IDE, the tool that the user is currently working with. ' +
+        'This agent is aware of all commands that the user can execute within the Teacher IDE, the tool that the user is currently working with. ' +
         'Based on the user request, it can find the right command and then let the user execute it.');
     override prompts = [commandTemplate];
     override agentSpecificVariables = [{

@@ -501,7 +501,7 @@
       },
       "completion": {
         "agent": {
-          "description": "Bu aracı, Theia IDE'deki kod düzenleyicide satır içi kod tamamlama özelliği sağlar.",
+          "description": "Bu aracı, Teacher IDE'deki kod düzenleyicide satır içi kod tamamlama özelliği sağlar.",
           "vars": {
             "file": {
               "description": "Düzenlenmekte olan dosyanın URI'si"
@@ -1030,7 +1030,7 @@
             "label": "AI komutu",
             "message": "{0} ile args ile geri çağırma yürütme. İlk arg, dinamik olarak kaydedilen komut için kaydedilen komut kimliğidir. Diğer args, işleyici için gerçek args'lardır."
           },
-          "description": "Bu ajan, kullanıcının şu anda çalıştığı araç olan Theia IDE içinde kullanıcının yürütebileceği tüm komutları bilir. Kullanıcı talebine göre doğru komutu bulabilir ve kullanıcının bunu yürütmesine izin verebilir.",
+          "description": "Bu ajan, kullanıcının şu anda çalıştığı araç olan Teacher IDE içinde kullanıcının yürütebileceği tüm komutları bilir. Kullanıcı talebine göre doğru komutu bulabilir ve kullanıcının bunu yürütmesine izin verebilir.",
           "response": {
             "customHandler": "Şunu deneyin:",
             "noCommand": "Üzgünüm, böyle bir komut bulamıyorum.",
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "Bu ayar, Theia IDE'de LlamaFile modellerini yapılandırmanıza ve yönetmenize olanak tanır.            \n            Her giriş için kullanıcı dostu bir `ad`, LlamaFile'ınızı gösteren dosya `uri` ve çalışacağı `bağlantı noktası` gereklidir.            \n            Bir LlamaFile'ı başlatmak için, istediğiniz modeli seçmenize olanak tanıyan \"LlamaFile'ı Başlat\" komutunu kullanın.            \n            Bir girişi düzenlerseniz (örneğin, bağlantı noktasını değiştirirseniz), çalışan tüm örnekler durur ve bunları manuel olarak yeniden başlatmanız gerekir.            \n            [Theia IDE belgelerinde LlamaFiles'ı yapılandırma ve yönetme hakkında daha fazla bilgi edinin](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "Bu ayar, Teacher IDE'de LlamaFile modellerini yapılandırmanıza ve yönetmenize olanak tanır.            \n            Her giriş için kullanıcı dostu bir `ad`, LlamaFile'ınızı gösteren dosya `uri` ve çalışacağı `bağlantı noktası` gereklidir.            \n            Bir LlamaFile'ı başlatmak için, istediğiniz modeli seçmenize olanak tanıyan \"LlamaFile'ı Başlat\" komutunu kullanın.            \n            Bir girişi düzenlerseniz (örneğin, bağlantı noktasını değiştirirseniz), çalışan tüm örnekler durur ve bunları manuel olarak yeniden başlatmanız gerekir.            \n            [Teacher IDE belgelerinde LlamaFiles'ı yapılandırma ve yönetme hakkında daha fazla bilgi edinin](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "Bu Llamafile için kullanılacak model adı."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "Yazılım geliştiricilere yardımcı olmak için tasarlanmış, Theia IDE'ye entegre bir AI asistanı. Bu ajan, kullanıcıların çalışma alanına erişebilir, mevcut tüm dosya ve klasörlerin listesini alabilir ve bunların içeriğini geri getirebilir. Ayrıca, kullanıcıya dosya değişiklikleri önerebilir. Böylece, kullanıcıya kodlama görevlerinde veya dosya değişikliklerini içeren diğer görevlerde yardımcı olabilir."
+          "description": "Yazılım geliştiricilere yardımcı olmak için tasarlanmış, Teacher IDE'ye entegre bir AI asistanı. Bu ajan, kullanıcıların çalışma alanına erişebilir, mevcut tüm dosya ve klasörlerin listesini alabilir ve bunların içeriğini geri getirebilir. Ayrıca, kullanıcıya dosya değişiklikleri önerebilir. Böylece, kullanıcıya kodlama görevlerinde veya dosya değişikliklerini içeren diğer görevlerde yardımcı olabilir."
         },
         "considerGitignore": {
           "description": "Etkinleştirildiğinde, global .gitignore dosyasında (beklenen konum çalışma alanı köküdür) belirtilen dosya/klasörleri hariç tutar.",
@@ -1506,7 +1506,7 @@
           "title": "Maksimum Arama Sonuçları"
         },
         "workspaceAgent": {
-          "description": "Theia IDE'ye entegre edilmiş, yazılım geliştiricilere yardımcı olmak için tasarlanmış bir AI asistanı. Bu ajan, kullanıcıların çalışma alanına erişebilir, mevcut tüm dosya ve klasörlerin listesini alabilir ve bunların içeriğini geri getirebilir. Dosyaları değiştiremez. Bu nedenle, mevcut proje, proje dosyaları ve çalışma alanındaki kaynak kodu ile ilgili sorular, örneğin projenin nasıl oluşturulacağı, kaynak kodunun nereye konulacağı, belirli kod veya yapılandırmaların nerede bulunacağı vb. gibi soruların yanıtlarını verebilir."
+          "description": "Teacher IDE'ye entegre edilmiş, yazılım geliştiricilere yardımcı olmak için tasarlanmış bir AI asistanı. Bu ajan, kullanıcıların çalışma alanına erişebilir, mevcut tüm dosya ve klasörlerin listesini alabilir ve bunların içeriğini geri getirebilir. Dosyaları değiştiremez. Bu nedenle, mevcut proje, proje dosyaları ve çalışma alanındaki kaynak kodu ile ilgili sorular, örneğin projenin nasıl oluşturulacağı, kaynak kodunun nereye konulacağı, belirli kod veya yapılandırmaların nerede bulunacağı vb. gibi soruların yanıtlarını verebilir."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "Menü, yan çubukta kompakt bir düğme olarak görüntülenir. Bu değer, {0} {1} olduğunda yok sayılır."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Yapılandırmayı eklemek için çalışma alanı kökünü seçin.",
       "breakpoint": "breakpoint",
       "cannotRunToThisLocation": "Geçerli iş parçacığını belirtilen konuma çalıştıramadı.",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "Theia IDE'de AI Desteği mevcuttur!",
+        "header": "Teacher IDE'de AI Desteği mevcuttur!",
         "openAIChatView": "Başlamak için şimdi AI Sohbet Görünümünü açın!"
       },
       "apiComparator": "{0} API Uyumluluğu",

@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "Questa impostazione consente di configurare e gestire i modelli LlamaFile in Theia IDE.            \n            Ogni voce richiede un `nome` intuitivo, il file `uri` che punta al proprio LlamaFile e la `porta` su cui verrà eseguito.            \n            Per avviare un LlamaFile, utilizzare il comando \"Avvia LlamaFile\", che consente di selezionare il modello desiderato.            \n            Se si modifica una voce (ad esempio, cambiando la porta), qualsiasi istanza in esecuzione si interromperà e sarà necessario riavviarla manualmente.            \n            [Maggiori informazioni sulla configurazione e la gestione dei LlamaFile sono disponibili nella documentazione di Theia IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "Questa impostazione consente di configurare e gestire i modelli LlamaFile in Teacher IDE.            \n            Ogni voce richiede un `nome` intuitivo, il file `uri` che punta al proprio LlamaFile e la `porta` su cui verrà eseguito.            \n            Per avviare un LlamaFile, utilizzare il comando \"Avvia LlamaFile\", che consente di selezionare il modello desiderato.            \n            Se si modifica una voce (ad esempio, cambiando la porta), qualsiasi istanza in esecuzione si interromperà e sarà necessario riavviarla manualmente.            \n            [Maggiori informazioni sulla configurazione e la gestione dei LlamaFile sono disponibili nella documentazione di Teacher IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "Il nome del modello da utilizzare per questo Llamafile."
           },
@@ -1506,7 +1506,7 @@
           "title": "Risultati di ricerca massimi"
         },
         "workspaceAgent": {
-          "description": "Un assistente AI integrato in Theia IDE, progettato per assistere gli sviluppatori di software. Questo agente può accedere all'area di lavoro degli utenti, ottenere un elenco di tutti i file e le cartelle disponibili e recuperarne il contenuto. Non può modificare i file. Può quindi rispondere a domande sul progetto corrente, sui file di progetto e sul codice sorgente nell'area di lavoro, ad esempio come compilare il progetto, dove inserire il codice sorgente, dove trovare codice o configurazioni specifici, ecc."
+          "description": "Un assistente AI integrato in Teacher IDE, progettato per assistere gli sviluppatori di software. Questo agente può accedere all'area di lavoro degli utenti, ottenere un elenco di tutti i file e le cartelle disponibili e recuperarne il contenuto. Non può modificare i file. Può quindi rispondere a domande sul progetto corrente, sui file di progetto e sul codice sorgente nell'area di lavoro, ad esempio come compilare il progetto, dove inserire il codice sorgente, dove trovare codice o configurazioni specifici, ecc."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "Il menu viene visualizzato come un pulsante compatto nella barra laterale. Questo valore viene ignorato quando {0} è {1}."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Selezionare la radice dell'area di lavoro per aggiungere la configurazione a",
       "breakpoint": "breakpoint",
       "cannotRunToThisLocation": "Impossibile eseguire il thread corrente nella posizione specificata.",

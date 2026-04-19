@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "Esta configuración le permite configurar y gestionar modelos LlamaFile en Theia IDE.            \n            Cada entrada requiere un «nombre» fácil de usar, el «uri» del archivo que apunta a su LlamaFile y el «puerto» en el que se ejecutará.            \n            Para iniciar un LlamaFile, utilice el comando «Iniciar LlamaFile», que le permite seleccionar el modelo deseado.            \n            Si edita una entrada (por ejemplo, cambia el puerto), cualquier instancia en ejecución se detendrá y deberá volver a iniciarla manualmente.            \n            [Más información sobre la configuración y gestión de LlamaFiles en la documentación de Theia IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "Esta configuración le permite configurar y gestionar modelos LlamaFile en Teacher IDE.            \n            Cada entrada requiere un «nombre» fácil de usar, el «uri» del archivo que apunta a su LlamaFile y el «puerto» en el que se ejecutará.            \n            Para iniciar un LlamaFile, utilice el comando «Iniciar LlamaFile», que le permite seleccionar el modelo deseado.            \n            Si edita una entrada (por ejemplo, cambia el puerto), cualquier instancia en ejecución se detendrá y deberá volver a iniciarla manualmente.            \n            [Más información sobre la configuración y gestión de LlamaFiles en la documentación de Teacher IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "El nombre del modelo que se utilizará para este Llamafile."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "Un asistente de IA integrado en Theia IDE, diseñado para ayudar a los desarrolladores de software. Este agente puede acceder al espacio de trabajo de los usuarios, obtener una lista de todos los archivos y carpetas disponibles y recuperar su contenido. Además, puede sugerir modificaciones de los archivos al usuario. Por lo tanto, puede ayudar al usuario con tareas de codificación u otras tareas que impliquen cambios en los archivos."
+          "description": "Un asistente de IA integrado en Teacher IDE, diseñado para ayudar a los desarrolladores de software. Este agente puede acceder al espacio de trabajo de los usuarios, obtener una lista de todos los archivos y carpetas disponibles y recuperar su contenido. Además, puede sugerir modificaciones de los archivos al usuario. Por lo tanto, puede ayudar al usuario con tareas de codificación u otras tareas que impliquen cambios en los archivos."
         },
         "considerGitignore": {
           "description": "Si está habilitado, excluye los archivos/carpetas especificados en un archivo .gitignore global (la ubicación prevista es la raíz del espacio de trabajo).",
@@ -1506,7 +1506,7 @@
           "title": "Resultados máximos de búsqueda"
         },
         "workspaceAgent": {
-          "description": "Un asistente de IA integrado en Theia IDE, diseñado para ayudar a los desarrolladores de software. Este agente puede acceder al espacio de trabajo de los usuarios, obtener una lista de todos los archivos y carpetas disponibles y recuperar su contenido. No puede modificar archivos. Por lo tanto, puede responder a preguntas sobre el proyecto actual, los archivos del proyecto y el código fuente en el espacio de trabajo, como por ejemplo, cómo construir el proyecto, dónde colocar el código fuente, dónde encontrar código o configuraciones específicas, etc."
+          "description": "Un asistente de IA integrado en Teacher IDE, diseñado para ayudar a los desarrolladores de software. Este agente puede acceder al espacio de trabajo de los usuarios, obtener una lista de todos los archivos y carpetas disponibles y recuperar su contenido. No puede modificar archivos. Por lo tanto, puede responder a preguntas sobre el proyecto actual, los archivos del proyecto y el código fuente en el espacio de trabajo, como por ejemplo, cómo construir el proyecto, dónde colocar el código fuente, dónde encontrar código o configuraciones específicas, etc."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "El menú se muestra como un botón compacto en la barra lateral. Este valor se ignora cuando {0} es {1}."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Seleccione la raíz del espacio de trabajo para añadir la configuración a",
       "breakpoint": "punto de interrupción",
       "cannotRunToThisLocation": "No se pudo ejecutar el subproceso actual en la ubicación especificada.",

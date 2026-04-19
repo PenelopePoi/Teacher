@@ -501,7 +501,7 @@
       },
       "completion": {
         "agent": {
-          "description": "此代理程式為 Theia IDE 中的程式碼編輯器提供內嵌式程式碼完成功能。",
+          "description": "此代理程式為 Teacher IDE 中的程式碼編輯器提供內嵌式程式碼完成功能。",
           "vars": {
             "file": {
               "description": "正在編輯的檔案之 URI"
@@ -1030,7 +1030,7 @@
             "label": "AI指令",
             "message": "執行回調函式時傳遞參數:{0}。首個參數為動態註冊指令所對應的指令識別碼,其餘參數則為處理函式實際接收的操作參數。"
           },
-          "description": "此代理程式能識別使用者在 Theia IDE(使用者當前操作的工具)中可執行的所有指令。根據使用者請求,它能找出正確指令並讓使用者執行。",
+          "description": "此代理程式能識別使用者在 Teacher IDE(使用者當前操作的工具)中可執行的所有指令。根據使用者請求,它能找出正確指令並讓使用者執行。",
           "response": {
             "customHandler": "請嘗試執行以下指令:",
             "noCommand": "抱歉,我找不到這樣的指令",
@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "此設定可讓您在 Theia IDE 中配置與管理 LlamaFile 模型。            \n            每個項目需具備易於辨識的 `名稱`、指向 LlamaFile 的檔案 `URI`,以及其運作的 `連接埠`。            \n            啟動 LlamaFile 時,請使用「啟動 LlamaFile」指令,該指令可讓您選擇所需模型。            \n            若編輯項目(例如變更端口),所有運行中的實例將停止,需手動重新啟動。            \n            [深入了解 Theia IDE 中 LlamaFile 的配置與管理](https://theia-ide.org/docs/user_ai/#llamafile-models)。",
+          "mdDescription": "此設定可讓您在 Teacher IDE 中配置與管理 LlamaFile 模型。            \n            每個項目需具備易於辨識的 `名稱`、指向 LlamaFile 的檔案 `URI`,以及其運作的 `連接埠`。            \n            啟動 LlamaFile 時,請使用「啟動 LlamaFile」指令,該指令可讓您選擇所需模型。            \n            若編輯項目(例如變更端口),所有運行中的實例將停止,需手動重新啟動。            \n            [深入了解 Teacher IDE 中 LlamaFile 的配置與管理](https://theia-ide.org/docs/user_ai/#llamafile-models)。",
           "name": {
             "description": "此 Llamafile 應使用的模型名稱。"
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "整合於 Theia IDE 的人工智慧助理,專為協助軟體開發者設計。此代理程式可存取使用者工作區,能取得所有可用檔案與資料夾清單並檢索其內容。此外,它可向使用者建議檔案修改方案,從而協助執行編碼任務或其他涉及檔案變更的工作。"
+          "description": "整合於 Teacher IDE 的人工智慧助理,專為協助軟體開發者設計。此代理程式可存取使用者工作區,能取得所有可用檔案與資料夾清單並檢索其內容。此外,它可向使用者建議檔案修改方案,從而協助執行編碼任務或其他涉及檔案變更的工作。"
         },
         "considerGitignore": {
           "description": "若啟用此設定,將排除全域 .gitignore 檔案(預期位置為工作區根目錄)中指定的檔案/資料夾。",
@@ -1506,7 +1506,7 @@
           "title": "最大搜尋結果"
         },
         "workspaceAgent": {
-          "description": "整合於 Theia IDE 的人工智慧助理,專為協助軟體開發者設計。此代理程式可存取使用者工作區,能取得所有可用檔案與資料夾清單並檢索其內容,但無法修改檔案。因此可回答關於當前專案、專案檔案及工作區內原始碼的相關問題,例如如何建置專案、原始碼存放位置、特定程式碼或設定檔所在位置等。"
+          "description": "整合於 Teacher IDE 的人工智慧助理,專為協助軟體開發者設計。此代理程式可存取使用者工作區,能取得所有可用檔案與資料夾清單並檢索其內容,但無法修改檔案。因此可回答關於當前專案、專案檔案及工作區內原始碼的相關問題,例如如何建置專案、原始碼存放位置、特定程式碼或設定檔所在位置等。"
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "選單以緊湊按鈕形式顯示於側邊欄。當{0}設定為{1}時,此值將被忽略。"
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "選擇工作區根目錄以新增設定至",
       "breakpoint": "中斷點",
       "cannotRunToThisLocation": "無法將當前執行緒移至指定位置。",
@@ -1893,7 +1893,7 @@
     },
     "getting-started": {
       "ai": {
-        "header": "Theia IDE 的 AI 支援功能現已開放使用！",
+        "header": "Teacher IDE 的 AI 支援功能現已開放使用！",
         "openAIChatView": "立即開啟 AI 聊天視窗,學習如何開始！"
       },
       "apiComparator": "{0} API 相容性",

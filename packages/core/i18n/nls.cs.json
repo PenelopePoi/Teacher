@@ -1174,7 +1174,7 @@
       },
       "llamaFile": {
         "prefs": {
-          "mdDescription": "Toto nastavení umožňuje konfigurovat a spravovat modely LlamaFile v Theia IDE.            \n            Každý záznam vyžaduje uživatelsky přívětivé „jméno“, soubor „uri“ odkazující na váš LlamaFile a „port“, na kterém bude spuštěn.            \n            Chcete-li spustit LlamaFile, použijte příkaz „Start LlamaFile“, který vám umožní vybrat požadovaný model.            \n            Pokud upravíte záznam (např. změníte port), všechny spuštěné instance se zastaví a budete je muset ručně spustit znovu.            \n            [Více informací o konfiguraci a správě LlamaFiles najdete v dokumentaci Theia IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
+          "mdDescription": "Toto nastavení umožňuje konfigurovat a spravovat modely LlamaFile v Teacher IDE.            \n            Každý záznam vyžaduje uživatelsky přívětivé „jméno“, soubor „uri“ odkazující na váš LlamaFile a „port“, na kterém bude spuštěn.            \n            Chcete-li spustit LlamaFile, použijte příkaz „Start LlamaFile“, který vám umožní vybrat požadovaný model.            \n            Pokud upravíte záznam (např. změníte port), všechny spuštěné instance se zastaví a budete je muset ručně spustit znovu.            \n            [Více informací o konfiguraci a správě LlamaFiles najdete v dokumentaci Teacher IDE](https://theia-ide.org/docs/user_ai/#llamafile-models).",
           "name": {
             "description": "Název modelu, který se má použít pro tento soubor Llamafile."
           },
@@ -1481,7 +1481,7 @@
       },
       "workspace": {
         "coderAgent": {
-          "description": "AI asistent integrovaný do Theia IDE, navržený pro pomoc softwarovým vývojářům. Tento agent má přístup k pracovnímu prostoru uživatele, může získat seznam všech dostupných souborů a složek a načíst jejich obsah. Dále může uživateli navrhovat úpravy souborů. Může tedy uživateli pomáhat s úkoly souvisejícími s kódováním nebo jinými úkoly zahrnujícími změny souborů."
+          "description": "AI asistent integrovaný do Teacher IDE, navržený pro pomoc softwarovým vývojářům. Tento agent má přístup k pracovnímu prostoru uživatele, může získat seznam všech dostupných souborů a složek a načíst jejich obsah. Dále může uživateli navrhovat úpravy souborů. Může tedy uživateli pomáhat s úkoly souvisejícími s kódováním nebo jinými úkoly zahrnujícími změny souborů."
         },
         "considerGitignore": {
           "description": "Pokud je tato možnost povolena, vylučuje soubory/složky uvedené v globálním souboru .gitignore (očekávané umístění je kořenový adresář pracovního prostoru).",
@@ -1506,7 +1506,7 @@
           "title": "Maximální počet výsledků vyhledávání"
         },
         "workspaceAgent": {
-          "description": "AI asistent integrovaný do Theia IDE, navržený pro pomoc softwarovým vývojářům. Tento agent má přístup k pracovnímu prostoru uživatele, může získat seznam všech dostupných souborů a složek a načíst jejich obsah. Nemůže však soubory upravovat. Může proto odpovídat na otázky týkající se aktuálního projektu, projektových souborů a zdrojového kódu v pracovním prostoru, například jak sestavit projekt, kam umístit zdrojový kód, kde najít konkrétní kód nebo konfigurace atd."
+          "description": "AI asistent integrovaný do Teacher IDE, navržený pro pomoc softwarovým vývojářům. Tento agent má přístup k pracovnímu prostoru uživatele, může získat seznam všech dostupných souborů a složek a načíst jejich obsah. Nemůže však soubory upravovat. Může proto odpovídat na otázky týkající se aktuálního projektu, projektových souborů a zdrojového kódu v pracovním prostoru, například jak sestavit projekt, kam umístit zdrojový kód, kde najít konkrétní kód nebo konfigurace atd."
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "window.menuBarVisibility": "Nabídka se zobrazuje jako kompaktní tlačítko v postranní liště. Tato hodnota se ignoruje, pokud je {0} {1}."
     },
     "debug": {
-      "TheiaIDE": "Theia IDE",
+      "TheiaIDE": "Teacher IDE",
       "addConfigurationPlaceholder": "Vyberte kořenový adresář pracovního prostoru, do kterého chcete přidat konfiguraci.",
       "breakpoint": "breakpoint",
       "cannotRunToThisLocation": "Nelze spustit aktuální vlákno na zadaném místě.",

@@ -98,7 +98,7 @@ Search the internet for XYZ
 ### More Information
 
 [Theia AI MCP UI README](https://github.com/eclipse-theia/theia/tree/master/packages/ai-mcp-ui)
-[User documentation on MCP in the Theia IDE](https://theia-ide.org/docs/user_ai/#mcp-integration)
+[User documentation on MCP in the Teacher IDE](https://theia-ide.org/docs/user_ai/#mcp-integration)
 [List of available MCP servers](https://github.com/modelcontextprotocol/servers)
 
 ## Additional Information
