@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
+  <defs>
+    <linearGradient id="teacherGradW" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a5b4fc"/>
+      <stop offset="100%" style="stop-color:#c4b5fd"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="120" fill="transparent"/>
+  <!-- Book/code icon -->
+  <g transform="translate(20,15)">
+    <path d="M10 90 L10 10 Q10 5 15 5 L55 5 Q60 5 60 10 L60 80 Q60 85 55 85 L15 85 Q10 85 10 90 Z" fill="url(#teacherGradW)" opacity="0.9"/>
+    <path d="M60 10 L60 80 Q60 85 65 85 L80 85 Q85 85 85 80 L85 15 Q85 10 80 10 Z" fill="url(#teacherGradW)" opacity="0.7"/>
+    <text x="30" y="52" font-family="monospace" font-size="22" fill="#1e1b4b" text-anchor="middle">&lt;/&gt;</text>
+  </g>
+  <!-- Teacher text -->
+  <text x="130" y="75" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="52" fill="#ffffff" letter-spacing="-1">Teacher</text>
+  <text x="131" y="100" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="14" fill="#c4b5fd">AI-Powered Learning IDE</text>
+</svg>

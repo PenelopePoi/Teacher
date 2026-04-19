@@ -1,126 +1,157 @@
 <br/>
-<div id="theia-logo" align="center">
+<div id="teacher-logo" align="center">
     <br />
-    <img src="https://raw.githubusercontent.com/eclipse-theia/theia/master/logo/theia-logo-gray.svg?sanitize=true" alt="Theia Logo" width="300"/>
-    <h3>Cloud & Desktop IDE Framework</h3>
+    <img src="logo/teacher-logo.svg" alt="Teacher Logo" width="400"/>
+    <h3>AI-Powered Learning IDE</h3>
+    <p><em>From Pain to Purpose. From Passion to Prophet.</em></p>
 </div>
 
 <div id="badges" align="center">
 
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-curved)](https://github.com/eclipse-theia/theia/labels/help%20wanted)
-  [![Build Status](https://github.com/eclipse-theia/theia/actions/workflows/ci-cd.yml/badge.svg?branch=master)](https://github.com/eclipse-theia/theia/actions/workflows/ci-cd.yml?query=branch%3Amaster)
-  [![Publish VS Code Built-in Extensions](https://github.com/eclipse-theia/vscode-builtin-extensions/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/eclipse-theia/vscode-builtin-extensions/actions/workflows/build.yml?query=branch%3Amaster)
-  [![Open questions](https://img.shields.io/badge/Open-questions-blue.svg?style=flat-curved)](https://github.com/eclipse-theia/theia/discussions/categories/q-a)
-  [![Open bugs](https://img.shields.io/badge/Open-bugs-red.svg?style=flat-curved)](https://github.com/eclipse-theia/theia/labels/bug)
+  [![Built on Theia](https://img.shields.io/badge/Built_on-Eclipse_Theia-blue.svg?style=flat-curved)](https://theia-ide.org)
+  [![License](https://img.shields.io/badge/License-EPL_2.0-brightgreen.svg?style=flat-curved)](LICENSE-EPL)
 
-Eclipse Theia is an extensible framework to develop full-fledged multi-language Cloud & Desktop IDEs and tools with state-of-the-art web technologies.
+**Teacher** is a full-featured, AI-enhanced IDE built on [Eclipse Theia](https://theia-ide.org) — designed to make learning to code accessible, guided, and real. Not a toy. Not a tutorial. A professional-grade development environment that teaches you while you build.
 
 </div>
 
-- [Website](#website)
-- [Repositories](#repositories)
-- [Releases](#releases)
-- [Scope](#scope)
-- [Roadmap](#roadmap)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [Feedback](#feedback)
-- [Documentation](#documentation)
-- [License](#license)
-- [Trademark](#trademark)
+---
 
-<div style='margin:0 auto;width:60%;'>
+## What is Teacher?
 
-![Theia](https://raw.githubusercontent.com/eclipse-theia/theia/master/doc/images/theia-screenshot.png)
+Teacher is a fork of Eclipse Theia, customized as an educational IDE that pairs real software development with AI-powered guidance. It supports VS Code extensions, multiple languages, and runs in the browser or as a desktop app.
 
-</div>
+**Key differences from upstream Theia:**
+- AI tutoring integration — contextual explanations, not just autocomplete
+- Curriculum-aware workspace templates
+- Progress tracking and skill assessment
+- Accessibility-first design
+- Built for nonprofit educational use (Aurality Foundation)
 
-## Website
+## Features
 
-[Visit the Eclipse Theia website](http://www.theia-ide.org) for more information and [the Theia documentation](http://www.theia-ide.org/docs).
+- Full IDE capabilities (syntax highlighting, debugging, terminal, git, extensions)
+- VS Code extension compatibility
+- Browser-based and desktop (Electron) modes
+- Multi-language support
+- InversifyJS dependency injection architecture
+- Plugin system for extensibility
 
-## Repositories
+## Quick Start
 
-This is the main repository for the Eclipse Theia project, containing the sources of the Theia Platform. Please open generic discussions, bug reports and feature requests about Theia on this repository. The Theia project also includes additional repositories, e.g. for the [artifacts building the Theia IDE](https://github.com/eclipse-theia/theia-blueprint) and the [Theia website](https://github.com/eclipse-theia/theia-website). Please also see the [overview of all Theia project repositories](https://github.com/eclipse-theia).
+### Prerequisites
 
-## Releases
+- Node.js >= 20
+- npm
 
-- [All available releases](https://github.com/eclipse-theia/theia/releases) are available on GitHub including changelogs.
-- [Detailed release announcements](https://theia-ide.org/resources/) are linked on the Theia website.
-- [Community Releases](https://theia-ide.org/releases/) are listed on the Theia website.
-- [Visit the release website](https://theia-ide.org/releases/) for more information.
+### Install & Run (Browser)
 
-## Scope
+```bash
+npm install
+npm run build:browser
+npm run start:browser
+```
 
-- Support building browser-based and desktop IDEs and tools
-- Provide a highly flexible architecture for adopters
-- Support VS Code Extension protocol
-- Develop under vendor-neutral open-source governance
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-[More details on the project goals](https://theia-ide.org/docs/project_goals/) are available on the Theia website.
+### Run as Desktop App
 
-## Roadmap
+```bash
+npm install
+npm run build:electron
+npm run start:electron
+```
 
-See [our roadmap](https://github.com/eclipse-theia/theia/wiki/Eclipse-Theia-Roadmap) for an overview about the current project goals and the upcoming releases.
+## Deployment
 
-## Getting Started
+> **Teacher is a full-stack IDE — it cannot deploy to serverless platforms like Vercel.**
+> It requires persistent WebSockets, a writable filesystem, and long-running processes.
 
-Here you can find guides and examples for common scenarios to adopt Theia:
+| Mode | How |
+|---|---|
+| **Desktop** | Build Electron binaries via [Theia Blueprint](https://github.com/eclipse-theia/theia-blueprint) |
+| **Self-hosted browser** | Docker container on Fly.io, Railway, Render, DigitalOcean, or any VPS |
+| **Managed cloud IDE** | Gitpod, Coder, or Eclipse Che |
+| **Marketing site** | A static landing page *can* deploy to Vercel/Netlify |
 
-- [Get an overview of how to get started](https://theia-ide.org/#gettingstarted) on the Theia website
-- [Develop a Theia application - your own IDE/Tool](https://theia-ide.org/docs/composing_applications/)
-- [Learn about Theia's extension mechanisms](https://theia-ide.org/docs/extensions/)
-- [Develop a VS Code like extension](https://theia-ide.org/docs/authoring_vscode_extensions/)
-- [Develop a Theia extension](https://theia-ide.org/docs/authoring_extensions/)
-- [Test a VS Code extension in Theia](https://github.com/eclipse-theia/theia/wiki/Testing-VS-Code-extensions)
-- [Package a desktop Theia application with Electron](https://theia-ide.org/docs/blueprint_documentation/)
+### Docker (Self-hosted)
+
+```dockerfile
+FROM node:20-slim
+WORKDIR /app
+COPY . .
+RUN npm install && npm run build:browser
+EXPOSE 3000
+CMD ["npm", "run", "start:browser"]
+```
+
+## Architecture
+
+```
+Teacher (Theia Fork)
+├── packages/          # 77 runtime packages (core + extensions)
+│   ├── core/          # Platform foundation
+│   ├── editor/        # Editor framework
+│   ├── monaco/        # Monaco editor integration
+│   ├── terminal/      # Terminal emulator
+│   ├── plugin-ext/    # Plugin API implementation
+│   └── ...
+├── dev-packages/      # Build tooling
+├── examples/          # Sample apps (browser, electron)
+├── configs/           # Shared TypeScript, ESLint, Mocha configs
+└── logo/              # Teacher branding assets
+```
+
+**Per-package code organization:**
+- `src/common/` — Shared APIs (runs everywhere)
+- `src/browser/` — Browser/DOM APIs
+- `src/node/` — Node.js backend APIs
+- `src/electron-browser/` — Electron renderer
+- `src/electron-main/` — Electron main process
+
+## Development
+
+```bash
+# Watch mode (auto-rebuild on changes)
+npm run watch
+
+# Compile TypeScript only
+npm run compile
+
+# Lint
+npm run lint
+
+# Run tests
+npm run test
+
+# Build specific package
+npx lerna run compile --scope @theia/core
+```
+
+See [doc/Developing.md](doc/Developing.md) for the full development guide.
 
 ## Contributing
 
-Read below to learn how to take part in improving Theia:
+1. Fork the repository
+2. Follow the [coding guidelines](doc/coding-guidelines.md)
+3. Read the [Code of Conduct](CODE_OF_CONDUCT.md)
+4. Submit a pull request
 
-- Fork the repository and [run the examples from source](doc/Developing.md#quick-start)
-- Get familiar with [the development workflow](doc/Developing.md), [Coding Guidelines](doc/coding-guidelines.md), [Code of Conduct](CODE_OF_CONDUCT.md) and [sign the Eclipse contributor agreement](CONTRIBUTING.md#eclipse-contributor-agreement)
-- Find an issue to work on and submit a pull request
-  - First time contributing to open source? Pick a [good first issue](https://github.com/eclipse-theia/theia/labels/good%20first%20issue) to get you familiar with GitHub contributing process.
-  - First time contributing to Theia? Pick a [beginner friendly issue](https://github.com/eclipse-theia/theia/labels/beginners) to get you familiar with codebase and our contributing process.
-  - Want to become a Committer? Solve an issue showing that you understand Theia objectives and architecture. [Here](https://github.com/eclipse-theia/theia/labels/help%20wanted) is a good list to start. Further, have a look at our [roadmap](https://github.com/eclipse-theia/theia/wiki/Eclipse-Theia-Roadmap) to align your contributions with the current project goals.
-- Could not find an issue? Look for bugs, typos, and missing features.
+## Upstream
 
-## Feedback
-
-Read below how to engage with Theia community:
-
-- Join the discussion on [GitHub](https://github.com/eclipse-theia/theia/discussions).
-- Ask a question, request a new feature and file a bug with [GitHub issues](https://github.com/eclipse-theia/theia/issues/new/choose).
-- Vote on existing GitHub issues by reacting with a 👍. We regularly check issues with votes!
-- Star the repository to show your support.
-- Follow Theia on [X](https://x.com/theia_ide).
-- Join the [weekly developer call](https://github.com/eclipse-theia/theia/wiki/Dev-Meetings)
-
-## Documentation
-
-- [API Documentation](https://eclipse-theia.github.io/theia/docs/next/index.html)
-- [General Documentation](https://theia-ide.org/docs/)
-- [VS Code API Compatibility Report](https://eclipse-theia.github.io/vscode-theia-comparator/status.html)
-- Useful Links:
-  - [Developing](doc/Developing.md)
-  - [Testing](doc/Testing.md)
-  - [Migration Guide](doc/Migration.md)
-  - [API Integration Testing](doc/api-testing.md)
-  - [Coding Guidelines](doc/coding-guidelines.md)
-  - [Code Organization](doc/code-organization.md)
-  - [Plugin and VSCode API](doc/Plugin-API.md)
-
-## SBOM
-
-To enhance supply chain security and offer users clear insight into project  components, Eclipse Theia now generates a Software Bill of Materials (SBOM) for every release. These are published to the Eclipse Foundation SBOM registry, with access instructions and usage details available in this [documentation](https://eclipse-csi.github.io/security-handbook/sbom/registry.html).
+Teacher tracks [Eclipse Theia](https://github.com/eclipse-theia/theia) upstream. Core framework updates are pulled periodically.
 
 ## License
 
 - [Eclipse Public License 2.0](LICENSE-EPL)
-- [一 (Secondary) GNU General Public License, version 2 with the GNU Classpath Exception](LICENSE-GPL-2.0-ONLY-CLASSPATH-EXCEPTION)
+- [GNU GPL v2.0 with Classpath Exception](LICENSE-GPL-2.0-ONLY-CLASSPATH-EXCEPTION)
 
 ## Trademark
 
-"Theia" is a **trademark of the Eclipse Foundation**. [Learn More](https://www.eclipse.org/theia)
+"Theia" is a trademark of the Eclipse Foundation. Teacher is an independent fork and is not affiliated with or endorsed by the Eclipse Foundation.
+
+---
+
+<div align="center">
+  <sub>Built by <a href="https://xelabrandingstudio.com">XELA Creative Branding Studio</a></sub>
+</div>
