@@ -1,0 +1,25 @@
+{
+    "id": "hello-world",
+    "title": "Your First Program",
+    "objectives": [
+        "Understand what a program is and how Python executes code",
+        "Use the print() function to display output",
+        "Write and run a complete Python script"
+    ],
+    "hints": [
+        "The print() function displays text to the console. Try: print('something')",
+        "Strings in Python are wrapped in quotes — single or double quotes both work",
+        "Look at the TODO comments in main.py for exactly what to fill in"
+    ],
+    "assessmentCriteria": [
+        "Program runs without errors",
+        "Output includes a personalized greeting",
+        "Output includes a statement about what the student wants to learn"
+    ],
+    "estimatedMinutes": 15,
+    "prerequisiteSkills": [],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "python -m pytest test_main.py -v"
+    }
+}

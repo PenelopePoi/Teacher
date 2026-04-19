@@ -1,0 +1,26 @@
+{
+    "id": "conditionals",
+    "title": "Making Decisions with If/Else",
+    "objectives": [
+        "Write if, elif, and else statements",
+        "Use comparison operators (==, !=, <, >, <=, >=)",
+        "Combine conditions with and, or, not",
+        "Build a simple decision-making program"
+    ],
+    "hints": [
+        "An if statement checks a condition: if age >= 18: print('adult')",
+        "Use elif for additional conditions, else for the fallback case",
+        "Combine conditions: if age >= 13 and age < 18: print('teenager')"
+    ],
+    "assessmentCriteria": [
+        "Program uses if/elif/else correctly",
+        "Comparison operators produce correct boolean results",
+        "Edge cases are handled"
+    ],
+    "estimatedMinutes": 30,
+    "prerequisiteSkills": ["Variables", "Data types", "print() function"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "python -m pytest test_main.py -v"
+    }
+}

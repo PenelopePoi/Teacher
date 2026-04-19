@@ -468,3 +468,840 @@
     margin: 0;
     line-height: 1.4;
 }
+
+/* ===== Skill Browser Widget ===== */
+
+.teacher-skill-browser {
+    overflow-y: auto;
+}
+
+.teacher-skill-browser-container {
+    padding: 12px;
+}
+
+.teacher-skill-browser-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.teacher-skill-browser-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-skill-browser-count {
+    font-size: 12px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-skill-browser-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.teacher-skill-browser-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 180px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-skill-browser-search-input {
+    flex: 1;
+}
+
+.teacher-skill-browser-category-select {
+    min-width: 140px;
+}
+
+.teacher-skill-browser-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-skill-browser-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    color: var(--theia-descriptionForeground);
+    font-size: 13px;
+    text-align: center;
+}
+
+.teacher-skill-browser-card {
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.teacher-skill-browser-card:hover {
+    border-color: var(--theia-focusBorder);
+}
+
+.teacher-skill-browser-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-skill-browser-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-skill-browser-card-type {
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+    text-transform: capitalize;
+}
+
+.teacher-skill-browser-card-desc {
+    font-size: 12px;
+    color: var(--theia-descriptionForeground);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.teacher-skill-browser-card-category {
+    font-size: 11px;
+    color: var(--theia-textLink-foreground);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ===== Learning Analytics Widget ===== */
+
+.teacher-learning-analytics {
+    overflow-y: auto;
+}
+
+.teacher-analytics-container {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.teacher-analytics-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.teacher-analytics-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.teacher-analytics-refresh-btn {
+    padding: 4px 8px;
+    min-width: auto;
+}
+
+/* Streak Card */
+
+.teacher-analytics-streak-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.teacher-analytics-streak-card .codicon-flame {
+    font-size: 24px;
+    color: var(--theia-textLink-foreground);
+}
+
+.teacher-analytics-streak-content {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.teacher-analytics-streak-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-analytics-streak-label {
+    font-size: 13px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-analytics-streak-dots {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.teacher-analytics-streak-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--theia-editorWidget-border);
+}
+
+.teacher-analytics-streak-dot-active {
+    background: var(--theia-progressBar-background);
+}
+
+/* Analytics Sections */
+
+.teacher-analytics-section {
+    margin-bottom: 24px;
+}
+
+.teacher-analytics-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--theia-panel-border);
+    padding-bottom: 8px;
+}
+
+/* Course Breakdown Table */
+
+.teacher-analytics-course-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.teacher-analytics-course-table th {
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: 600;
+    color: var(--theia-descriptionForeground);
+    border-bottom: 1px solid var(--theia-panel-border);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.teacher-analytics-course-table td {
+    padding: 8px;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-analytics-course-name {
+    font-weight: 500;
+}
+
+.teacher-analytics-course-bar {
+    height: 6px;
+    background: var(--theia-editorWidget-border);
+    border-radius: 3px;
+    overflow: hidden;
+    min-width: 120px;
+}
+
+.teacher-analytics-course-bar-fill {
+    height: 100%;
+    background: var(--theia-progressBar-background);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.teacher-analytics-course-pct {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--theia-descriptionForeground);
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Time Distribution Bars */
+
+.teacher-analytics-time-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-analytics-time-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.teacher-analytics-time-label {
+    font-size: 12px;
+    color: var(--theia-editor-foreground);
+    min-width: 120px;
+    text-align: right;
+}
+
+.teacher-analytics-time-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--theia-editorWidget-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.teacher-analytics-time-bar-fill {
+    height: 100%;
+    background: var(--theia-textLink-foreground);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.teacher-analytics-time-value {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    min-width: 32px;
+}
+
+/* Skill Heatmap */
+
+.teacher-analytics-heatmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.teacher-analytics-heatmap-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 4px;
+    border-radius: 4px;
+    font-size: 10px;
+    text-align: center;
+    min-height: 32px;
+}
+
+.teacher-analytics-heatmap-level-0 {
+    background: var(--theia-editorWidget-border);
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-analytics-heatmap-level-1 {
+    background: var(--theia-textBlockQuote-background);
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-analytics-heatmap-level-2 {
+    background: var(--theia-list-hoverBackground);
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-analytics-heatmap-level-3 {
+    background: var(--theia-button-background);
+    color: var(--theia-button-foreground);
+    opacity: 0.75;
+}
+
+.teacher-analytics-heatmap-level-4 {
+    background: var(--theia-button-background);
+    color: var(--theia-button-foreground);
+}
+
+.teacher-analytics-heatmap-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-analytics-heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-analytics-heatmap-legend-cell {
+    width: 16px;
+    height: 16px;
+    min-height: 16px;
+    padding: 0;
+}
+
+.teacher-analytics-heatmap-legend-label {
+    margin: 0 4px;
+}
+
+/* Weak Areas */
+
+.teacher-analytics-weak-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-analytics-weak-item {
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.teacher-analytics-weak-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.teacher-analytics-weak-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-analytics-weak-pct {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-analytics-weak-bar {
+    height: 4px;
+    background: var(--theia-editorWidget-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.teacher-analytics-weak-bar-fill {
+    height: 100%;
+    background: var(--theia-testing-iconFailed);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.teacher-analytics-weak-suggestion {
+    font-size: 12px;
+    color: var(--theia-descriptionForeground);
+    margin: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+}
+
+.teacher-analytics-weak-suggestion .codicon-lightbulb {
+    color: var(--theia-textLink-foreground);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* ===== AI History Search Widget ===== */
+
+.teacher-ai-history-search {
+    overflow-y: auto;
+}
+
+.teacher-ai-history-container {
+    padding: 12px;
+}
+
+.teacher-ai-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.teacher-ai-history-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-ai-history-count {
+    font-size: 12px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-ai-history-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.teacher-ai-history-search-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-ai-history-search-input {
+    flex: 1;
+}
+
+.teacher-ai-history-filter-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.teacher-ai-history-agent-select {
+    min-width: 100px;
+}
+
+.teacher-ai-history-date-input {
+    min-width: 140px;
+}
+
+.teacher-ai-history-clear-btn {
+    padding: 4px 10px;
+    min-width: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+}
+
+.teacher-ai-history-results {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-ai-history-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    color: var(--theia-descriptionForeground);
+    font-size: 13px;
+    text-align: center;
+}
+
+.teacher-ai-history-item {
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.teacher-ai-history-item:hover {
+    border-color: var(--theia-focusBorder);
+}
+
+.teacher-ai-history-item-expanded {
+    border-color: var(--theia-focusBorder);
+}
+
+.teacher-ai-history-item-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    cursor: pointer;
+    position: relative;
+}
+
+.teacher-ai-history-item-header:hover {
+    background: var(--theia-list-hoverBackground);
+}
+
+.teacher-ai-history-item-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-ai-history-item-agent {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--theia-textLink-foreground);
+    font-weight: 600;
+}
+
+.teacher-ai-history-item-date {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.teacher-ai-history-item-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+    font-weight: 500;
+}
+
+.teacher-ai-history-item-toggle {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    color: var(--theia-descriptionForeground);
+    font-size: 14px;
+}
+
+.teacher-ai-history-item-body {
+    padding: 0 12px 12px 12px;
+    border-top: 1px solid var(--theia-panel-border);
+}
+
+.teacher-ai-history-item-answer {
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+    line-height: 1.5;
+    padding-top: 10px;
+}
+
+.teacher-ai-history-item-answer p {
+    margin: 0;
+}
+
+/* ===== Learning Path Widget ===== */
+
+.teacher-learning-path {
+    overflow-y: auto;
+}
+
+.teacher-learning-path-container {
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.teacher-learning-path-header {
+    margin-bottom: 16px;
+}
+
+.teacher-learning-path-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Summary Bar */
+
+.teacher-learning-path-summary {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 14px 18px;
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 8px;
+}
+
+.teacher-learning-path-summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.teacher-learning-path-summary-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--theia-textLink-foreground);
+}
+
+.teacher-learning-path-summary-label {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.teacher-learning-path-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--theia-editorWidget-border);
+    border-radius: 3px;
+    overflow: hidden;
+    min-width: 100px;
+}
+
+.teacher-learning-path-progress-fill {
+    height: 100%;
+    background: var(--theia-progressBar-background);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Timeline */
+
+.teacher-learning-path-timeline {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-learning-path-node {
+    display: flex;
+    gap: 14px;
+}
+
+.teacher-learning-path-node-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 28px;
+}
+
+.teacher-learning-path-node-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.teacher-learning-path-dot-completed {
+    background: var(--theia-testing-iconPassed);
+    color: var(--theia-button-foreground);
+}
+
+.teacher-learning-path-dot-current {
+    background: var(--theia-button-background);
+    color: var(--theia-button-foreground);
+}
+
+.teacher-learning-path-dot-upcoming {
+    background: var(--theia-editorWidget-border);
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-learning-path-dot-locked {
+    background: var(--theia-editorWidget-border);
+    color: var(--theia-descriptionForeground);
+    opacity: 0.6;
+}
+
+.teacher-learning-path-node-line {
+    width: 2px;
+    flex: 1;
+    min-height: 16px;
+}
+
+.teacher-learning-path-line-completed {
+    background: var(--theia-testing-iconPassed);
+}
+
+.teacher-learning-path-line-current {
+    background: var(--theia-button-background);
+}
+
+.teacher-learning-path-line-upcoming {
+    background: var(--theia-editorWidget-border);
+}
+
+.teacher-learning-path-line-locked {
+    background: var(--theia-editorWidget-border);
+    opacity: 0.4;
+}
+
+/* Node Content */
+
+.teacher-learning-path-node-content {
+    flex: 1;
+    padding-bottom: 16px;
+}
+
+.teacher-learning-path-node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.teacher-learning-path-node-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-learning-path-node-locked .teacher-learning-path-node-title {
+    color: var(--theia-descriptionForeground);
+    opacity: 0.7;
+}
+
+.teacher-learning-path-node-time {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+}
+
+.teacher-learning-path-node-skills {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.teacher-learning-path-node-skill-tag {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--theia-textBlockQuote-background);
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-learning-path-continue-btn {
+    margin-top: 8px;
+    padding: 4px 14px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}

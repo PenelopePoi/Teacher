@@ -2,9 +2,10 @@ import '../../src/browser/style/teacher.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
-import { Agent } from '@theia/ai-core/lib/common';
-import { PreferenceContribution } from '@theia/core';
+import { Agent, AIVariableContribution } from '@theia/ai-core/lib/common';
+import { CommandContribution, PreferenceContribution } from '@theia/core';
 import {
+    KeybindingContribution,
     RemoteConnectionProvider, ServiceConnectionProvider,
     WidgetFactory, FrontendApplicationContribution, bindViewContribution
 } from '@theia/core/lib/browser';
@@ -19,6 +20,12 @@ import { TeacherWelcomeWidget } from './widgets/teacher-welcome-widget';
 import { TeacherWelcomeContribution } from './widgets/teacher-welcome-contribution';
 import { ProgressDashboardWidget } from './widgets/progress-dashboard-widget';
 import { CurriculumBrowserWidget } from './widgets/curriculum-browser-widget';
+import { SkillBrowserWidget } from './widgets/skill-browser-widget';
+import { LearningAnalyticsWidget } from './widgets/learning-analytics-widget';
+import { AIHistorySearchWidget } from './widgets/ai-history-search-widget';
+import { LearningPathWidget } from './widgets/learning-path-widget';
+import { LessonCommandContribution } from './commands/lesson-commands';
+import { LessonContextVariableContribution } from './lesson-context-variable';
 
 export default new ContainerModule(bind => {
     // Tutor Agent
@@ -79,4 +86,41 @@ export default new ContainerModule(bind => {
         id: CurriculumBrowserWidget.ID,
         createWidget: () => context.container.get<CurriculumBrowserWidget>(CurriculumBrowserWidget),
     })).inSingletonScope();
+
+    // Skill Browser Widget
+    bind(SkillBrowserWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: SkillBrowserWidget.ID,
+        createWidget: () => context.container.get<SkillBrowserWidget>(SkillBrowserWidget),
+    })).inSingletonScope();
+
+    // Learning Analytics Widget
+    bind(LearningAnalyticsWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: LearningAnalyticsWidget.ID,
+        createWidget: () => context.container.get<LearningAnalyticsWidget>(LearningAnalyticsWidget),
+    })).inSingletonScope();
+
+    // AI History Search Widget
+    bind(AIHistorySearchWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: AIHistorySearchWidget.ID,
+        createWidget: () => context.container.get<AIHistorySearchWidget>(AIHistorySearchWidget),
+    })).inSingletonScope();
+
+    // Learning Path Widget
+    bind(LearningPathWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: LearningPathWidget.ID,
+        createWidget: () => context.container.get<LearningPathWidget>(LearningPathWidget),
+    })).inSingletonScope();
+
+    // Lesson Commands (Start Lesson, Check My Work, Get Hint, Submit for Review)
+    bind(LessonCommandContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(LessonCommandContribution);
+    bind(KeybindingContribution).toService(LessonCommandContribution);
+
+    // Lesson Context Variable (injects lesson objectives into AI agent prompts)
+    bind(LessonContextVariableContribution).toSelf().inSingletonScope();
+    bind(AIVariableContribution).toService(LessonContextVariableContribution);
 });

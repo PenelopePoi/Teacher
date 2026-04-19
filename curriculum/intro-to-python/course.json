@@ -1,0 +1,31 @@
+{
+    "id": "intro-to-python",
+    "title": "Introduction to Python Programming",
+    "description": "A beginner-friendly course covering Python fundamentals: variables, control flow, functions, and data structures. Learn to think like a programmer while building real projects that serve human purpose.",
+    "creditHours": 3,
+    "modules": [
+        {
+            "id": "python-basics",
+            "title": "Python Basics",
+            "lessons": [
+                { "id": "hello-world", "title": "Your First Program", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 15, "prerequisiteSkills": [] },
+                { "id": "variables", "title": "Variables and Data Types", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] }
+            ]
+        },
+        {
+            "id": "control-flow",
+            "title": "Control Flow",
+            "lessons": [
+                { "id": "conditionals", "title": "Making Decisions with If/Else", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] },
+                { "id": "loops", "title": "Repeating Actions with Loops", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 35, "prerequisiteSkills": [] }
+            ]
+        },
+        {
+            "id": "functions-module",
+            "title": "Functions and Reuse",
+            "lessons": [
+                { "id": "functions", "title": "Writing Reusable Functions", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 40, "prerequisiteSkills": [] }
+            ]
+        }
+    ]
+}

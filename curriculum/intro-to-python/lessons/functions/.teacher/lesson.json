@@ -1,0 +1,26 @@
+{
+    "id": "functions",
+    "title": "Writing Reusable Functions",
+    "objectives": [
+        "Define functions with def and return values",
+        "Use parameters and arguments effectively",
+        "Understand variable scope (local vs global)",
+        "Write functions with default parameter values"
+    ],
+    "hints": [
+        "Define a function: def add(a, b): return a + b",
+        "Default parameters: def greet(name='World'): return f'Hello, {name}'",
+        "Variables inside a function are local — they don't exist outside it"
+    ],
+    "assessmentCriteria": [
+        "Functions are defined with correct syntax",
+        "Return values are used instead of print inside functions",
+        "Parameters and default values work correctly"
+    ],
+    "estimatedMinutes": 40,
+    "prerequisiteSkills": ["Variables", "Data types", "Conditionals", "Loops"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "python -m pytest test_main.py -v"
+    }
+}

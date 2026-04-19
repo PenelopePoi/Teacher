@@ -1,0 +1,26 @@
+{
+    "id": "variables",
+    "title": "Variables and Data Types",
+    "objectives": [
+        "Create and assign variables in Python",
+        "Understand the difference between strings, integers, floats, and booleans",
+        "Use type() to inspect data types",
+        "Convert between data types with int(), str(), float()"
+    ],
+    "hints": [
+        "Variables are created with the = operator: name = 'Alex'",
+        "Python has four basic types: str, int, float, bool. Use type(x) to check.",
+        "To convert types: int('42') gives 42, str(42) gives '42'"
+    ],
+    "assessmentCriteria": [
+        "All variables are assigned with correct types",
+        "Type conversions produce the expected values",
+        "Program runs without TypeError or ValueError"
+    ],
+    "estimatedMinutes": 25,
+    "prerequisiteSkills": ["print() function", "Running Python scripts"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "python -m pytest test_main.py -v"
+    }
+}

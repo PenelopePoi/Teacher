@@ -1,0 +1,26 @@
+{
+    "id": "loops",
+    "title": "Repeating Actions with Loops",
+    "objectives": [
+        "Use for loops to iterate over sequences",
+        "Use while loops for conditional repetition",
+        "Control loop flow with break and continue",
+        "Use range() to generate number sequences"
+    ],
+    "hints": [
+        "A for loop iterates over items: for item in [1, 2, 3]: print(item)",
+        "range(5) generates numbers 0 through 4. range(1, 6) generates 1 through 5.",
+        "Use 'break' to exit a loop early, 'continue' to skip to the next iteration"
+    ],
+    "assessmentCriteria": [
+        "for and while loops are used correctly",
+        "Loop termination conditions prevent infinite loops",
+        "break and continue are used appropriately"
+    ],
+    "estimatedMinutes": 35,
+    "prerequisiteSkills": ["Variables", "Conditionals", "Comparison operators"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "python -m pytest test_main.py -v"
+    }
+}

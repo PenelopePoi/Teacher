@@ -5,6 +5,9 @@ import { ASIBridgeService, ASI_BRIDGE_SERVICE_PATH } from '../common/asi-bridge-
 import { ASIBridgeServiceImpl } from './asi-bridge-service';
 import { ProgressTrackingService, PROGRESS_SERVICE_PATH } from '../common/progress-protocol';
 import { ProgressTrackingServiceImpl } from './progress-service';
+import { CurriculumService, CURRICULUM_SERVICE_PATH, CurriculumServiceImpl } from './curriculum-service';
+import { TemplateService, TEMPLATE_SERVICE_PATH, TemplateServiceImpl } from './template-service';
+import { AssessmentService, ASSESSMENT_SERVICE_PATH, AssessmentServiceImpl } from './assessment-service';
 import { TeacherPreferencesSchema } from '../common/teacher-preferences';
 
 const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
@@ -18,6 +21,24 @@ const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
     bind(ProgressTrackingService).toService(ProgressTrackingServiceImpl);
     bind(ConnectionHandler).toDynamicValue(ctx =>
         new RpcConnectionHandler(PROGRESS_SERVICE_PATH, () => ctx.container.get(ProgressTrackingService))
+    ).inSingletonScope();
+
+    bind(CurriculumServiceImpl).toSelf().inSingletonScope();
+    bind(CurriculumService).toService(CurriculumServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(CURRICULUM_SERVICE_PATH, () => ctx.container.get(CurriculumService))
+    ).inSingletonScope();
+
+    bind(TemplateServiceImpl).toSelf().inSingletonScope();
+    bind(TemplateService).toService(TemplateServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(TEMPLATE_SERVICE_PATH, () => ctx.container.get(TemplateService))
+    ).inSingletonScope();
+
+    bind(AssessmentServiceImpl).toSelf().inSingletonScope();
+    bind(AssessmentService).toService(AssessmentServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(ASSESSMENT_SERVICE_PATH, () => ctx.container.get(AssessmentService))
     ).inSingletonScope();
 });
 
