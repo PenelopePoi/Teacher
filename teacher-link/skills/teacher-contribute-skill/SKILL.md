@@ -1,85 +1,108 @@
 ---
 name: teacher-contribute-skill
-description: Write a new SKILL.md into the Teacher skill library. v1 is GATED — Claude drafts the skill in conversation, user reviews and approves before any write. Only applicable where Claude has filesystem access (Claude Code, Managed Agents). This is NOT the MCP "teach" tool.
+description: Write a new SKILL.md into the Teacher skill library. v1 is GATED — Claude drafts the skill in conversation, user reviews and approves before anything is written. Prefers the teacher_add_skill MCP tool; falls back to filesystem write only where MCP isn't available.
 ---
 
 # teacher-contribute-skill — Propose a new Teacher skill
 
-The user wants to push a new skill into Teacher's library so future sessions (their own, and any Claude instance talking to their Teacher) can use it.
+The user wants to push a new skill into Teacher's library so future sessions can use it.
 
-## Critical distinction
+## Two write paths
 
-- **Server-side `teach` tool** = pedagogical session generator (see `teacher-teach-session`)
-- **This skill** = filesystem write of a new `SKILL.md` to `.skills-library/<skill-name>/SKILL.md`
+**Preferred — MCP (works from any Claude client):**
+Call the `teacher_add_skill` MCP tool. It takes `{name, description, content, overwrite?}`, validates the name (kebab-case), injects frontmatter if missing, writes `.skills-library/<name>/SKILL.md`, and returns the canonical path. Hot-reloaded by the ASI.
 
-There is currently **no MCP tool for skill writes**. This skill works via direct filesystem access.
+**Fallback — direct filesystem:**
+Only if `teacher_add_skill` is not available (older Teacher ASI, bridge misconfigured, or you're working purely on the filesystem). Requires filesystem access — Claude Code has it, Claude Desktop typically does not.
+
+The skill library lives at `~/.claude/skills/` (symlinked into the Teacher repo as `.skills-library/`).
 
 ## Governance (v1: gated)
 
-**Skill quality is load-bearing.** The Teacher library is a curated asset that affects every future session. Sloppy skills pollute the mesh. The v1 rule:
+**Skill quality is load-bearing.** The Teacher library is a curated asset that affects every future session on any machine running Teacher. Sloppy skills pollute the mesh.
 
-1. Claude drafts the skill **in conversation** (no file writes yet).
-2. User reads the draft, asks for changes, or approves.
-3. Only on explicit approval ("yes, write it", "ship it", "save") does Claude write the file.
-4. After writing, Claude runs a lint pass — at minimum verifies the frontmatter, name uniqueness, and that `teacher_list_skills` returns the new skill.
+**The rule:**
 
-**Never write a skill file before the user approves.** If in doubt, ask.
+1. Claude drafts the skill **in conversation** — full SKILL.md as a code block. **No tool call yet.**
+2. User reads the draft, requests changes, or approves.
+3. Only on explicit approval ("yes, write it", "ship it", "save") does Claude call `teacher_add_skill` or write the file.
+4. After writing, Claude verifies — call `teacher_list_skills` to confirm it appears, or `teacher_get_skill` to read it back.
+
+**Never call `teacher_add_skill` before the user approves the draft.**
 
 ## When to use
 
 - User says "Teacher should know how to X", "add this as a Teacher skill", "save this playbook"
-- After you (Claude) have executed a non-trivial workflow successfully and the user wants it codified
-- When the user is capturing a hard-won insight they want to persist
+- After a successful non-trivial workflow that the user wants codified
+- When capturing a hard-won insight worth persisting
 
 ## When NOT to use
 
 - Throwaway one-shot tasks
 - Content that duplicates an existing skill (check `teacher_list_skills` first)
-- Anything the user hasn't explicitly said they want persisted
+- Anything the user hasn't explicitly asked to persist
+- Bulk skill generation (one at a time — each deserves a real review)
 
 ## Draft checklist
 
 Every new skill must have:
 
-- **Frontmatter** — `name` (kebab-case, matches directory), `description` (one-liner, starts with a verb or scenario, makes the invocation trigger clear)
+- **Frontmatter** — `name` (kebab-case, matches directory), `description` (one-liner that makes the trigger scenario clear)
 - **When to use** — concrete scenarios, not vague vibes
 - **When NOT to use** — just as important; shows the skill's boundary
 - **Workflow** — numbered steps a future Claude can follow
-- **One concrete example** — shows the skill in motion
-- **Guardrails / error handling** — what could go wrong and what to do
+- **One concrete example** — the skill in motion
+- **Guardrails / error handling** — what can go wrong, what to do about it
 
 Style must match the existing library: direct, compressed, no hedging, no filler.
 
 ## Workflow
 
-1. **Check for duplicates.** `teacher_list_skills` with a relevant category filter. If a similar skill exists, offer to *update* it instead of creating a new one.
-2. **Draft in conversation.** Write the full SKILL.md text as a code block. Don't touch the filesystem yet.
-3. **Iterate.** The user edits, pushes back, or approves.
-4. **On approval, write:**
-   - Create directory: `.skills-library/<skill-name>/`  (or `~/.claude/skills/<skill-name>/` directly if the symlink target is different)
-   - Write `SKILL.md`
-   - Verify: `teacher_list_skills` should return it
-5. **Report.** Tell the user the path written and that `teacher_get_skill` now resolves it.
+1. **Check for duplicates.** `teacher_list_skills` with a relevant category filter. If something similar exists, offer to *update* it (via `teacher_add_skill` with `overwrite: true`) rather than creating a near-duplicate.
+2. **Draft in conversation.** Full SKILL.md as a code block.
+3. **Iterate.** User edits, pushes back, or approves.
+4. **On approval — write:**
 
-## Filesystem paths
+   ```
+   teacher_add_skill({
+     name: "cold-email-founders",
+     description: "Draft high-conversion cold emails to technical founders...",
+     content: "<full SKILL.md body or body-without-frontmatter>",
+     overwrite: false
+   })
+   ```
 
-- `.skills-library/` is a symlink in the Teacher repo pointing at `~/.claude/skills`
-- Writing to either path has the same effect
-- The skill is live immediately — `SkillService` in the Teacher IDE and the ASI's `SkillRouter` both hot-reload
+5. **Verify.** `teacher_list_skills` should include the new name. `teacher_get_skill` with the name should return the content.
+6. **Report.** Tell the user the path written and that future sessions can now `teacher_get_skill` it.
+
+## Error handling
+
+| Error from `teacher_add_skill` | Cause | Action |
+|---|---|---|
+| `Invalid skill name` | Name isn't kebab-case | Rename, try again |
+| `Skill already exists` | Name collision | Ask user: new name, or `overwrite: true`? |
+| Transport error | Bridge down / server down | `teacher_status` to diagnose |
+
+## Filesystem fallback (Claude Code, no MCP)
+
+If `teacher_add_skill` is unavailable and you have filesystem access:
+
+```
+mkdir -p ~/.claude/skills/<skill-name>
+# Write SKILL.md with frontmatter (name + description) at the top
+```
+
+Verify with `ls ~/.claude/skills/<skill-name>/SKILL.md`. Then `teacher_list_skills` (if the bridge is up) will surface it on the next call.
 
 ## Example
 
-User: "This cold-email pattern we just nailed — save it as a skill called `cold-email-founders`."
+User: "The cold-email pattern we just nailed — save it as a skill called `cold-email-founders`."
 
 - `teacher_list_skills` with `{category: "email"}` → no match
-- Draft the SKILL.md in chat, showing frontmatter + sections
+- Draft the full SKILL.md in chat
 - User: "Good, add a note about no subject lines longer than 6 words."
-- Update the draft in chat
+- Update the draft
 - User: "Ship it."
-- Write `~/.claude/skills/cold-email-founders/SKILL.md`
-- Verify: `teacher_list_skills` → `cold-email-founders` appears
-- Confirm to user: "Written. `teacher_get_skill` with name `cold-email-founders` now returns it."
-
-## Future — server-side skill writes
-
-A proper `add_skill` MCP tool on the Teacher server (`~/local-asi/mcp-server.py`) would replace this filesystem dance and work from Claude Desktop too (which normally has no filesystem). Tracked as a future improvement.
+- `teacher_add_skill({name: "cold-email-founders", description: "Draft high-conversion cold emails to technical founders — short subject lines (≤6 words), specific hook, no template language", content: "<drafted body>"})`
+- Verify: `teacher_list_skills` shows it, `teacher_get_skill` with that name returns the content
+- Confirm: "Written to ~/.claude/skills/cold-email-founders/SKILL.md. Live immediately."

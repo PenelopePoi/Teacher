@@ -5,7 +5,7 @@ description: Umbrella router for the Teacher ASI bridge. When the user wants to 
 
 # Teacher-Link Router
 
-Teacher-Link exposes a local Teacher ASI installation (running at `http://localhost:8808` by default) as MCP tools in any Claude client. The 7 MCP tools are:
+Teacher-Link exposes a local Teacher ASI installation (running at `http://localhost:8808` by default) as MCP tools in any Claude client. The 8 MCP tools are:
 
 | Tool | Purpose | Speed |
 |---|---|---|
@@ -13,6 +13,7 @@ Teacher-Link exposes a local Teacher ASI installation (running at `http://localh
 | `teacher_search_knowledge` | Query the cached knowledge graph | fast |
 | `teacher_list_skills` | Enumerate the local skill library | fast |
 | `teacher_get_skill` | Pull a SKILL.md into conversation | fast |
+| `teacher_add_skill` | Write a new SKILL.md into the library | fast (use with `teacher-contribute-skill` playbook) |
 | `teacher_ask` | Full ASI swarm (research → critic → synth → improve → score) | **slow (60–180s)** |
 | `teacher_teach_session` | Pedagogical Q&A generator | **slow (scales with Q count)** |
 | `teacher_improve` | Re-run lowest-scored KB entries | **expensive** |
@@ -37,7 +38,7 @@ Teacher-Link exposes a local Teacher ASI installation (running at `http://localh
 - `teacher_improve` with `num_entries` default 3. This is expensive — don't call without explicit intent.
 
 **User says "write a new Teacher skill for X" or "teach Teacher how to do X":**
-- This is NOT `teacher_teach_session`. Hand off to the `teacher-contribute-skill` skill, which writes a new `SKILL.md` to `.skills-library/`. Gated: Claude drafts, user approves before commit.
+- This is NOT `teacher_teach_session`. Hand off to the `teacher-contribute-skill` skill, which uses `teacher_add_skill` (preferred) or filesystem fallback. Gated: Claude drafts, user approves BEFORE any write.
 
 ## Guardrails
 

@@ -106,6 +106,24 @@ const TOOLS = [
         },
     },
     {
+        name: 'teacher_add_skill',
+        endpoint: 'add_skill',
+        description:
+            'Write a new SKILL.md into the Teacher skill library. ' +
+            'Pairs with the teacher-contribute-skill playbook: draft the skill in chat, get the user\'s explicit approval, THEN call this. ' +
+            'Frontmatter is auto-injected if not supplied. Kebab-case name required. Hot-reloaded — the skill is callable via teacher_get_skill immediately after.',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                name: { type: 'string', description: 'Skill name in kebab-case (e.g. cold-email-founders). Used as directory name.' },
+                description: { type: 'string', description: 'One-line description for the SKILL.md frontmatter.' },
+                content: { type: 'string', description: 'Full SKILL.md body. Frontmatter is auto-prepended if missing.' },
+                overwrite: { type: 'boolean', description: 'Allow replacing an existing skill of the same name.', default: false },
+            },
+            required: ['name', 'description', 'content'],
+        },
+    },
+    {
         name: 'teacher_status',
         endpoint: 'status',
         description:
