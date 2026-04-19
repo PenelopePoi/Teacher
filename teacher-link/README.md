@@ -23,6 +23,7 @@ Once installed, you get these MCP tools in any Claude client:
 | `teacher_search_knowledge` | Search the graph-structured knowledge base (≥6/10 entries only) |
 | `teacher_list_skills` | List the local skill library with optional category filter |
 | `teacher_get_skill` | Return full SKILL.md for a named skill |
+| `teacher_add_skill` | Write a new SKILL.md into the library (works from any client — no filesystem needed) |
 | `teacher_ask` | Route a question through the full ASI swarm (slow, 60–180s) |
 | `teacher_teach_session` | Generate a scored N-question teaching session on a topic |
 | `teacher_improve` | Re-run the lowest-scored KB entries to raise their quality |
@@ -109,9 +110,9 @@ teacher-link/
 
 ## Known limitations
 
-- **`teacher-contribute-skill` is filesystem-only.** The Teacher server has no "add skill" endpoint yet — the skill writes `SKILL.md` files directly to `.skills-library/`. That works in Claude Code (which has filesystem access) and in clients with the Filesystem MCP configured, but not in vanilla Claude Desktop. A future server-side `add_skill` tool is tracked as an improvement.
-- **No auth by default.** The bridge and server are both open on localhost. Do NOT expose port 8808 to a public network without adding bearer-token auth and setting `TEACHER_MCP_TOKEN`.
+- **No auth by default.** The bridge and server are both open on localhost. Do NOT expose port 8808 to a public network without adding bearer-token auth on the server and setting `TEACHER_MCP_TOKEN` on the bridge.
 - **Latency is real.** `teacher_ask` and `teacher_teach_session` are slow because they run the full ASI pipeline on local Ollama. Budget accordingly; warn users when calling them.
+- **Skill-routing cache.** Adding a skill via `teacher_add_skill` makes it immediately discoverable by `teacher_get_skill` (reads disk per call). The ASI's `SkillRouter` category cache is loaded at server start, though — if you rely on auto-routing by keyword, restart the ASI server after a batch of skill additions.
 
 ---
 
