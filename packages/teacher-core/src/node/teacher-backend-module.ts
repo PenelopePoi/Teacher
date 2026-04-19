@@ -39,6 +39,8 @@ import {
 import { SessionLogger } from './session-logger';
 import { StreakTracker } from './streak-tracker';
 import { AutoReviewService } from './auto-review-service';
+import { UserProfileService, USER_PROFILE_SERVICE_PATH } from '../common/user-profile-protocol';
+import { UserProfileServiceImpl } from './user-profile-service';
 
 const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
     bind(ASIBridgeServiceImpl).toSelf().inSingletonScope();
@@ -89,6 +91,13 @@ const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
             const svc = ctx.container.get<ConceptTracker>(ConceptTrackerSymbol);
             return svc;
         })
+    ).inSingletonScope();
+
+    // UserProfileService — persistent user identity, achievements, sessions
+    bind(UserProfileServiceImpl).toSelf().inSingletonScope();
+    bind(UserProfileService).toService(UserProfileServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(USER_PROFILE_SERVICE_PATH, () => ctx.container.get(UserProfileService))
     ).inSingletonScope();
 
     // MilestoneService — stores milestones in ~/.teacher/milestones.json
