@@ -6,6 +6,8 @@ import '../../src/browser/style/teachable-moments.css';
 import '../../src/browser/style/notification-orbit.css';
 import '../../src/browser/style/message-queue.css';
 import '../../src/browser/style/help-overlay.css';
+import '../../src/browser/style/spiral-review.css';
+import '../../src/browser/style/skill-map.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -99,6 +101,10 @@ import { DragToAskCommandContribution } from './commands/drag-to-ask-command';
 import { HelpOverlayContribution } from './help/help-overlay-contribution';
 import { CheckpointService } from './checkpoint/checkpoint-service';
 import { CheckpointCommandContribution } from './checkpoint/checkpoint-commands';
+import { SpiralReviewService } from './teachable-moments/spiral-review-service';
+import { SpiralReviewWidget } from './teachable-moments/spiral-review-widget';
+import { SkillMapService } from './skill-map/skill-map-service';
+import { SkillMapWidget } from './skill-map/skill-map-widget';
 
 export default new ContainerModule(bind => {
     // Agent Handoff Service — manages inter-agent communication and handoffs
@@ -405,6 +411,22 @@ export default new ContainerModule(bind => {
     bind(WidgetFactory).toDynamicValue(context => ({
         id: PedagogyLibraryWidget.ID,
         createWidget: () => context.container.get<PedagogyLibraryWidget>(PedagogyLibraryWidget),
+    })).inSingletonScope();
+
+    // H3 Spiral Review — spaced repetition soft reminders for old concepts
+    bind(SpiralReviewService).toSelf().inSingletonScope();
+    bind(SpiralReviewWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: SpiralReviewWidget.ID,
+        createWidget: () => context.container.get<SpiralReviewWidget>(SpiralReviewWidget),
+    })).inSingletonScope();
+
+    // H5 Skill Map — personal competence visualization across domains
+    bind(SkillMapService).toSelf().inSingletonScope();
+    bind(SkillMapWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: SkillMapWidget.ID,
+        createWidget: () => context.container.get<SkillMapWidget>(SkillMapWidget),
     })).inSingletonScope();
 
     // Daily Objective widget (bottom panel, auto-visible)
