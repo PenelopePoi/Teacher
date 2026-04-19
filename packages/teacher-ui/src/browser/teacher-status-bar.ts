@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { injectable } from 'inversify';
 import { StatusBarImpl } from '@theia/core/lib/browser/status-bar/status-bar';
-import { StatusBarViewEntry, StatusBarAlignment } from '@theia/core/lib/browser/status-bar/status-bar-types';
+import { StatusBarViewEntry } from '@theia/core/lib/browser/status-bar/status-bar-types';
 
 /**
  * Filtered status bar for Teacher IDE.
