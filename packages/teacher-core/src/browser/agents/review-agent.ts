@@ -43,7 +43,7 @@ export class TeachingReviewAgent extends AbstractStreamParsingChatAgent {
 
     override prompts = [{
         id: 'teacher-review-system',
-        defaultVariant: { id: 'teacher-review-system-default', content: REVIEW_SYSTEM_PROMPT },
+        defaultVariant: { id: 'teacher-review-system-default', template: REVIEW_SYSTEM_PROMPT },
         variants: []
     }];
     protected override systemPromptId: string = 'teacher-review-system';

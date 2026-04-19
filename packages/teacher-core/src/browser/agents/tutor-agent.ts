@@ -51,7 +51,7 @@ export class TutorAgent extends AbstractStreamParsingChatAgent {
 
     override prompts = [{
         id: 'teacher-tutor-system',
-        defaultVariant: { id: 'teacher-tutor-system-default', content: TUTOR_SYSTEM_PROMPT },
+        defaultVariant: { id: 'teacher-tutor-system-default', template: TUTOR_SYSTEM_PROMPT },
         variants: []
     }];
     protected override systemPromptId: string = 'teacher-tutor-system';

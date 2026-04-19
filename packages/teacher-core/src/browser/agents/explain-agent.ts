@@ -45,7 +45,7 @@ export class ExplainAgent extends AbstractStreamParsingChatAgent {
 
     override prompts = [{
         id: 'teacher-explain-system',
-        defaultVariant: { id: 'teacher-explain-system-default', content: EXPLAIN_SYSTEM_PROMPT },
+        defaultVariant: { id: 'teacher-explain-system-default', template: EXPLAIN_SYSTEM_PROMPT },
         variants: []
     }];
     protected override systemPromptId: string = 'teacher-explain-system';
