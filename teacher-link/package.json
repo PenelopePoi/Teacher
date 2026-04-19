@@ -1,0 +1,36 @@
+{
+  "name": "teacher-link",
+  "version": "1.0.0",
+  "description": "MCP bridge + Claude skills that connect Claude Desktop / Claude Code / Claude API clients to the local Teacher ASI swarm on port 8808.",
+  "type": "module",
+  "bin": {
+    "teacher-link": "./mcp-bridge.mjs"
+  },
+  "main": "./mcp-bridge.mjs",
+  "scripts": {
+    "start": "node mcp-bridge.mjs",
+    "test:server": "curl -sS http://localhost:8808/ | head -30"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "author": "XELA Creative Studio / Reconsumeralization LLC",
+  "license": "EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PenelopePoi/Teacher.git",
+    "directory": "teacher-link"
+  },
+  "keywords": [
+    "mcp",
+    "teacher",
+    "xela",
+    "claude",
+    "ollama",
+    "asi",
+    "bridge"
+  ]
+}
