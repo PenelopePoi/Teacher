@@ -1,11 +1,44 @@
 {
   "extends": "../../configs/base.tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "rootDir": "src",
     "outDir": "lib",
     "jsx": "react"
   },
   "include": [
     "src"
+  ],
+  "references": [
+    {
+      "path": "../../dev-packages/cli"
+    },
+    {
+      "path": "../ai-chat"
+    },
+    {
+      "path": "../ai-chat-ui"
+    },
+    {
+      "path": "../ai-core"
+    },
+    {
+      "path": "../ai-ollama"
+    },
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../editor"
+    },
+    {
+      "path": "../filesystem"
+    },
+    {
+      "path": "../getting-started"
+    },
+    {
+      "path": "../workspace"
+    }
   ]
 }

@@ -23,19 +23,38 @@ Teacher is a fork of Eclipse Theia, customized as an educational IDE that pairs 
 
 **Key differences from upstream Theia:**
 - AI tutoring integration — contextual explanations, not just autocomplete
-- Curriculum-aware workspace templates
-- Progress tracking and skill assessment
-- Accessibility-first design
+- Curriculum-aware workspace templates with guided lessons
+- Progress tracking, skill mastery, and assessment engine
+- Local-first AI via Ollama + multi-agent ASI system
 - Built for nonprofit educational use (Aurality Foundation)
 
 ## Features
 
+### AI Agents
+- **Tutor Agent** — Socratic AI coding mentor that guides discovery instead of giving answers
+- **Explain Agent** — Select any code, get structured explanations (What / Why / How / Try It)
+- **Teaching Review Agent** — Code review that teaches the concepts behind each suggestion
+
+### Curriculum System
+- Course browser with modules and lessons
+- Workspace templates with starter code and tests
+- Assessment engine (code challenges, AI evaluation, quizzes)
+- Lesson commands: Start Lesson (`Ctrl+Shift+L`), Check My Work (`Ctrl+Shift+C`), Get Hint (`Ctrl+Shift+H`)
+- AI context injection — lesson objectives automatically inform all agent responses
+
+### Progress Tracking
+- Student dashboard with skill mastery visualization
+- Lesson completion and score tracking
+- Time-spent analytics
+- Suggested next lessons
+
+### Platform
 - Full IDE capabilities (syntax highlighting, debugging, terminal, git, extensions)
 - VS Code extension compatibility
 - Browser-based and desktop (Electron) modes
 - Multi-language support
-- InversifyJS dependency injection architecture
-- Plugin system for extensibility
+- Local ASI bridge — connects to a 5-agent research swarm for deep explanations
+- 306 skills in the bundled skills library
 
 ## Quick Start
 
@@ -74,32 +93,52 @@ npm run start:electron
 | **Managed cloud IDE** | Gitpod, Coder, or Eclipse Che |
 | **Marketing site** | A static landing page *can* deploy to Vercel/Netlify |
 
-### Docker (Self-hosted)
+### Docker Compose (Recommended)
 
-```dockerfile
-FROM node:20-slim
-WORKDIR /app
-COPY . .
-RUN npm install && npm run build:browser
-EXPOSE 3000
-CMD ["npm", "run", "start:browser"]
+```bash
+docker compose up
+```
+
+This starts Teacher IDE on port 3000 and Ollama on port 11434 with persistent volumes.
+
+### Docker (Manual)
+
+```bash
+docker build -t teacher-ide .
+docker run -p 3000:3000 teacher-ide
 ```
 
 ## Architecture
 
 ```
 Teacher (Theia Fork)
-├── packages/          # 77 runtime packages (core + extensions)
-│   ├── core/          # Platform foundation
-│   ├── editor/        # Editor framework
-│   ├── monaco/        # Monaco editor integration
-│   ├── terminal/      # Terminal emulator
-│   ├── plugin-ext/    # Plugin API implementation
-│   └── ...
-├── dev-packages/      # Build tooling
-├── examples/          # Sample apps (browser, electron)
-├── configs/           # Shared TypeScript, ESLint, Mocha configs
-└── logo/              # Teacher branding assets
+├── packages/
+│   ├── teacher-core/      # Teacher-specific extension
+│   │   ├── src/browser/
+│   │   │   ├── agents/    # Tutor, Explain, Teaching Review agents
+│   │   │   ├── commands/  # Lesson commands (Start, Check, Hint, Submit)
+│   │   │   ├── widgets/   # Welcome page, Progress Dashboard, Curriculum Browser
+│   │   │   └── style/     # Teacher CSS (Theia variables only)
+│   │   ├── src/node/
+│   │   │   ├── asi-bridge-service.ts      # Local ASI HTTP bridge
+│   │   │   ├── curriculum-service.ts      # Course/lesson loader
+│   │   │   ├── assessment-service.ts      # Test runner + AI evaluation
+│   │   │   ├── template-service.ts        # Workspace template engine
+│   │   │   └── progress-service.ts        # Student progress persistence
+│   │   └── src/common/    # RPC protocols, preferences, types
+│   ├── ai-core/           # Agent framework, LLM abstraction
+│   ├── ai-ollama/         # Ollama integration (localhost:11434)
+│   ├── ai-chat/           # Chat agents framework
+│   ├── core/              # Platform foundation
+│   ├── editor/            # Editor framework
+│   ├── monaco/            # Monaco editor integration
+│   └── ...                # 77 packages total
+├── curriculum/            # Sample courses (Intro to Python)
+├── examples/              # Browser + Electron apps
+├── .github/workflows/     # CI, Docker publish, Electron release
+├── Dockerfile             # Browser mode container
+├── docker-compose.yml     # IDE + Ollama stack
+└── logo/                  # Teacher branding assets
 ```
 
 **Per-package code organization:**
