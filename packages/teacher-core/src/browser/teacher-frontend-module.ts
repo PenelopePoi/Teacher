@@ -8,6 +8,7 @@ import '../../src/browser/style/message-queue.css';
 import '../../src/browser/style/help-overlay.css';
 import '../../src/browser/style/spiral-review.css';
 import '../../src/browser/style/skill-map.css';
+import '../../src/browser/style/friction.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -112,6 +113,9 @@ import { AchievementsWidget } from './widgets/achievements-widget';
 import { AchievementsContribution } from './widgets/achievements-contribution';
 import { ChallengesWidget } from './widgets/challenges-widget';
 import { ChallengesContribution } from './widgets/challenges-contribution';
+import { StudentFrictionService } from './friction/student-friction-service';
+import { FrictionNotificationBridge } from './friction/friction-notification-bridge';
+import { FrictionAnalyticsWidget } from './friction/friction-analytics-widget';
 
 export default new ContainerModule(bind => {
     // Agent Handoff Service — manages inter-agent communication and handoffs
@@ -496,6 +500,17 @@ export default new ContainerModule(bind => {
         createWidget: () => context.container.get<ChallengesWidget>(ChallengesWidget),
     })).inSingletonScope();
     bindViewContribution(bind, ChallengesContribution);
+
+    // Friction Detection — Qualtrics-inspired student struggle sensing
+    bind(StudentFrictionService).toSelf().inSingletonScope();
+    bind(FrictionNotificationBridge).toSelf().inSingletonScope();
+
+    // Friction Analytics widget (session wellness panel)
+    bind(FrictionAnalyticsWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: FrictionAnalyticsWidget.ID,
+        createWidget: () => context.container.get<FrictionAnalyticsWidget>(FrictionAnalyticsWidget),
+    })).inSingletonScope();
 
     // C8 Drag-to-Ask Service — injectable singleton for selection-as-context
     bind(DragToAskService).toSelf().inSingletonScope();

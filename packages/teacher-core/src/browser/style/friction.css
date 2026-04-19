@@ -1,0 +1,278 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Friction Analytics — Student struggle detection visuals.
+   Subtle, warm, supportive. Never alarming. Never surveilling.
+
+   Severity palette:
+     mild     — amber    (#d97706)
+     moderate — orange   (#ea580c)
+     high     — soft red (#dc2626)
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Container ──────────────────────────────────────────────────────── */
+
+.teacher-friction-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    height: 100%;
+    overflow-y: auto;
+    font-family: var(--theia-ui-font-family);
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+
+.teacher-friction-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-friction-header-icon {
+    font-size: 16px;
+    color: var(--theia-foreground, #ccc);
+    opacity: 0.8;
+}
+
+.teacher-friction-header-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--theia-foreground, #ccc);
+    flex: 1;
+}
+
+.teacher-friction-score {
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    min-width: 32px;
+    text-align: right;
+}
+
+.teacher-friction-score--good {
+    color: #22c55e;
+}
+
+.teacher-friction-score--moderate {
+    color: #d97706;
+}
+
+.teacher-friction-score--struggling {
+    color: #dc2626;
+}
+
+/* ── Health bar ──────────────────────────────────────────────────────── */
+
+.teacher-friction-health-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--theia-editorWidget-background, #333);
+    overflow: hidden;
+}
+
+.teacher-friction-health-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease, background 0.4s ease;
+}
+
+.teacher-friction-health-fill--good {
+    background: #22c55e;
+}
+
+.teacher-friction-health-fill--moderate {
+    background: #d97706;
+}
+
+.teacher-friction-health-fill--struggling {
+    background: #dc2626;
+}
+
+/* ── Summary stats ──────────────────────────────────────────────────── */
+
+.teacher-friction-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+}
+
+.teacher-friction-summary-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 4px;
+    border-radius: 6px;
+    background: var(--theia-editor-background, var(--theia-editorWidget-background, #252526));
+}
+
+.teacher-friction-summary-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-foreground, #ccc);
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-friction-summary-label {
+    font-size: 10px;
+    color: var(--theia-descriptionForeground, #888);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Timeline ───────────────────────────────────────────────────────── */
+
+.teacher-friction-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.teacher-friction-timeline-header {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--theia-descriptionForeground, #888);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 0;
+}
+
+/* ── Friction event card ────────────────────────────────────────────── */
+
+.teacher-friction-event {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border-left: 3px solid transparent;
+    background: var(--theia-editor-background, var(--theia-editorWidget-background, #252526));
+    transition: background 0.15s ease, opacity 0.15s ease;
+    animation: teacher-friction-fade-in 0.25s ease;
+}
+
+@keyframes teacher-friction-fade-in {
+    from { opacity: 0; transform: translateY(-3px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Severity border colors — warm, not alarming */
+.teacher-friction-event--mild {
+    border-left-color: #d97706;
+}
+
+.teacher-friction-event--moderate {
+    border-left-color: #ea580c;
+}
+
+.teacher-friction-event--high {
+    border-left-color: #dc2626;
+}
+
+/* Resolved events are dimmed */
+.teacher-friction-event--resolved {
+    opacity: 0.5;
+}
+
+.teacher-friction-event:hover {
+    background: var(--theia-list-hoverBackground, rgba(255, 255, 255, 0.04));
+}
+
+/* ── Event icon ─────────────────────────────────────────────────────── */
+
+.teacher-friction-event-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 14px;
+    color: var(--theia-foreground, #ccc);
+    opacity: 0.8;
+}
+
+.teacher-friction-event--mild .teacher-friction-event-icon {
+    color: #d97706;
+}
+
+.teacher-friction-event--moderate .teacher-friction-event-icon {
+    color: #ea580c;
+}
+
+.teacher-friction-event--high .teacher-friction-event-icon {
+    color: #dc2626;
+}
+
+/* ── Event body ─────────────────────────────────────────────────────── */
+
+.teacher-friction-event-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.teacher-friction-event-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--theia-foreground, #ccc);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-friction-event-context {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground, #888);
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+.teacher-friction-event-time {
+    flex-shrink: 0;
+    font-size: 10px;
+    color: var(--theia-descriptionForeground, #888);
+    font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+}
+
+/* ── Resolved badge ─────────────────────────────────────────────────── */
+
+.teacher-friction-event-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.teacher-friction-event-badge--resolved {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+/* ── Empty state ────────────────────────────────────────────────────── */
+
+.teacher-friction-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 32px 16px;
+    text-align: center;
+}
+
+.teacher-friction-empty-icon {
+    font-size: 28px;
+    color: #22c55e;
+    opacity: 0.6;
+}
+
+.teacher-friction-empty p {
+    font-size: 12px;
+    color: var(--theia-descriptionForeground, #888);
+    font-style: italic;
+    margin: 0;
+}
