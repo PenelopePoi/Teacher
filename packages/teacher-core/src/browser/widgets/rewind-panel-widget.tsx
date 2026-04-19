@@ -52,7 +52,7 @@ export class RewindPanelWidget extends ReactWidget {
         const now = Date.now();
         this.checkpoints = [
             { id: 'cp-1', label: 'Current state', timestamp: now, fileCount: 0, kind: 'auto', isCurrent: true, fileDiffs: [] },
-            { id: 'cp-2', label: 'Before auth refactor', timestamp: now - 2 * 60000, fileCount: 4, kind: "manual", isCurrent: false, fileDiffs: [], fileDiffs: [
+            { id: 'cp-2', label: 'Before auth refactor', timestamp: now - 2 * 60000, fileCount: 4, kind: 'manual', isCurrent: false, fileDiffs: [
                 { file: 'src/auth/service.ts', linesAdded: 42, linesRemoved: 8 },
                 { file: 'src/auth/types.ts', linesAdded: 15, linesRemoved: 0 },
                 { file: 'src/middleware/auth.ts', linesAdded: 28, linesRemoved: 3 },
@@ -84,6 +84,7 @@ export class RewindPanelWidget extends ReactWidget {
             fileCount: 0,
             kind: 'manual',
             isCurrent: false,
+            fileDiffs: [],
         };
         this.checkpoints.splice(1, 0, cp);
         this.newCheckpointName = '';

@@ -1,6 +1,6 @@
 import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
 import { Emitter, Event } from '@theia/core/lib/common';
-import { PreferenceService } from '@theia/core/lib/browser/preferences/preference-service';
+import { PreferenceService } from '@theia/core/lib/common/preferences/preference-service';
 import { AgentSessionManager } from './agent-session-manager';
 import { AutoCapConfig, TrustEvent } from '../common/trust-protocol';
 
@@ -45,7 +45,7 @@ export class AutoCapMiddleware {
         this.syncThresholdPreference();
 
         // Watch for preference changes
-        this.preferenceService.onPreferenceChanged(change => {
+        this.preferenceService.onPreferenceChanged((change: { preferenceName: string }) => {
             if (change.preferenceName === PREFERENCE_KEY) {
                 this.syncThresholdPreference();
             }

@@ -5407,3 +5407,1311 @@ textarea:focus-visible {
 .teacher-improvement-dashboard-container {
     max-width: var(--teacher-content-max-width);
 }
+
+/* ============================================================
+ * New Widget Enhancements (Changes 21-30)
+ * ============================================================ */
+
+/* 21 — Skill Browser: Recently Used section */
+
+.teacher-skill-browser-recent {
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--teacher-surface-2);
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-skill-browser-recent-title {
+    font-family: var(--teacher-font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teacher-text-secondary);
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-skill-browser-recent-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.teacher-skill-browser-recent-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-skill-browser-recent-chip:hover {
+    border-color: var(--teacher-accent);
+}
+
+.teacher-skill-browser-recent-chip-name {
+    color: var(--teacher-text-primary);
+    font-weight: 500;
+}
+
+.teacher-skill-browser-recent-chip-category {
+    color: var(--teacher-text-tertiary);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* 22 — Learning Analytics: Learning Velocity chart */
+
+.teacher-analytics-velocity-subtitle {
+    font-size: 12px;
+    color: var(--teacher-text-tertiary);
+    margin: 0 0 12px 0;
+}
+
+.teacher-analytics-velocity-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 140px;
+    padding: 8px 0;
+}
+
+.teacher-analytics-velocity-bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+}
+
+.teacher-analytics-velocity-bar-wrapper {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.teacher-analytics-velocity-bar {
+    width: 70%;
+    min-width: 16px;
+    max-width: 40px;
+    background: var(--teacher-accent);
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 4px;
+    transition: height var(--teacher-duration-normal) var(--teacher-ease-ios);
+}
+
+.teacher-analytics-velocity-value {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-surface-0);
+    font-weight: 600;
+}
+
+.teacher-analytics-velocity-label {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    margin-top: 4px;
+}
+
+/* 23 — Learning Path: You are here marker */
+
+.teacher-learning-path-you-are-here {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--teacher-accent);
+    color: var(--teacher-surface-0);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* 24 — Progress Dashboard: Daily streak counter */
+
+.teacher-dashboard-streak {
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: var(--teacher-surface-2);
+    border: 1px solid var(--teacher-border-subtle);
+    margin-bottom: 16px;
+}
+
+.teacher-dashboard-streak-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.teacher-dashboard-streak-flame {
+    font-size: 20px;
+    color: var(--teacher-accent);
+}
+
+.teacher-dashboard-streak-count {
+    font-family: var(--teacher-font-mono);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--teacher-accent);
+}
+
+.teacher-dashboard-streak-label {
+    font-size: 13px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-dashboard-streak-dots {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.teacher-dashboard-streak-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--teacher-surface-4);
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-dashboard-streak-dot--active {
+    background: var(--teacher-accent);
+    border-color: var(--teacher-accent);
+}
+
+/* 25 — Teachable Moments: Revisit / Quiz Me buttons */
+
+.teacher-teachable-moments-card-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.teacher-teachable-moments-revisit-btn,
+.teacher-teachable-moments-quiz-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--teacher-text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-teachable-moments-revisit-btn:hover {
+    border-color: var(--teacher-ai-thinking);
+    color: var(--teacher-ai-thinking);
+}
+
+.teacher-teachable-moments-quiz-btn:hover {
+    border-color: var(--teacher-accent);
+    color: var(--teacher-accent);
+}
+
+.teacher-teachable-moments-revisit-panel {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    border-radius: 6px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-ai-thinking);
+    color: var(--teacher-text-secondary);
+    font-size: 12px;
+}
+
+.teacher-teachable-moments-revisit-panel p {
+    margin: 0;
+}
+
+.teacher-teachable-moments-quiz-panel {
+    padding: 8px 12px;
+    margin-top: 8px;
+    border-radius: 6px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-accent);
+}
+
+.teacher-teachable-moments-quiz-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    color: var(--teacher-text-primary);
+    font-size: 12px;
+    margin: 0 0 8px 0;
+}
+
+.teacher-teachable-moments-quiz-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.teacher-teachable-moments-quiz-answer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--teacher-border-subtle);
+    background: transparent;
+    color: var(--teacher-text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-teachable-moments-quiz-answer-btn--yes:hover {
+    border-color: var(--teacher-ai-confident);
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-teachable-moments-quiz-answer-btn--no:hover {
+    border-color: var(--teacher-accent-hot);
+    color: var(--teacher-accent-hot);
+}
+
+.teacher-teachable-moments-quiz-result {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.teacher-teachable-moments-quiz-result--correct {
+    background: rgba(79, 178, 134, 0.15);
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-teachable-moments-quiz-result--review {
+    background: rgba(232, 169, 72, 0.15);
+    color: var(--teacher-accent);
+}
+
+/* 26 — Pulse Panel: Agent mode badge */
+
+.teacher-pulse-panel-mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-pulse-panel-mode-badge--blue {
+    color: #3B82F6;
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.teacher-pulse-panel-mode-badge--amber {
+    color: var(--teacher-accent);
+    border-color: rgba(232, 169, 72, 0.3);
+}
+
+.teacher-pulse-panel-mode-badge--green {
+    color: #4ADE80;
+    border-color: rgba(74, 222, 128, 0.3);
+}
+
+.teacher-pulse-panel-mode-badge--gray {
+    color: #9CA3AF;
+    border-color: rgba(156, 163, 175, 0.3);
+}
+
+/* 27 — Ghost Timeline: Undo All Since button */
+
+.teacher-ghost-clip-undo-since-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--teacher-text-tertiary);
+    cursor: pointer;
+    font-size: 11px;
+    transition: color var(--teacher-duration-fast) var(--teacher-ease-ios),
+                background var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-ghost-clip-undo-since-btn:hover {
+    color: var(--teacher-accent-hot);
+    background: rgba(245, 123, 32, 0.15);
+}
+
+/* 28 — Plan Mode: Time and Dependencies */
+
+.teacher-plan-mode-time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    background: var(--teacher-surface-3);
+}
+
+.teacher-plan-mode-dependencies {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-plan-mode-dep-label {
+    font-weight: 500;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-plan-mode-dep-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-secondary);
+}
+
+/* 29 — Rewind Panel: File diff preview */
+
+.teacher-rewind-diff-preview {
+    margin-top: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-rewind-diff-preview-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teacher-text-secondary);
+    margin-bottom: 6px;
+}
+
+.teacher-rewind-diff-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 0;
+    font-size: 11px;
+}
+
+.teacher-rewind-diff-file {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--teacher-text-secondary);
+    font-family: var(--teacher-font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.teacher-rewind-diff-stats {
+    display: flex;
+    gap: 6px;
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.teacher-rewind-diff-added {
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-rewind-diff-removed {
+    color: var(--teacher-accent-hot);
+}
+
+/* 30 — Canvas Review: Slider mode */
+
+.teacher-canvas-review-btn--mode {
+    background: var(--teacher-surface-3);
+    color: var(--teacher-text-secondary);
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-canvas-review-btn--mode:hover {
+    border-color: var(--teacher-accent);
+    color: var(--teacher-accent);
+}
+
+.teacher-canvas-review-btn--active {
+    border-color: var(--teacher-accent);
+    color: var(--teacher-accent);
+    background: rgba(232, 169, 72, 0.1);
+}
+
+.teacher-canvas-review-slider-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.teacher-canvas-review-slider-stack {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.teacher-canvas-review-slider-layer {
+    position: absolute;
+    inset: 0;
+    padding: 16px;
+}
+
+.teacher-canvas-review-slider-layer--before {
+    z-index: 2;
+}
+
+.teacher-canvas-review-slider-layer--after {
+    z-index: 1;
+}
+
+.teacher-canvas-review-slider-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--teacher-accent);
+    z-index: 3;
+    transform: translateX(-1px);
+}
+
+.teacher-canvas-review-slider-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--teacher-surface-2);
+    border-top: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-canvas-review-slider-label-left,
+.teacher-canvas-review-slider-label-right {
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+    min-width: 40px;
+}
+
+.teacher-canvas-review-slider-label-right {
+    text-align: right;
+}
+
+.teacher-canvas-review-slider-input {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--teacher-surface-4);
+    border-radius: 2px;
+    outline: none;
+}
+
+.teacher-canvas-review-slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--teacher-accent);
+    cursor: pointer;
+    border: 2px solid var(--teacher-surface-0);
+}
+
+/* ============================================================
+ * New Widgets (Changes 31-34) — CSS
+ * ============================================================ */
+
+/* 31 — Daily Objective Widget */
+
+.teacher-daily-objective {
+    overflow-y: auto;
+}
+
+.teacher-daily-objective-container {
+    padding: 12px 16px;
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-daily-objective-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.teacher-daily-objective-icon {
+    font-size: 18px;
+    color: var(--teacher-accent);
+}
+
+.teacher-daily-objective-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    margin: 0;
+}
+
+.teacher-daily-objective-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-daily-objective-goal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.teacher-daily-objective-goal-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-daily-objective-goal-pct {
+    font-family: var(--teacher-font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--teacher-accent);
+}
+
+.teacher-daily-objective-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--teacher-surface-4);
+    overflow: hidden;
+}
+
+.teacher-daily-objective-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--teacher-accent);
+    transition: width var(--teacher-duration-normal) var(--teacher-ease-ios);
+}
+
+.teacher-daily-objective-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.teacher-daily-objective-tasks {
+    font-size: 12px;
+    color: var(--teacher-text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.teacher-daily-objective-update-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--teacher-text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-daily-objective-update-btn:hover {
+    border-color: var(--teacher-accent);
+    color: var(--teacher-accent);
+}
+
+.teacher-daily-objective-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-daily-objective-edit-input {
+    font-size: 14px;
+}
+
+.teacher-daily-objective-edit-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.teacher-daily-objective-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 4px;
+    background: transparent;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-daily-objective-edit-btn--save {
+    color: var(--teacher-ai-confident);
+    border-color: rgba(79, 178, 134, 0.3);
+}
+
+.teacher-daily-objective-edit-btn--save:hover {
+    background: rgba(79, 178, 134, 0.1);
+}
+
+.teacher-daily-objective-edit-btn--cancel {
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-daily-objective-edit-btn--cancel:hover {
+    color: var(--teacher-text-secondary);
+}
+
+/* 32 — Concept Map Widget */
+
+.teacher-concept-map {
+    overflow-y: auto;
+}
+
+.teacher-concept-map-container {
+    padding: 12px 16px;
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-concept-map-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.teacher-concept-map-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-concept-map-count {
+    font-size: 12px;
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-concept-map-legend {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.teacher-concept-map-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-concept-map-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.teacher-concept-map-canvas {
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 8px;
+    background: var(--teacher-surface-1);
+    overflow: hidden;
+}
+
+.teacher-concept-map-svg {
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+}
+
+.teacher-concept-map-edge {
+    stroke: var(--teacher-border-subtle);
+    stroke-width: 1.5;
+    stroke-opacity: 0.5;
+}
+
+.teacher-concept-map-detail {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: var(--teacher-surface-2);
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-concept-map-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-concept-map-detail-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.teacher-concept-map-detail-cluster {
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+    margin-left: auto;
+}
+
+.teacher-concept-map-detail-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--teacher-surface-4);
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.teacher-concept-map-detail-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width var(--teacher-duration-normal) var(--teacher-ease-ios);
+}
+
+.teacher-concept-map-detail-mastery {
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+}
+
+/* 33 — Quick Quiz Widget */
+
+.teacher-quick-quiz {
+    overflow-y: auto;
+}
+
+.teacher-quick-quiz-container {
+    padding: 20px 24px;
+    max-width: var(--teacher-content-max-width);
+    margin: 0 auto;
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-quick-quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.teacher-quick-quiz-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-quick-quiz-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-quick-quiz-score-text {
+    font-family: var(--teacher-font-mono);
+    font-size: 13px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-quick-quiz-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--teacher-text-tertiary);
+    cursor: pointer;
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-quick-quiz-reset-btn:hover {
+    color: var(--teacher-accent);
+    border-color: var(--teacher-accent);
+}
+
+.teacher-quick-quiz-progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.teacher-quick-quiz-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--teacher-surface-4);
+    border: 1px solid var(--teacher-border-subtle);
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-quick-quiz-dot--current {
+    border-color: var(--teacher-accent);
+    box-shadow: 0 0 0 2px rgba(232, 169, 72, 0.2);
+}
+
+.teacher-quick-quiz-dot--correct {
+    background: var(--teacher-ai-confident);
+    border-color: var(--teacher-ai-confident);
+}
+
+.teacher-quick-quiz-dot--wrong {
+    background: var(--teacher-accent-hot);
+    border-color: var(--teacher-accent-hot);
+}
+
+.teacher-quick-quiz-question {
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--teacher-surface-2);
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-quick-quiz-question-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.teacher-quick-quiz-concept-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--teacher-surface-3);
+    font-size: 11px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-quick-quiz-type-badge {
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-quick-quiz-question-text {
+    font-size: 15px;
+    color: var(--teacher-text-primary);
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+
+.teacher-quick-quiz-code-snippet {
+    padding: 12px 16px;
+    border-radius: 6px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    font-family: var(--teacher-font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--teacher-text-primary);
+    margin: 0 0 12px 0;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.teacher-quick-quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.teacher-quick-quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--teacher-border-subtle);
+    background: var(--teacher-surface-3);
+    color: var(--teacher-text-primary);
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-quick-quiz-option:hover:not(:disabled) {
+    border-color: var(--teacher-accent);
+    background: rgba(232, 169, 72, 0.05);
+}
+
+.teacher-quick-quiz-option--correct {
+    border-color: var(--teacher-ai-confident) !important;
+    background: rgba(79, 178, 134, 0.1) !important;
+}
+
+.teacher-quick-quiz-option--wrong {
+    border-color: var(--teacher-accent-hot) !important;
+    background: rgba(245, 123, 32, 0.1) !important;
+}
+
+.teacher-quick-quiz-option-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--teacher-surface-4);
+    font-family: var(--teacher-font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teacher-text-secondary);
+    flex-shrink: 0;
+}
+
+.teacher-quick-quiz-option-text {
+    flex: 1;
+}
+
+.teacher-quick-quiz-option-icon {
+    margin-left: auto;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.teacher-quick-quiz-feedback {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.teacher-quick-quiz-feedback--correct {
+    background: rgba(79, 178, 134, 0.1);
+    color: var(--teacher-ai-confident);
+    border: 1px solid rgba(79, 178, 134, 0.2);
+}
+
+.teacher-quick-quiz-feedback--wrong {
+    background: rgba(232, 169, 72, 0.1);
+    color: var(--teacher-accent);
+    border: 1px solid rgba(232, 169, 72, 0.2);
+}
+
+.teacher-quick-quiz-nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.teacher-quick-quiz-next-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--teacher-accent);
+    background: rgba(232, 169, 72, 0.1);
+    color: var(--teacher-accent);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-quick-quiz-next-btn:hover {
+    background: rgba(232, 169, 72, 0.2);
+}
+
+/* 34 — Project Tracker Widget */
+
+.teacher-project-tracker {
+    overflow-y: auto;
+}
+
+.teacher-project-tracker-container {
+    padding: 12px 16px;
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-project-tracker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.teacher-project-tracker-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-project-tracker-progress {
+    font-family: var(--teacher-font-mono);
+    font-size: 12px;
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-project-tracker-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--teacher-surface-4);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.teacher-project-tracker-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--teacher-accent);
+    transition: width var(--teacher-duration-normal) var(--teacher-ease-ios);
+}
+
+.teacher-project-tracker-skills-earned {
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: var(--teacher-surface-2);
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-project-tracker-skills-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teacher-accent);
+    margin-bottom: 6px;
+}
+
+.teacher-project-tracker-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.teacher-project-tracker-skill-chip {
+    display: inline-flex;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    font-size: 10px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-project-tracker-timeline {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-project-tracker-milestone {
+    display: flex;
+    gap: 12px;
+}
+
+.teacher-project-tracker-milestone-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 24px;
+    flex-shrink: 0;
+}
+
+.teacher-project-tracker-milestone-dot {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.teacher-project-tracker-dot--done {
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-project-tracker-dot--current {
+    color: var(--teacher-accent);
+}
+
+.teacher-project-tracker-dot--upcoming {
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-project-tracker-milestone-line {
+    width: 2px;
+    flex: 1;
+    min-height: 12px;
+    background: var(--teacher-border-subtle);
+}
+
+.teacher-project-tracker-line--done {
+    background: var(--teacher-ai-confident);
+}
+
+.teacher-project-tracker-line--current {
+    background: linear-gradient(to bottom, var(--teacher-accent), var(--teacher-border-subtle));
+}
+
+.teacher-project-tracker-milestone-content {
+    flex: 1;
+    padding-bottom: 16px;
+    min-width: 0;
+}
+
+.teacher-project-tracker-milestone-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.teacher-project-tracker-milestone-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-project-tracker-milestone--upcoming .teacher-project-tracker-milestone-title {
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-project-tracker-status-badge {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.teacher-project-tracker-status-badge--done {
+    background: rgba(79, 178, 134, 0.15);
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-project-tracker-status-badge--current {
+    background: rgba(232, 169, 72, 0.15);
+    color: var(--teacher-accent);
+}
+
+.teacher-project-tracker-status-badge--upcoming {
+    background: var(--teacher-surface-3);
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-project-tracker-milestone-desc {
+    font-size: 12px;
+    color: var(--teacher-text-secondary);
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+}
+
+.teacher-project-tracker-milestone--upcoming .teacher-project-tracker-milestone-desc {
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-project-tracker-milestone-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.teacher-project-tracker-milestone-skill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+}
+
+/* Add new widgets to noise texture backgrounds */
+.teacher-daily-objective,
+.teacher-concept-map,
+.teacher-quick-quiz,
+.teacher-project-tracker {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.01'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+}
+
+/* Add new widgets to scrollbar-gutter */
+.teacher-daily-objective,
+.teacher-concept-map,
+.teacher-quick-quiz,
+.teacher-project-tracker {
+    scrollbar-gutter: stable;
+}

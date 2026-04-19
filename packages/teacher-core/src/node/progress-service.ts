@@ -233,4 +233,35 @@ export class ProgressTrackingServiceImpl implements ProgressTrackingService {
             suggestedNextLesson
         };
     }
+
+    async getWeeklyReport(): Promise<any> {
+        const summary = await this.getSummary();
+        return {
+            lessonsCompleted: summary.completedLessons,
+            timeSpentHours: summary.totalTimeHours,
+            skillsImproved: summary.topSkills.map(s => s.skill),
+            areasNeedingAttention: [],
+            streakDays: 0,
+            periodStart: new Date(Date.now() - 7 * 86400000).toISOString(),
+            periodEnd: new Date().toISOString()
+        };
+    }
+
+    async getStreak(): Promise<number> {
+        return 0;
+    }
+
+    async getWeakAreas(): Promise<string[]> {
+        return [];
+    }
+
+    async getRecommendedNext(): Promise<any> {
+        const summary = await this.getSummary();
+        return {
+            lessonId: summary.suggestedNextLesson,
+            reason: 'Continue where you left off',
+            estimatedMinutes: 30,
+            skillsTargeted: []
+        };
+    }
 }
