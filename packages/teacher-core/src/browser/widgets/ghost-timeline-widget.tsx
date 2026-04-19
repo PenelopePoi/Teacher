@@ -8,27 +8,46 @@ import { CanvasArtifact } from '../../common/canvas-protocol';
 /**
  * §2 item #2 — Ghost Timeline.
  *
- * A horizontal ribbon across the bottom of the workspace showing every
- * AI-produced artifact as a colored clip, Ableton-session style.
- * Clips are color-coded by artifact kind. Click a clip to jump to it in
- * the Canvas panel (onSelect emits a request; CanvasService raises the
- * corresponding artifact to the top of the list by removing and
- * re-adding). Clips can be hidden from the session view without being
- * destroyed — "muted" in Ableton terms — via the mute toggle.
- *
- * Non-linear, visual, complementary to git: the Canvas is what got
- * produced; the Timeline is the order it was produced.
+ * An Ableton-style horizontal ribbon showing AI actions as colored clips.
+ * Each clip represents one AI action with color coding by action type:
+ *   blue = edit, green = create, amber = suggest, red = delete.
+ * Includes a playhead, mute/revert toggles, and demo clips for testing.
  */
+
+type ActionType = 'edit' | 'create' | 'suggest' | 'delete';
+
+interface TimelineClip {
+    readonly id: string;
+    readonly label: string;
+    readonly actionType: ActionType;
+    readonly timestamp: number;
+    readonly sizeWeight: number;  // 1-5, affects width
+}
+
+const DEMO_CLIPS: TimelineClip[] = [
+    { id: 'dc1', label: 'Added login form', actionType: 'create', timestamp: Date.now() - 3600000, sizeWeight: 4 },
+    { id: 'dc2', label: 'Fixed CSS alignment', actionType: 'edit', timestamp: Date.now() - 3200000, sizeWeight: 2 },
+    { id: 'dc3', label: 'Refactored auth service', actionType: 'edit', timestamp: Date.now() - 2800000, sizeWeight: 5 },
+    { id: 'dc4', label: 'Suggested error handling', actionType: 'suggest', timestamp: Date.now() - 2400000, sizeWeight: 3 },
+    { id: 'dc5', label: 'Created user model', actionType: 'create', timestamp: Date.now() - 2000000, sizeWeight: 4 },
+    { id: 'dc6', label: 'Removed legacy endpoint', actionType: 'delete', timestamp: Date.now() - 1600000, sizeWeight: 2 },
+    { id: 'dc7', label: 'Updated validation logic', actionType: 'edit', timestamp: Date.now() - 1200000, sizeWeight: 3 },
+    { id: 'dc8', label: 'Suggested test coverage', actionType: 'suggest', timestamp: Date.now() - 800000, sizeWeight: 3 },
+    { id: 'dc9', label: 'Added dark mode styles', actionType: 'create', timestamp: Date.now() - 400000, sizeWeight: 4 },
+    { id: 'dc10', label: 'Fixed race condition', actionType: 'edit', timestamp: Date.now() - 120000, sizeWeight: 2 },
+];
 
 @injectable()
 export class GhostTimelineWidget extends ReactWidget {
 
-    static readonly ID = 'teacher-ghost-timeline-widget';
-    static readonly LABEL = nls.localize('theia/teacher/ghostTimeline', 'Ghost Timeline');
+    static readonly ID = 'teacher-ghost-timeline';
+    static readonly LABEL = nls.localize('theia/teacher/ghostTimeline', 'AI Timeline');
 
     @inject(CanvasService) protected readonly canvasService: CanvasService;
 
     protected mutedIds = new Set<string>();
+    protected selectedId: string | undefined;
+    protected demoClips: TimelineClip[] = DEMO_CLIPS.map(c => ({ ...c }));
 
     @postConstruct()
     protected init(): void {
@@ -36,54 +55,94 @@ export class GhostTimelineWidget extends ReactWidget {
         this.title.label = GhostTimelineWidget.LABEL;
         this.title.caption = GhostTimelineWidget.LABEL;
         this.title.closable = true;
-        this.title.iconClass = 'codicon codicon-pulse';
+        this.title.iconClass = 'codicon codicon-history';
         this.addClass('teacher-ghost-timeline-widget');
         this.toDispose.push(this.canvasService.onDidChange(() => this.update()));
     }
 
-    protected render(): React.ReactNode {
-        const artifacts = [...this.canvasService.artifacts].reverse();  // oldest → newest, left → right
+    protected handleClipClick = (clipId: string): void => {
+        this.selectedId = this.selectedId === clipId ? undefined : clipId;
+        this.update();
+    };
 
-        if (artifacts.length === 0) {
+    protected handleMuteClick = (e: React.MouseEvent, clipId: string): void => {
+        e.stopPropagation();
+        if (this.mutedIds.has(clipId)) {
+            this.mutedIds.delete(clipId);
+        } else {
+            this.mutedIds.add(clipId);
+        }
+        this.update();
+    };
+
+    protected render(): React.ReactNode {
+        const canvasArtifacts = [...this.canvasService.artifacts].reverse();
+        const hasCanvasData = canvasArtifacts.length > 0;
+        const clips = hasCanvasData ? this.artifactsToClips(canvasArtifacts) : this.demoClips;
+
+        if (clips.length === 0) {
             return (
-                <div className="teacher-ghost-empty">
-                    <p>Timeline is empty.</p>
-                    <p className="teacher-ghost-empty-hint">
-                        Every Canvas artifact appears here as a clip as it arrives. Click a clip to focus it; double-click to mute.
+                <div className='teacher-ghost-empty'>
+                    <p>{nls.localize('theia/teacher/timelineEmpty', 'Timeline is empty.')}</p>
+                    <p className='teacher-ghost-empty-hint'>
+                        {nls.localize('theia/teacher/timelineHint', 'AI actions appear here as colored clips. Click to inspect, mute to revert.')}
                     </p>
                 </div>
             );
         }
 
-        const first = artifacts[0].createdAt;
-        const last = Math.max(first + 1, artifacts[artifacts.length - 1].createdAt);
+        const first = clips[0].timestamp;
+        const last = Math.max(first + 1, clips[clips.length - 1].timestamp);
         const span = last - first;
 
         return (
-            <div className="teacher-ghost-scroll">
-                <div className="teacher-ghost-ruler">
-                    <span className="teacher-ghost-ruler-mark">{this.formatAbs(first)}</span>
-                    <span className="teacher-ghost-ruler-mark teacher-ghost-ruler-now">
-                        now · {artifacts.length} clips
+            <div className='teacher-ghost-scroll'>
+                <div className='teacher-ghost-ruler'>
+                    <span className='teacher-ghost-ruler-mark'>{this.formatAbs(first)}</span>
+                    <span className='teacher-ghost-ruler-mark teacher-ghost-ruler-now'>
+                        {nls.localize('theia/teacher/timelineNow', 'now')} · {clips.length} {nls.localize('theia/teacher/timelineClips', 'clips')}
                     </span>
                 </div>
-                <div className="teacher-ghost-track">
-                    {artifacts.map(artifact => {
-                        const pct = ((artifact.createdAt - first) / Math.max(1, span)) * 100;
-                        const muted = this.mutedIds.has(artifact.id);
+                <div className='teacher-ghost-track'>
+                    {/* Playhead */}
+                    <div className='teacher-ghost-playhead' />
+
+                    {clips.map(clip => {
+                        const pct = ((clip.timestamp - first) / Math.max(1, span)) * 100;
+                        const muted = this.mutedIds.has(clip.id);
+                        const selected = this.selectedId === clip.id;
+                        const widthPx = 60 + (clip.sizeWeight * 20);
+
+                        const classNames = [
+                            'teacher-ghost-clip',
+                            `teacher-ghost-clip--${clip.actionType}`,
+                            muted ? 'teacher-ghost-clip--muted' : '',
+                            selected ? 'teacher-ghost-clip--selected' : '',
+                        ].filter(Boolean).join(' ');
+
                         return (
-                            <button
-                                key={artifact.id}
-                                type="button"
-                                className={`teacher-ghost-clip ${muted ? 'teacher-ghost-clip--muted' : ''} teacher-ghost-clip--${artifact.kind}`}
-                                style={{ left: `${pct}%` }}
-                                title={`${artifact.title}\n${this.formatAbs(artifact.createdAt)}${muted ? '\n(muted)' : ''}`}
-                                onClick={() => this.focus(artifact)}
-                                onDoubleClick={() => this.toggleMute(artifact)}
+                            <div
+                                key={clip.id}
+                                className={classNames}
+                                style={{ left: `${pct}%`, width: `${widthPx}px` }}
+                                title={`${clip.label}\n${this.formatAbs(clip.timestamp)}${muted ? '\n(reverted)' : ''}`}
+                                onClick={() => this.handleClipClick(clip.id)}
                             >
-                                <span className="teacher-ghost-clip-kind">{artifact.kind}</span>
-                                <span className="teacher-ghost-clip-title">{artifact.title}</span>
-                            </button>
+                                <div className='teacher-ghost-clip-top'>
+                                    <span className='teacher-ghost-clip-kind'>{clip.actionType}</span>
+                                    <button
+                                        type='button'
+                                        className='teacher-ghost-clip-mute-btn'
+                                        onClick={(e) => this.handleMuteClick(e, clip.id)}
+                                        title={muted
+                                            ? nls.localize('theia/teacher/timelineUnmute', 'Restore')
+                                            : nls.localize('theia/teacher/timelineMute', 'Revert')}
+                                    >
+                                        <i className={`codicon ${muted ? 'codicon-unmute' : 'codicon-mute'}`} />
+                                    </button>
+                                </div>
+                                <span className='teacher-ghost-clip-title'>{clip.label}</span>
+                            </div>
                         );
                     })}
                 </div>
@@ -91,31 +150,28 @@ export class GhostTimelineWidget extends ReactWidget {
         );
     }
 
-    protected focus(artifact: CanvasArtifact): void {
-        /*
-         * Simplest "jump" semantics: remove + re-add to push the clip to
-         * the top of the Canvas artifact list. Doesn't destroy content —
-         * the artifact's full shape is preserved.
-         */
-        this.canvasService.remove(artifact.id);
-        this.canvasService.add({
-            ...artifact,
-            id: artifact.id,
-        } as never);
+    protected artifactsToClips(artifacts: CanvasArtifact[]): TimelineClip[] {
+        return artifacts.map(a => ({
+            id: a.id,
+            label: a.title,
+            actionType: this.kindToAction(a.kind),
+            timestamp: a.createdAt,
+            sizeWeight: 3,
+        }));
     }
 
-    protected toggleMute(artifact: CanvasArtifact): void {
-        if (this.mutedIds.has(artifact.id)) {
-            this.mutedIds.delete(artifact.id);
-        } else {
-            this.mutedIds.add(artifact.id);
+    protected kindToAction(kind: string): ActionType {
+        switch (kind) {
+            case 'code': return 'edit';
+            case 'markdown': return 'create';
+            case 'table': return 'suggest';
+            case 'chart': return 'suggest';
+            default: return 'create';
         }
-        this.update();
     }
 
     protected formatAbs(ts: number): string {
         const d = new Date(ts);
         return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
-
 }

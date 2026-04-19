@@ -33,6 +33,10 @@ import { TeacherStatusContribution } from './status/teacher-status-contribution'
 import { DragToAskContribution } from './components/drag-to-ask-contribution';
 import { GhostTimelineWidget } from './widgets/ghost-timeline-widget';
 import { GhostTimelineContribution } from './widgets/ghost-timeline-contribution';
+import { PulsePanelWidget } from './widgets/pulse-panel-widget';
+import { PulsePanelContribution } from './widgets/pulse-panel-contribution';
+import { TeachableMomentsWidget } from './widgets/teachable-moments-widget';
+import { TeachableMomentsContribution } from './widgets/teachable-moments-contribution';
 import { LessonCommandContribution } from './commands/lesson-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
@@ -145,6 +149,22 @@ export default new ContainerModule(bind => {
         createWidget: () => context.container.get<GhostTimelineWidget>(GhostTimelineWidget),
     })).inSingletonScope();
     bindViewContribution(bind, GhostTimelineContribution);
+
+    // §2 — Pulse Panel widget (ambient AI status strip)
+    bind(PulsePanelWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: PulsePanelWidget.ID,
+        createWidget: () => context.container.get<PulsePanelWidget>(PulsePanelWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, PulsePanelContribution);
+
+    // §2 item #6 — Teachable Moments widget (learned concepts tracker)
+    bind(TeachableMomentsWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: TeachableMomentsWidget.ID,
+        createWidget: () => context.container.get<TeachableMomentsWidget>(TeachableMomentsWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, TeachableMomentsContribution);
 
     // Canvas — service + widget + view contribution (Cursor-inspired)
     bind(CanvasService).toSelf().inSingletonScope();

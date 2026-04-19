@@ -16,9 +16,9 @@ Signature: 2.4s breathing glow, amber #E8A948, no spinners ever
 - [ ] Product icon theme (Lucide base + 25 custom)
 
 ### Phase 2 — AI Surface
-- [ ] Pulse Panel (ambient AI status strip)
-- [ ] Ghost Timeline (Ableton-style AI undo ribbon)
-- [ ] Teachable Moments (gold underline on new concepts)
+- [x] Pulse Panel (ambient AI status strip)
+- [x] Ghost Timeline (Ableton-style AI undo ribbon)
+- [x] Teachable Moments (gold underline on new concepts)
 - [ ] Ghost text with explanation tooltip
 
 ### Phase 3 — Beginner UX  

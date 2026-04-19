@@ -2692,3 +2692,530 @@ body.teacher-status-rebuilt #theia-statusBar {
 .teacher-ghost-clip--keyValue    { border-left-color: var(--teacher-ai-confident); }
 .teacher-ghost-clip--chart       { border-left-color: var(--teacher-accent-hot); }
 .teacher-ghost-clip--connections { border-left-color: #C79BE8; }
+
+/* Action-type clip colors (Phase 2 Ghost Timeline) */
+.teacher-ghost-clip--edit        { border-left-color: var(--teacher-ai-thinking); }
+.teacher-ghost-clip--create      { border-left-color: var(--teacher-ai-confident); }
+.teacher-ghost-clip--suggest     { border-left-color: var(--teacher-ai-suggesting); }
+.teacher-ghost-clip--delete      { border-left-color: #E5484D; }
+
+.teacher-ghost-clip--selected {
+    border-color: var(--teacher-accent);
+    box-shadow: 0 0 0 1px var(--teacher-accent), 0 2px 8px rgba(232, 169, 72, 0.25);
+    z-index: 2;
+}
+
+.teacher-ghost-clip-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-ghost-clip-mute-btn {
+    background: transparent;
+    border: none;
+    color: var(--teacher-text-tertiary);
+    cursor: pointer;
+    padding: 0 2px;
+    font-size: 10px;
+    line-height: 1;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teacher-ghost-clip-mute-btn:hover {
+    color: var(--teacher-text-primary);
+    background: var(--teacher-surface-4);
+}
+
+/* Playhead — amber vertical line at right edge */
+.teacher-ghost-playhead {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--teacher-accent);
+    box-shadow: 0 0 6px rgba(232, 169, 72, 0.5);
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* ============================================================
+ * §2 — Pulse Panel Widget
+ * Thin 32px horizontal strip: orb + status + model badge
+ * ============================================================ */
+
+.teacher-pulse-panel {
+    overflow: hidden;
+    background: var(--teacher-surface-1);
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-pulse-panel-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-pulse-panel-strip {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Orb button */
+.teacher-pulse-panel-orb-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+/* 12px breathing orb */
+.teacher-pulse-panel-orb {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--teacher-ai-thinking);
+    transition: background-color var(--teacher-duration-normal) var(--teacher-ease-ios);
+}
+
+/* Idle — periwinkle breathing glow */
+.teacher-pulse-panel-state--idle .teacher-pulse-panel-orb {
+    background: var(--teacher-ai-thinking);
+    box-shadow: 0 0 8px rgba(123, 155, 209, 0.6), 0 0 16px rgba(123, 155, 209, 0.3);
+    animation: teacher-pulse-panel-breathe var(--teacher-breathing-duration) ease-in-out infinite;
+}
+
+/* Thinking — faster breath */
+.teacher-pulse-panel-state--thinking .teacher-pulse-panel-orb {
+    background: var(--teacher-ai-thinking);
+    box-shadow: 0 0 10px rgba(123, 155, 209, 0.7), 0 0 20px rgba(123, 155, 209, 0.4);
+    animation: teacher-pulse-panel-breathe 1800ms ease-in-out infinite;
+}
+
+/* Thinking ring */
+.teacher-pulse-panel-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid rgba(123, 155, 209, 0.5);
+    transform: translate(-50%, -50%);
+    animation: teacher-pulse-panel-ring-expand 1800ms ease-out infinite;
+    pointer-events: none;
+}
+
+/* Suggesting — amber pulse with spring scale */
+.teacher-pulse-panel-state--suggesting .teacher-pulse-panel-orb {
+    background: var(--teacher-ai-suggesting);
+    box-shadow: 0 0 10px rgba(232, 169, 72, 0.7), 0 0 20px rgba(232, 169, 72, 0.4);
+    animation: teacher-pulse-panel-suggest 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Error — static red */
+.teacher-pulse-panel-state--error .teacher-pulse-panel-orb {
+    background: #E5484D;
+    box-shadow: 0 0 8px rgba(229, 72, 77, 0.6);
+    animation: none;
+}
+
+@keyframes teacher-pulse-panel-breathe {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes teacher-pulse-panel-ring-expand {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+@keyframes teacher-pulse-panel-suggest {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+}
+
+/* Status text */
+.teacher-pulse-panel-status {
+    flex: 1;
+    font-size: 12px;
+    color: var(--teacher-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-pulse-panel-state--error.teacher-pulse-panel-status {
+    color: #E5484D;
+}
+
+.teacher-pulse-panel-state--suggesting.teacher-pulse-panel-status {
+    color: var(--teacher-ai-suggesting);
+}
+
+/* Model badge */
+.teacher-pulse-panel-model-badge {
+    flex-shrink: 0;
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--teacher-surface-3);
+    color: var(--teacher-text-tertiary);
+    border: 1px solid var(--teacher-border-subtle);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Activity log (expanded) */
+.teacher-pulse-panel-log {
+    border-top: 1px solid var(--teacher-border-subtle);
+    background: var(--teacher-surface-2);
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.teacher-pulse-panel-log::-webkit-scrollbar {
+    width: 4px;
+}
+
+.teacher-pulse-panel-log::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(122, 130, 142, 0.3);
+}
+
+.teacher-pulse-panel-log-header {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-pulse-panel-log-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teacher-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-pulse-panel-log-entries {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-pulse-panel-log-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    font-size: 11px;
+    border-bottom: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-pulse-panel-log-entry:last-child {
+    border-bottom: none;
+}
+
+.teacher-pulse-panel-log-time {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    min-width: 64px;
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-pulse-panel-log-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.teacher-pulse-panel-state--idle .teacher-pulse-panel-log-dot,
+.teacher-pulse-panel-log-dot.teacher-pulse-panel-state--idle { background: var(--teacher-ai-thinking); }
+.teacher-pulse-panel-state--thinking .teacher-pulse-panel-log-dot,
+.teacher-pulse-panel-log-dot.teacher-pulse-panel-state--thinking { background: var(--teacher-ai-thinking); }
+.teacher-pulse-panel-state--suggesting .teacher-pulse-panel-log-dot,
+.teacher-pulse-panel-log-dot.teacher-pulse-panel-state--suggesting { background: var(--teacher-ai-suggesting); }
+.teacher-pulse-panel-state--error .teacher-pulse-panel-log-dot,
+.teacher-pulse-panel-log-dot.teacher-pulse-panel-state--error { background: #E5484D; }
+
+.teacher-pulse-panel-log-msg {
+    color: var(--teacher-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-pulse-panel-log-empty {
+    padding: 12px;
+    color: var(--teacher-text-tertiary);
+    font-size: 11px;
+    font-style: italic;
+    text-align: center;
+}
+
+/* ============================================================
+ * §2 item #6 — Teachable Moments Widget
+ * Concept tracker with confidence levels and category grouping
+ * ============================================================ */
+
+.teacher-teachable-moments {
+    overflow-y: auto;
+    background: var(--teacher-surface-1);
+    font-family: var(--teacher-font-ui);
+}
+
+.teacher-teachable-moments::-webkit-scrollbar {
+    width: 4px;
+}
+
+.teacher-teachable-moments::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(122, 130, 142, 0.3);
+}
+
+.teacher-teachable-moments-container {
+    padding: 12px;
+}
+
+.teacher-teachable-moments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.teacher-teachable-moments-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-teachable-moments-title .codicon {
+    color: var(--teacher-accent);
+}
+
+.teacher-teachable-moments-count {
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Search */
+.teacher-teachable-moments-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-teachable-moments-search-input {
+    flex: 1;
+    background: var(--teacher-surface-3) !important;
+    border: 1px solid var(--teacher-border-subtle) !important;
+    border-radius: 6px !important;
+    color: var(--teacher-text-primary) !important;
+    font-family: var(--teacher-font-ui);
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+.teacher-teachable-moments-search-input::placeholder {
+    color: var(--teacher-text-tertiary);
+}
+
+/* List */
+.teacher-teachable-moments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-teachable-moments-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    color: var(--teacher-text-tertiary);
+    font-size: 12px;
+    text-align: center;
+}
+
+.teacher-teachable-moments-empty .codicon {
+    font-size: 24px;
+    opacity: 0.5;
+}
+
+/* Category headers — TE-style uppercase labels */
+.teacher-teachable-moments-category {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--teacher-text-tertiary);
+    padding: 4px 0;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-teachable-moments-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Concept cards */
+.teacher-teachable-moments-card {
+    background: var(--teacher-surface-2);
+    border: 1px solid var(--teacher-border-subtle);
+    border-left: 3px solid var(--teacher-ai-suggesting);
+    border-radius: 4px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-teachable-moments-card:hover {
+    border-color: var(--teacher-border-strong);
+}
+
+/* Confidence-based left border */
+.teacher-teachable-moments-card--new {
+    border-left-color: var(--teacher-ai-suggesting);
+}
+
+.teacher-teachable-moments-card--learning {
+    border-left-color: var(--teacher-accent);
+}
+
+.teacher-teachable-moments-card--known {
+    border-left-color: var(--teacher-ai-confident);
+}
+
+.teacher-teachable-moments-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-teachable-moments-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    font-family: var(--teacher-font-mono);
+}
+
+/* Gold underline for new concepts */
+.teacher-teachable-moments-card-name--new {
+    text-decoration: underline;
+    text-decoration-color: var(--teacher-ai-suggesting);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+}
+
+.teacher-teachable-moments-card-confidence {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-teachable-moments-confidence--new {
+    background: rgba(232, 169, 72, 0.15);
+    color: var(--teacher-ai-suggesting);
+}
+
+.teacher-teachable-moments-confidence--learning {
+    background: rgba(232, 169, 72, 0.1);
+    color: var(--teacher-accent);
+}
+
+.teacher-teachable-moments-confidence--known {
+    background: rgba(79, 178, 134, 0.15);
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-teachable-moments-card-explanation {
+    font-size: 12px;
+    color: var(--teacher-text-secondary);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.teacher-teachable-moments-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2px;
+}
+
+.teacher-teachable-moments-card-time {
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Got it — small pill button */
+.teacher-teachable-moments-got-it {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    font-size: 10px;
+    font-weight: 500;
+    font-family: var(--teacher-font-ui);
+    color: var(--teacher-text-primary);
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 12px;
+    cursor: pointer;
+    transition:
+        background-color var(--teacher-duration-fast) var(--teacher-ease-ios),
+        border-color var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-teachable-moments-got-it:hover {
+    background: var(--teacher-ai-confident);
+    color: var(--teacher-surface-0);
+    border-color: var(--teacher-ai-confident);
+}
+
+.teacher-teachable-moments-got-it .codicon {
+    font-size: 10px;
+}
