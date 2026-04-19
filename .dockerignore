@@ -1,0 +1,16 @@
+.git
+node_modules
+.vscode
+.github
+*.md
+LICENSE*
+NOTICE*
+.eslintrc*
+.gitignore
+.dockerignore
+docker-compose.yml
+examples/electron
+examples/playwright
+sample-plugins
+doc
+logo

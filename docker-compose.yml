@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  teacher:
+    build: .
+    container_name: teacher-ide
+    ports:
+      - "3000:3000"
+    volumes:
+      - teacher-workspace:/home/theia/workspace
+      - teacher-plugins:/app/plugins
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    networks:
+      - teacher-net
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: teacher-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    networks:
+      - teacher-net
+    restart: unless-stopped
+
+volumes:
+  teacher-workspace:
+  teacher-plugins:
+  ollama-models:
+
+networks:
+  teacher-net:
+    driver: bridge
