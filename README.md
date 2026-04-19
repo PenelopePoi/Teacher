@@ -132,6 +132,7 @@ Teacher (Theia Fork)
 │   ├── core/              # Platform foundation
 │   ├── editor/            # Editor framework
 │   ├── monaco/            # Monaco editor integration
+│   ├── teacher-ui/        # Teacher-branded UI shell, theming, layout
 │   └── ...                # 77 packages total
 ├── curriculum/            # Sample courses (Intro to Python)
 ├── examples/              # Browser + Electron apps
