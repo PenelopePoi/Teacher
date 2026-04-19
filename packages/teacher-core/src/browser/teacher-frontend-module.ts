@@ -5,6 +5,7 @@ import '../../src/browser/style/ghost-timeline.css';
 import '../../src/browser/style/teachable-moments.css';
 import '../../src/browser/style/notification-orbit.css';
 import '../../src/browser/style/message-queue.css';
+import '../../src/browser/style/help-overlay.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -93,6 +94,9 @@ import { MessageQueueWidget } from './agent-queue/message-queue-widget';
 import { MessageQueueContribution } from './agent-queue/message-queue-contribution';
 import { AgentHandoffService } from './agents/agent-handoff-service';
 import { AgentCommunicationService } from '../common/agent-protocol';
+import { DragToAskService } from './components/drag-to-ask-service';
+import { DragToAskCommandContribution } from './commands/drag-to-ask-command';
+import { HelpOverlayContribution } from './help/help-overlay-contribution';
 
 export default new ContainerModule(bind => {
     // Agent Handoff Service — manages inter-agent communication and handoffs
@@ -427,6 +431,19 @@ export default new ContainerModule(bind => {
         createWidget: () => context.container.get<ProjectTrackerWidget>(ProjectTrackerWidget),
     })).inSingletonScope();
     bindViewContribution(bind, ProjectTrackerContribution);
+
+    // C8 Drag-to-Ask Service — injectable singleton for selection-as-context
+    bind(DragToAskService).toSelf().inSingletonScope();
+
+    // C8 Drag-to-Ask Command (Cmd+Shift+A — grab selection, set subject, open chat)
+    bind(DragToAskCommandContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(DragToAskCommandContribution);
+    bind(KeybindingContribution).toService(DragToAskCommandContribution);
+
+    // B7 Help Overlay (? shortcut sheet — glass modal with all keybindings)
+    bind(HelpOverlayContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(HelpOverlayContribution);
+    bind(KeybindingContribution).toService(HelpOverlayContribution);
 
     // G6a Message Queue — append context to running agents mid-loop (Cmd+Shift+M)
     bind(MessageQueueService).toSelf().inSingletonScope();
