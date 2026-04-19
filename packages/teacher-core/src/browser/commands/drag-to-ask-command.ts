@@ -48,10 +48,7 @@ export class DragToAskCommandContribution implements CommandContribution, Keybin
                     return;
                 }
 
-                const selection = editor.editor.selection;
-                const selectedText = editor.editor.document.getLineContent
-                    ? this.getSelectedText(editor)
-                    : '';
+                const selectedText = this.getSelectedText(editor) || '';
 
                 if (!selectedText || selectedText.trim().length === 0) {
                     this.messageService.info(nls.localize(
@@ -62,10 +59,11 @@ export class DragToAskCommandContribution implements CommandContribution, Keybin
                 }
 
                 const uri = editor.editor.uri;
+                const sel = editor.editor.selection;
                 const fileName = uri.path.base || uri.toString();
-                const lineInfo = selection.start.line !== selection.end.line
-                    ? `L${selection.start.line + 1}-${selection.end.line + 1}`
-                    : `L${selection.start.line + 1}`;
+                const lineInfo = sel.start.line !== sel.end.line
+                    ? `L${sel.start.line + 1}-${sel.end.line + 1}`
+                    : `L${sel.start.line + 1}`;
                 const source = `${fileName}:${lineInfo}`;
 
                 this.dragToAskService.setSubject(selectedText, source);
@@ -96,7 +94,7 @@ export class DragToAskCommandContribution implements CommandContribution, Keybin
         });
     }
 
-    protected getSelectedText(editor: ReturnType<EditorManager['currentEditor']>): string {
+    protected getSelectedText(editor: any): string {
         if (!editor) {
             return '';
         }

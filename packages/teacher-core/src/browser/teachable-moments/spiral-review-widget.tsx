@@ -112,7 +112,7 @@ export class SpiralReviewWidget extends ReactWidget {
         }
     }
 
-    dispose(): void {
+    override dispose(): void {
         for (const timer of this.autoDismissTimers.values()) {
             clearTimeout(timer);
         }
