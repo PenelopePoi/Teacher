@@ -1,7 +1,6 @@
-import { PreferenceSchema } from '@theia/core/lib/browser/preferences/preference-contribution';
+import { PreferenceSchema } from '@theia/core/lib/common/preferences/preference-schema';
 
 export const TeacherPreferencesSchema: PreferenceSchema = {
-    type: 'object',
     properties: {
         'teacher.asi.enabled': {
             type: 'boolean',
