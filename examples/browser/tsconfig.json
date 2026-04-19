@@ -201,6 +201,9 @@
       "path": "../../packages/teacher-core"
     },
     {
+      "path": "../../packages/teacher-ui"
+    },
+    {
       "path": "../../packages/terminal"
     },
     {

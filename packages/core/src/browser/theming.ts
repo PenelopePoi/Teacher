@@ -177,6 +177,13 @@ export class BuiltinThemeProvider {
         editorTheme: 'dark-theia' // loaded in /packages/monaco/src/browser/textmate/monaco-theme-registry.ts
     };
 
+    static readonly teacherDarkTheme: Theme = {
+        id: 'teacher-dark',
+        type: 'dark',
+        label: 'Teacher Dark',
+        editorTheme: 'dark-teacher' // loaded in /packages/monaco/src/browser/textmate/monaco-theme-registry.ts
+    };
+
     static readonly lightTheme: Theme = {
         id: 'light',
         type: 'light',
@@ -199,6 +206,7 @@ export class BuiltinThemeProvider {
     };
 
     static readonly themes = [
+        BuiltinThemeProvider.teacherDarkTheme,
         BuiltinThemeProvider.darkTheme,
         BuiltinThemeProvider.lightTheme,
         BuiltinThemeProvider.hcTheme,

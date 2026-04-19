@@ -17,10 +17,10 @@
       "path": "../core"
     },
     {
-      "path": "../monaco"
+      "path": "../editor"
     },
     {
-      "path": "../editor"
+      "path": "../monaco"
     }
   ]
 }

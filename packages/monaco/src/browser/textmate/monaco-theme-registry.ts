@@ -36,6 +36,10 @@ export class MonacoThemeRegistry {
             './dark_vs.json': require('../../../data/monaco-themes/vscode/dark_vs.json'),
             './dark_plus.json': require('../../../data/monaco-themes/vscode/dark_plus.json')
         }, 'dark-theia', 'vs-dark');
+        this.register(require('../../../data/monaco-themes/vscode/dark_teacher.json'), {
+            './dark_vs.json': require('../../../data/monaco-themes/vscode/dark_vs.json'),
+            './dark_plus.json': require('../../../data/monaco-themes/vscode/dark_plus.json')
+        }, 'dark-teacher', 'vs-dark');
         this.register(require('../../../data/monaco-themes/vscode/light_theia.json'), {
             './light_vs.json': require('../../../data/monaco-themes/vscode/light_vs.json'),
             './light_plus.json': require('../../../data/monaco-themes/vscode/light_plus.json'),
