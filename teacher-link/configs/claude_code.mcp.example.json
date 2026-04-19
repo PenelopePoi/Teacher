@@ -1,0 +1,14 @@
+{
+  "//": "Place this as .mcp.json at the root of any project where you want Teacher-Link exposed, or merge into ~/.claude.json for global availability across Claude Code sessions.",
+  "mcpServers": {
+    "teacher-link": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/absolute/path/to/Teacher/teacher-link/mcp-bridge.mjs"],
+      "env": {
+        "TEACHER_MCP_URL": "http://localhost:8808",
+        "TEACHER_MCP_TIMEOUT_MS": "180000"
+      }
+    }
+  }
+}

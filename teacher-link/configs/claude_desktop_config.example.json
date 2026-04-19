@@ -1,0 +1,13 @@
+{
+  "//": "Add this entry to ~/Library/Application Support/Claude/claude_desktop_config.json (Mac) or %APPDATA%\\Claude\\claude_desktop_config.json (Windows). Replace the absolute path with your clone location.",
+  "mcpServers": {
+    "teacher-link": {
+      "command": "node",
+      "args": ["/absolute/path/to/Teacher/teacher-link/mcp-bridge.mjs"],
+      "env": {
+        "TEACHER_MCP_URL": "http://localhost:8808",
+        "TEACHER_MCP_TIMEOUT_MS": "180000"
+      }
+    }
+  }
+}
