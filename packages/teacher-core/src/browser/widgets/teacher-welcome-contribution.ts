@@ -7,6 +7,7 @@ import {
     FrontendApplicationContribution
 } from '@theia/core/lib/browser';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
+import { PreferenceService } from '@theia/core/lib/browser/preferences/preference-service';
 import { TeacherWelcomeWidget } from './teacher-welcome-widget';
 
 export const TeacherWelcomeCommand = {
@@ -20,6 +21,9 @@ export class TeacherWelcomeContribution extends AbstractViewContribution<Teacher
     @inject(FrontendApplicationStateService)
     protected readonly stateService: FrontendApplicationStateService;
 
+    @inject(PreferenceService)
+    protected readonly preferenceService: PreferenceService;
+
     constructor() {
         super({
             widgetId: TeacherWelcomeWidget.ID,
@@ -32,7 +36,10 @@ export class TeacherWelcomeContribution extends AbstractViewContribution<Teacher
 
     async onStart(_app: FrontendApplication): Promise<void> {
         this.stateService.reachedState('ready').then(() => {
-            this.openView({ reveal: true, activate: true });
+            const showOnStartup = this.preferenceService.get<boolean>('teacher.welcome.showOnStartup', true);
+            if (showOnStartup) {
+                this.openView({ reveal: true, activate: true });
+            }
         });
     }
 

@@ -205,8 +205,9 @@ export class WorkflowBuilderWidget extends ReactWidget {
                                                         className='teacher-workflow-builder-step-remove'
                                                         onClick={() => this.handleRemoveStep(wf.id, i)}
                                                         title={nls.localize('theia/teacher/removeStep', 'Remove step')}
+                                                        aria-label={nls.localize('theia/teacher/removeStep', 'Remove step')}
                                                     >
-                                                        <i className='codicon codicon-close' />
+                                                        <i className='codicon codicon-close' aria-hidden='true' />
                                                     </button>
                                                 </div>
                                                 {i < wf.steps.length - 1 && (

@@ -1,4 +1,4 @@
-import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
+import { injectable, inject, optional, postConstruct } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution, FrontendApplication } from '@theia/core/lib/browser';
 import { Emitter, Event, DisposableCollection } from '@theia/core/lib/common';
 import { WorkspaceService } from '@theia/workspace/lib/browser';
@@ -19,7 +19,7 @@ import URI from '@theia/core/lib/common/uri';
  *   - CLAUDE.md support as fallback
  *   - Structured section parsing (headings -> sections map)
  *   - Content validation and size limits
- *   - Change diffing (what changed in AGENTS.md)
+ *   - Graceful degradation when workspace/file services unavailable
  */
 
 const AGENTS_MD_FILENAMES = ['AGENTS.md', 'agents.md', 'CLAUDE.md', 'claude.md'];
@@ -35,11 +35,11 @@ export interface AgentsMdSection {
 @injectable()
 export class AgentsMdProvider implements FrontendApplicationContribution {
 
-    @inject(WorkspaceService)
-    protected readonly workspaceService: WorkspaceService;
+    @inject(WorkspaceService) @optional()
+    protected readonly workspaceService: WorkspaceService | undefined;
 
-    @inject(FileService)
-    protected readonly fileService: FileService;
+    @inject(FileService) @optional()
+    protected readonly fileService: FileService | undefined;
 
     private agentsMdContent: string | undefined;
     private agentsMdPath: string | undefined;
@@ -57,18 +57,22 @@ export class AgentsMdProvider implements FrontendApplicationContribution {
     }
 
     async onStart(_app: FrontendApplication): Promise<void> {
-        // Wait for workspace to be ready
-        await this.workspaceService.ready;
+        // Wait for workspace to be ready if available
+        if (this.workspaceService) {
+            await this.workspaceService.ready;
+        }
         await this.loadAgentsMd();
 
         // Watch for workspace changes
-        this.disposables.push(
-            this.workspaceService.onWorkspaceChanged(() => {
-                this.loadAgentsMd();
-            })
-        );
+        if (this.workspaceService) {
+            this.disposables.push(
+                this.workspaceService.onWorkspaceChanged(() => {
+                    this.loadAgentsMd();
+                })
+            );
+        }
 
-        // Set up file watcher for the found file
+        // Set up file watcher if we found a file
         this.setupFileWatcher();
 
         // Poll as a fallback
@@ -116,63 +120,53 @@ export class AgentsMdProvider implements FrontendApplicationContribution {
         if (!this.agentsMdPath) {
             return undefined;
         }
-        // Extract just the filename
         const parts = this.agentsMdPath.split('/');
         return parts[parts.length - 1];
     }
 
     private async loadAgentsMd(): Promise<void> {
-        const roots = this.workspaceService.tryGetRoots();
-        if (roots.length === 0) {
-            // No workspace, try fallback fetch
-            await this.loadViaFetch();
-            return;
-        }
+        // Try FileService + WorkspaceService first
+        if (this.workspaceService && this.fileService) {
+            const roots = this.workspaceService.tryGetRoots();
+            for (const root of roots) {
+                for (const filename of AGENTS_MD_FILENAMES) {
+                    try {
+                        const fileUri = root.resource.resolve(filename);
+                        const stat = await this.fileService.resolve(fileUri);
+                        if (stat && !stat.isDirectory) {
+                            const content = await this.fileService.readFile(fileUri);
+                            const text = content.value.toString();
 
-        for (const root of roots) {
-            for (const filename of AGENTS_MD_FILENAMES) {
-                try {
-                    const fileUri = new URI(root.resource.toString()).resolve(filename);
-                    const stat = await this.fileService.resolve(fileUri);
-                    if (stat && !stat.isDirectory) {
-                        const content = await this.fileService.read(fileUri);
-                        const text = content.value;
+                            if (text.length > MAX_CONTENT_SIZE) {
+                                console.warn(`[AgentsMdProvider] ${filename} exceeds ${MAX_CONTENT_SIZE} chars, truncating`);
+                            }
 
-                        if (text.length > MAX_CONTENT_SIZE) {
-                            console.warn(`[AgentsMdProvider] ${filename} exceeds ${MAX_CONTENT_SIZE} chars, truncating`);
+                            const truncated = text.slice(0, MAX_CONTENT_SIZE);
+                            const changed = truncated !== this.agentsMdContent;
+
+                            this.agentsMdContent = truncated;
+                            this.agentsMdPath = fileUri.toString();
+                            this.agentsMdSections = this.parseSections(truncated);
+
+                            if (changed) {
+                                this.lastModified = Date.now();
+                                console.info(`[AgentsMdProvider] Loaded ${filename} (${truncated.length} chars, ${this.agentsMdSections.length} sections)`);
+                                this.onDidChangeContentEmitter.fire(truncated);
+                            }
+                            return;
                         }
-
-                        const truncated = text.slice(0, MAX_CONTENT_SIZE);
-                        const changed = truncated !== this.agentsMdContent;
-
-                        this.agentsMdContent = truncated;
-                        this.agentsMdPath = fileUri.toString();
-                        this.agentsMdSections = this.parseSections(truncated);
-
-                        if (changed) {
-                            this.lastModified = Date.now();
-                            console.info(`[AgentsMdProvider] Loaded ${filename} (${truncated.length} chars, ${this.agentsMdSections.length} sections)`);
-                            this.onDidChangeContentEmitter.fire(truncated);
-                        }
-                        return;
+                    } catch {
+                        // File does not exist, continue searching
                     }
-                } catch {
-                    // File does not exist, continue searching
                 }
             }
         }
 
-        // Not found in any workspace root — clear if previously loaded
-        if (this.agentsMdContent !== undefined) {
-            this.agentsMdContent = undefined;
-            this.agentsMdPath = undefined;
-            this.agentsMdSections = [];
-            this.onDidChangeContentEmitter.fire(undefined);
-            console.info('[AgentsMdProvider] AGENTS.md no longer found');
-        }
+        // Fallback: try fetch
+        await this.loadViaFetch();
     }
 
-    /** Fallback for when WorkspaceService is not available. */
+    /** Fallback for when WorkspaceService/FileService is not available. */
     private async loadViaFetch(): Promise<void> {
         for (const filename of AGENTS_MD_FILENAMES) {
             try {
@@ -195,10 +189,19 @@ export class AgentsMdProvider implements FrontendApplicationContribution {
                 // File not accessible
             }
         }
+
+        // Not found anywhere — clear if previously loaded
+        if (this.agentsMdContent !== undefined) {
+            this.agentsMdContent = undefined;
+            this.agentsMdPath = undefined;
+            this.agentsMdSections = [];
+            this.onDidChangeContentEmitter.fire(undefined);
+            console.info('[AgentsMdProvider] AGENTS.md no longer found');
+        }
     }
 
     private setupFileWatcher(): void {
-        if (!this.agentsMdPath) {
+        if (!this.agentsMdPath || !this.fileService) {
             return;
         }
         try {

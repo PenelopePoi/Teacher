@@ -96,6 +96,16 @@ export const TeacherPreferencesSchema: PreferenceSchema = {
             description: 'Default Ollama models for Teacher. First model is primary, rest are fallbacks.'
         },
         /**
+         * Controls whether the Teacher Welcome widget opens automatically on startup.
+         * Set to false to suppress the welcome screen after initial onboarding.
+         * Used by: TeacherWelcomeContribution.onStart().
+         */
+        'teacher.welcome.showOnStartup': {
+            type: 'boolean',
+            default: true,
+            description: 'Show the Teacher Welcome widget when the IDE starts.'
+        },
+        /**
          * Default editor font size.
          * Set larger (14) for beginner-friendly readability.
          * Used by: Editor configuration defaults.

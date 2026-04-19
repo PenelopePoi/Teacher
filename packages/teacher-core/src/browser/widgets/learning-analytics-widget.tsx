@@ -77,8 +77,8 @@ export class LearningAnalyticsWidget extends ReactWidget {
                         <i className='codicon codicon-pulse'></i>
                         {nls.localize('theia/teacher/analyticsTitle', 'Learning Analytics')}
                     </h1>
-                    <button className='theia-button teacher-analytics-refresh-btn' onClick={this.onRefresh}>
-                        <i className='codicon codicon-refresh'></i>
+                    <button className='theia-button teacher-analytics-refresh-btn' onClick={this.onRefresh} aria-label='Refresh analytics'>
+                        <i className='codicon codicon-refresh' aria-hidden='true'></i>
                     </button>
                 </div>
                 {this.renderStreakCard()}

@@ -166,15 +166,17 @@ export class IntentDockWidget extends ReactWidget {
                             type='button'
                             className='teacher-intent-card-btn teacher-intent-card-btn--confirm'
                             onClick={() => this.handleRefineSubmit(intent.id)}
+                            aria-label='Confirm refinement'
                         >
-                            <i className='codicon codicon-check' />
+                            <i className='codicon codicon-check' aria-hidden='true' />
                         </button>
                         <button
                             type='button'
                             className='teacher-intent-card-btn teacher-intent-card-btn--cancel'
                             onClick={this.handleRefineCancel}
+                            aria-label='Cancel refinement'
                         >
-                            <i className='codicon codicon-close' />
+                            <i className='codicon codicon-close' aria-hidden='true' />
                         </button>
                     </div>
                 ) : (
@@ -183,24 +185,27 @@ export class IntentDockWidget extends ReactWidget {
                             type='button'
                             className='teacher-intent-card-btn teacher-intent-card-btn--apply'
                             onClick={() => this.handleApply(intent.id)}
+                            aria-label='Apply intent'
                         >
-                            <i className='codicon codicon-play' />
+                            <i className='codicon codicon-play' aria-hidden='true' />
                             {nls.localize('theia/teacher/intentApply', 'Apply')}
                         </button>
                         <button
                             type='button'
                             className='teacher-intent-card-btn teacher-intent-card-btn--refine'
                             onClick={() => this.handleRefineStart(intent.id)}
+                            aria-label='Refine intent'
                         >
-                            <i className='codicon codicon-edit' />
+                            <i className='codicon codicon-edit' aria-hidden='true' />
                             {nls.localize('theia/teacher/intentRefineBtn', 'Refine')}
                         </button>
                         <button
                             type='button'
                             className='teacher-intent-card-btn teacher-intent-card-btn--dismiss'
                             onClick={() => this.handleDismiss(intent.id)}
+                            aria-label='Dismiss intent'
                         >
-                            <i className='codicon codicon-close' />
+                            <i className='codicon codicon-close' aria-hidden='true' />
                         </button>
                     </div>
                 )}

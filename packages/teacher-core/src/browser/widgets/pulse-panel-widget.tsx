@@ -147,10 +147,11 @@ export class PulsePanelWidget extends ReactWidget {
                         className={`teacher-pulse-panel-orb-btn ${stateClass}`}
                         onClick={this.toggleExpanded}
                         title={nls.localize('theia/teacher/pulseToggleLog', 'Toggle activity log')}
+                        aria-label={nls.localize('theia/teacher/pulseToggleLog', 'Toggle activity log')}
                     >
-                        <span className={`teacher-pulse-panel-orb ${stateClass}`} />
+                        <span className={`teacher-pulse-panel-orb ${stateClass}`} aria-hidden='true' />
                         {this.currentState === 'thinking' && (
-                            <span className='teacher-pulse-panel-ring' />
+                            <span className='teacher-pulse-panel-ring' aria-hidden='true' />
                         )}
                     </button>
 

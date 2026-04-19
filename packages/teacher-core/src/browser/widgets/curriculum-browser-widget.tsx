@@ -45,8 +45,8 @@ export class CurriculumBrowserWidget extends ReactWidget {
                         <i className='codicon codicon-book'></i>
                         {nls.localize('theia/teacher/availableCourses', 'Available Courses')}
                     </h2>
-                    <button className='theia-button teacher-curriculum-refresh-btn' onClick={this.onRefresh}>
-                        <i className='codicon codicon-refresh'></i>
+                    <button className='theia-button teacher-curriculum-refresh-btn' onClick={this.onRefresh} aria-label='Refresh courses'>
+                        <i className='codicon codicon-refresh' aria-hidden='true'></i>
                     </button>
                 </div>
                 {this.renderCurriculumTree()}

@@ -30,7 +30,8 @@ export type ConceptCategory =
     | 'Git'
     | 'Algorithms'
     | 'Design Patterns'
-    | 'Testing';
+    | 'Testing'
+    | 'Audio';
 
 export const CATEGORY_COLORS: Record<ConceptCategory, string> = {
     'Variables': '#60A5FA',
@@ -45,6 +46,7 @@ export const CATEGORY_COLORS: Record<ConceptCategory, string> = {
     'Algorithms': '#2DD4BF',
     'Design Patterns': '#818CF8',
     'Testing': '#4ADE80',
+    'Audio': '#E8A948',
 };
 
 export const CONCEPT_LIBRARY: readonly ConceptDefinition[] = [
