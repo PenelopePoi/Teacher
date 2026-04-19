@@ -15,12 +15,28 @@ import { execFile } from 'child_process';
 export class ASIBridgeServiceImpl implements ASIBridgeService {
 
     protected asiHost: string = 'http://localhost:8765';
+    protected lastConnectionState: boolean | undefined;
+
+    /**
+     * Allow the ASI host to be injected from preferences at runtime.
+     * Called by the backend module after reading `teacher.asi.host`.
+     */
+    setAsiHost(host: string): void {
+        if (host && host !== this.asiHost) {
+            console.info(`[ASI Bridge] Host changed: ${this.asiHost} → ${host}`);
+            this.asiHost = host;
+            this.lastConnectionState = undefined; // reset so next status logs
+        }
+    }
 
     async query(prompt: string, context?: Record<string, unknown>): Promise<ASIResponse> {
         const startTime = Date.now();
         try {
-            const response = await this.httpPost('/query', { prompt, context });
+            const response = await this.withRetry(
+                () => this.httpPost('/query', { prompt, context }, 10_000)
+            );
             const data = JSON.parse(response);
+            this.logConnectionChange(true);
             return {
                 answer: data.answer || data.result || '',
                 confidence: data.confidence || 0,
@@ -29,8 +45,17 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
                 processingTimeMs: Date.now() - startTime
             };
         } catch (error) {
+            this.logConnectionChange(false);
+            const errMsg = error instanceof Error ? error.message : String(error);
             return {
-                answer: `ASI is not running. Start it with: python3 asi.py --serve\n\nFalling back to direct Ollama.`,
+                answer: [
+                    'ASI is not reachable.',
+                    `Host: ${this.asiHost}`,
+                    `Error: ${errMsg}`,
+                    '',
+                    'To start ASI: python3 asi.py --serve',
+                    'Falling back to direct Ollama.',
+                ].join('\n'),
                 confidence: 0,
                 sources: [],
                 researcherCount: 0,
@@ -41,8 +66,9 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
 
     async getStatus(): Promise<ASIStatus> {
         try {
-            const response = await this.httpGet('/status');
+            const response = await this.httpGet('/status', 5_000);
             const data = JSON.parse(response);
+            this.logConnectionChange(true);
             return {
                 running: true,
                 ollamaConnected: data.ollama_connected ?? false,
@@ -50,6 +76,7 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
                 modelName: data.model_name ?? 'unknown'
             };
         } catch {
+            this.logConnectionChange(false);
             return {
                 running: false,
                 ollamaConnected: false,
@@ -62,8 +89,11 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
     async teach(topic: string, studentLevel: string): Promise<ASIResponse> {
         const startTime = Date.now();
         try {
-            const response = await this.httpPost('/teach', { topic, student_level: studentLevel });
+            const response = await this.withRetry(
+                () => this.httpPost('/teach', { topic, student_level: studentLevel }, 10_000)
+            );
             const data = JSON.parse(response);
+            this.logConnectionChange(true);
             return {
                 answer: data.answer || '',
                 confidence: data.confidence || 0,
@@ -72,8 +102,9 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
                 processingTimeMs: Date.now() - startTime
             };
         } catch {
+            this.logConnectionChange(false);
             return {
-                answer: 'ASI teaching mode unavailable. Using direct model instead.',
+                answer: `ASI teaching mode unavailable at ${this.asiHost}. Using direct model instead.`,
                 confidence: 0,
                 sources: [],
                 researcherCount: 0,
@@ -134,6 +165,49 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
         }
     }
 
+    // ── Retry logic ──────────────────────────────────────────────
+
+    protected async withRetry<T>(fn: () => Promise<T>, retries: number = 1, delayMs: number = 2000): Promise<T> {
+        try {
+            return await fn();
+        } catch (error) {
+            if (retries <= 0) {
+                throw error;
+            }
+            const isNetworkError = error instanceof Error && (
+                error.message.includes('ECONNREFUSED') ||
+                error.message.includes('ECONNRESET') ||
+                error.message.includes('ETIMEDOUT') ||
+                error.message.includes('socket hang up')
+            );
+            if (!isNetworkError) {
+                throw error;
+            }
+            console.warn(`[ASI Bridge] Network error, retrying in ${delayMs}ms (${retries} left): ${error.message}`);
+            await this.delay(delayMs);
+            return this.withRetry(fn, retries - 1, delayMs);
+        }
+    }
+
+    protected delay(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // ── Connection state logging ─────────────────────────────────
+
+    protected logConnectionChange(connected: boolean): void {
+        if (this.lastConnectionState !== connected) {
+            if (connected) {
+                console.info(`[ASI Bridge] Connected to ${this.asiHost}`);
+            } else {
+                console.warn(`[ASI Bridge] Lost connection to ${this.asiHost}`);
+            }
+            this.lastConnectionState = connected;
+        }
+    }
+
+    // ── Python runner ────────────────────────────────────────────
+
     protected runPython(
         scriptPath: string,
         args: string[],
@@ -158,33 +232,45 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
         });
     }
 
-    protected httpGet(path: string): Promise<string> {
+    // ── HTTP helpers with timeout support ────────────────────────
+
+    protected httpGet(urlPath: string, timeoutMs: number = 5_000): Promise<string> {
         return new Promise((resolve, reject) => {
-            const url = new URL(path, this.asiHost);
-            http.get(url, res => {
+            const url = new URL(urlPath, this.asiHost);
+            const req = http.get(url, { timeout: timeoutMs }, res => {
                 let data = '';
                 res.on('data', chunk => { data += chunk; });
                 res.on('end', () => resolve(data));
-            }).on('error', reject);
+            });
+            req.on('error', reject);
+            req.on('timeout', () => {
+                req.destroy();
+                reject(new Error(`GET ${urlPath} timed out after ${timeoutMs}ms`));
+            });
         });
     }
 
-    protected httpPost(path: string, body: Record<string, unknown>): Promise<string> {
+    protected httpPost(urlPath: string, body: Record<string, unknown>, timeoutMs: number = 10_000): Promise<string> {
         return new Promise((resolve, reject) => {
-            const url = new URL(path, this.asiHost);
+            const url = new URL(urlPath, this.asiHost);
             const postData = JSON.stringify(body);
             const req = http.request(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Content-Length': Buffer.byteLength(postData)
-                }
+                },
+                timeout: timeoutMs
             }, res => {
                 let data = '';
                 res.on('data', chunk => { data += chunk; });
                 res.on('end', () => resolve(data));
             });
             req.on('error', reject);
+            req.on('timeout', () => {
+                req.destroy();
+                reject(new Error(`POST ${urlPath} timed out after ${timeoutMs}ms`));
+            });
             req.write(postData);
             req.end();
         });

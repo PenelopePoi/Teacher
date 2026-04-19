@@ -19,46 +19,141 @@ export class CurriculumServiceImpl implements CurriculumService {
 
     protected curriculumDir: string = '';
 
-    protected getCurriculumDirectory(): string {
+    // ── Cache ────────────────────────────────────────────────────
+    protected cachedCourses: CurriculumDefinition[] | undefined;
+    protected cacheTimestamp: number = 0;
+    protected fsWatcher: fs.FSWatcher | undefined;
+
+    /**
+     * Allow the curriculum directory to be overridden from preferences.
+     * Called by the backend module after reading `teacher.curriculum.directory`.
+     */
+    setCurriculumDirectory(dir: string): void {
+        if (dir && dir !== this.curriculumDir) {
+            console.info(`[Curriculum] Directory set: ${dir}`);
+            this.curriculumDir = dir;
+            this.invalidateCache();
+        }
+    }
+
+    // ── Directory resolution ─────────────────────────────────────
+
+    protected async getCurriculumDirectory(): Promise<string> {
         if (this.curriculumDir) {
             return this.curriculumDir;
         }
-        // Default: look in common locations
         const candidates = [
             path.join(process.cwd(), 'curriculum'),
             path.join(os.homedir(), '.teacher', 'curriculum'),
         ];
         for (const candidate of candidates) {
-            if (fs.existsSync(candidate)) {
+            try {
+                await fs.promises.access(candidate, fs.constants.R_OK);
                 return candidate;
+            } catch {
+                // not accessible, try next
             }
         }
         return candidates[0];
     }
 
+    // ── Cache management ─────────────────────────────────────────
+
+    protected invalidateCache(): void {
+        this.cachedCourses = undefined;
+        this.cacheTimestamp = 0;
+        if (this.fsWatcher) {
+            this.fsWatcher.close();
+            this.fsWatcher = undefined;
+        }
+    }
+
+    protected startWatching(dir: string): void {
+        if (this.fsWatcher) {
+            return;
+        }
+        try {
+            this.fsWatcher = fs.watch(dir, { recursive: true }, (_event, _filename) => {
+                console.info(`[Curriculum] Change detected, invalidating cache`);
+                this.cachedCourses = undefined;
+                this.cacheTimestamp = 0;
+            });
+        } catch {
+            // fs.watch not supported on every platform/dir combo — degrade gracefully
+        }
+    }
+
+    // ── Validation ───────────────────────────────────────────────
+
+    protected validateCourseJson(data: unknown, filePath: string): CurriculumDefinition | undefined {
+        if (!data || typeof data !== 'object') {
+            console.warn(`[Curriculum] ${filePath}: not a valid JSON object`);
+            return undefined;
+        }
+        const obj = data as Record<string, unknown>;
+        if (typeof obj.id !== 'string' || !obj.id) {
+            console.warn(`[Curriculum] ${filePath}: missing or empty "id" field`);
+            return undefined;
+        }
+        if (typeof obj.title !== 'string' || !obj.title) {
+            console.warn(`[Curriculum] ${filePath}: missing or empty "title" field`);
+            return undefined;
+        }
+        if (!Array.isArray(obj.modules)) {
+            console.warn(`[Curriculum] ${filePath}: missing "modules" array`);
+            return undefined;
+        }
+        return obj as unknown as CurriculumDefinition;
+    }
+
+    // ── Core loading (async) ─────────────────────────────────────
+
     async getCourses(): Promise<CurriculumDefinition[]> {
-        const dir = this.getCurriculumDirectory();
-        if (!fs.existsSync(dir)) {
+        if (this.cachedCourses) {
+            return this.cachedCourses;
+        }
+
+        const dir = await this.getCurriculumDirectory();
+        let entries: fs.Dirent[];
+        try {
+            entries = await fs.promises.readdir(dir, { withFileTypes: true });
+        } catch {
             return [];
         }
+
+        this.startWatching(dir);
+
         const courses: CurriculumDefinition[] = [];
-        const entries = fs.readdirSync(dir, { withFileTypes: true });
         for (const entry of entries) {
-            if (entry.isDirectory()) {
-                const courseFile = path.join(dir, entry.name, 'course.json');
-                if (fs.existsSync(courseFile)) {
-                    try {
-                        const raw = fs.readFileSync(courseFile, 'utf-8');
-                        const course: CurriculumDefinition = JSON.parse(raw);
-                        // Enrich modules with lesson manifests from disk
-                        course.modules = await this.enrichModules(course.modules, path.join(dir, entry.name));
-                        courses.push(course);
-                    } catch {
-                        console.warn(`Failed to parse course file: ${courseFile}`);
-                    }
+            if (!entry.isDirectory()) {
+                continue;
+            }
+            const courseFile = path.join(dir, entry.name, 'course.json');
+            try {
+                const raw = await fs.promises.readFile(courseFile, 'utf-8');
+                let parsed: unknown;
+                try {
+                    parsed = JSON.parse(raw);
+                } catch (parseErr) {
+                    console.warn(`[Curriculum] Failed to parse JSON in ${courseFile}: ${parseErr instanceof Error ? parseErr.message : parseErr}`);
+                    continue;
                 }
+
+                const course = this.validateCourseJson(parsed, courseFile);
+                if (!course) {
+                    continue;
+                }
+
+                course.modules = await this.enrichModules(course.modules, path.join(dir, entry.name));
+                courses.push(course);
+                console.info(`[Curriculum] Discovered course: ${course.id} — "${course.title}" (${course.modules.length} modules)`);
+            } catch {
+                // course.json doesn't exist in this directory — skip
             }
         }
+
+        this.cachedCourses = courses;
+        this.cacheTimestamp = Date.now();
         return courses;
     }
 
@@ -93,22 +188,21 @@ export class CurriculumServiceImpl implements CurriculumService {
 
     protected async enrichModules(modules: CurriculumModule[], courseDir: string): Promise<CurriculumModule[]> {
         const lessonsDir = path.join(courseDir, 'lessons');
-        if (!fs.existsSync(lessonsDir)) {
+        try {
+            await fs.promises.access(lessonsDir, fs.constants.R_OK);
+        } catch {
             return modules;
         }
+
         for (const mod of modules) {
             const enrichedLessons: LessonManifest[] = [];
             for (const lesson of mod.lessons) {
                 const manifestPath = path.join(lessonsDir, lesson.id, '.teacher', 'lesson.json');
-                if (fs.existsSync(manifestPath)) {
-                    try {
-                        const raw = fs.readFileSync(manifestPath, 'utf-8');
-                        const manifest: LessonManifest = JSON.parse(raw);
-                        enrichedLessons.push(manifest);
-                    } catch {
-                        enrichedLessons.push(lesson);
-                    }
-                } else {
+                try {
+                    const raw = await fs.promises.readFile(manifestPath, 'utf-8');
+                    const manifest: LessonManifest = JSON.parse(raw);
+                    enrichedLessons.push(manifest);
+                } catch {
                     enrichedLessons.push(lesson);
                 }
             }
