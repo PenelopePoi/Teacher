@@ -14,7 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { codicon, CommonCommands, Key, KeyCode, LabelProvider, LocalizedMarkdown, Message, ReactWidget } from '@theia/core/lib/browser';
+import { codicon, CommonCommands, Key, KeyCode, LabelProvider, Message, ReactWidget } from '@theia/core/lib/browser';
 import { FrontendApplicationConfigProvider } from '@theia/core/lib/browser/frontend-application-config-provider';
 import { WindowService } from '@theia/core/lib/browser/window/window-service';
 import { CommandRegistry, environment, isOSX, Path, PreferenceService } from '@theia/core/lib/common';
@@ -426,16 +426,37 @@ export class GettingStartedWidget extends ReactWidget {
 
     protected renderNews(): React.ReactNode {
         return <div className='gs-section'>
-            <h3 className='gs-section-header'>🚀 {nls.localize('theia/getting-started/ai/header', 'AI Support in the Teacher IDE is available!')} ✨</h3>
-            <div className='gs-action-container'>
-                <a
-                    role={'button'}
-                    style={{ fontSize: 'var(--theia-ui-font-size2)' }}
-                    tabIndex={0}
-                    onClick={() => this.doOpenAIChatView()}
-                    onKeyDown={(e: React.KeyboardEvent) => this.doOpenAIChatViewEnter(e)}>
-                    {nls.localize('theia/getting-started/ai/openAIChatView', 'Open the AI Chat View now to learn how to start!')} ✨
-                </a>
+            <h3 className='gs-section-header'>Start Building</h3>
+            <div className='gs-action-container' style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ fontSize: '13px', color: 'var(--theia-descriptionForeground)', marginBottom: '8px', lineHeight: 1.5 }}>
+                    Pick a course below and start building real projects. The Tutor will guide you — it asks questions instead of giving answers, so you actually learn.
+                </div>
+                {this.renderCourseCard('Intro to Python', '5 lessons — Variables, loops, functions, classes, file I/O', 'codicon-symbol-method')}
+                {this.renderCourseCard('Web Fundamentals', '6 lessons — HTML structure, CSS styling, JavaScript basics', 'codicon-globe')}
+                {this.renderCourseCard('Git Basics', '4 lessons — Init, staging, branching, merging', 'codicon-git-branch')}
+                <div style={{ marginTop: '12px' }}>
+                    <a role={'button'} tabIndex={0} style={{ fontSize: 'var(--theia-ui-font-size2)' }}
+                        onClick={() => this.doOpenAIChatView()}
+                        onKeyDown={(e: React.KeyboardEvent) => this.doOpenAIChatViewEnter(e)}>
+                        Open the AI Tutor Chat
+                    </a>
+                </div>
+            </div>
+        </div>;
+    }
+
+    protected renderCourseCard(title: string, description: string, iconClass: string): React.ReactNode {
+        return <div style={{
+            display: 'flex', alignItems: 'center', gap: '12px',
+            padding: '10px 14px', borderRadius: '8px',
+            background: 'var(--theia-editor-background)',
+            border: '1px solid var(--theia-panel-border)',
+            cursor: 'pointer',
+        }}>
+            <span className={`codicon ${iconClass}`} style={{ fontSize: '20px', color: 'var(--theia-textLink-foreground)' }} />
+            <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--theia-editor-foreground)' }}>{title}</div>
+                <div style={{ fontSize: '11px', color: 'var(--theia-descriptionForeground)' }}>{description}</div>
             </div>
         </div>;
     }
@@ -444,24 +465,20 @@ export class GettingStartedWidget extends ReactWidget {
         return <div className='gs-container gs-aifeature-container'>
             <div className='flex-grid'>
                 <div className='col'>
-                    <h3 className='gs-section-header'> 🚀 {nls.localize('theia/getting-started/ai/header', 'AI Support in the Teacher IDE is available!')} ✨</h3>
-                    <LocalizedMarkdown className='gs-action-container'
-                        localizationKey='theia/getting-started/ai/features'
-                        defaultMarkdown={`
-Teacher IDE now contains AI support, offering powerful AI capabilities within your IDE.\\
-Please note that these features are disabled by default, ensuring that users can opt-in at their discretion.
-For those who choose to enable AI support, it is important to be aware that these may generate continuous
-requests to the language models (LLMs) you provide access to. This might incur costs that you need to monitor closely.\\
-For more details, please visit&nbsp;[the documentation]({0}).\\
-\\
-We welcome your feedback, contributions, and sponsorship! To support the ongoing development of the AI capabilities please visit the&nbsp;[Github Project]({1}).&nbsp;
-Thank you for being part of our community!\\
-The AI features are built on the framework Theia AI. If you want to build a custom AI-powered tool or IDE, Theia AI has been published as stable release.
-Check out [the Theia AI documentation]({2})!
-`}
-                        args={[this.userAIDocUrl, this.ghProjectUrl, this.theiaAIDocUrl]}
-                        markdownRenderer={this.markdownRenderer}
-                    />
+                    <h3 className='gs-section-header'>Your AI Tutor is Ready</h3>
+                    <div className='gs-action-container'>
+                        <p style={{ lineHeight: 1.6, fontSize: '13px' }}>
+                            Teacher IDE comes with three AI agents powered by your local Ollama models — no cloud, no API keys, no cost.
+                        </p>
+                        <ul style={{ fontSize: '13px', lineHeight: 1.8, paddingLeft: '20px' }}>
+                            <li><strong>Tutor</strong> — Your coding mentor. Uses Socratic questioning to guide you to answers.</li>
+                            <li><strong>Explain This</strong> — Select any code and get a structured breakdown: What / Why / How / Try It.</li>
+                            <li><strong>Teaching Review</strong> — Code review that teaches the concepts, not just the fixes.</li>
+                        </ul>
+                        <p style={{ fontSize: '12px', color: 'var(--theia-descriptionForeground)', marginTop: '8px' }}>
+                            Press <strong>Cmd+Shift+.</strong> for Focus Mode. Press <strong>Cmd+P</strong> to search anything.
+                        </p>
+                    </div>
                     <div className='gs-action-container'>
                         <a
                             role={'button'}
@@ -469,7 +486,7 @@ Check out [the Theia AI documentation]({2})!
                             tabIndex={0}
                             onClick={() => this.doOpenAIChatView()}
                             onKeyDown={(e: React.KeyboardEvent) => this.doOpenAIChatViewEnter(e)}>
-                            {nls.localize('theia/getting-started/ai/openAIChatView', 'Open the AI Chat View now to learn how to start!')} ✨
+                            Open the AI Tutor Chat
                         </a>
                     </div>
                 </div>

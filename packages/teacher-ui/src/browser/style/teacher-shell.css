@@ -571,3 +571,92 @@
 .teacher-glass-palette .quick-input-list {
     border-radius: 0 0 12px 12px;
 }
+
+/* ----------------------------------------------------------------
+   Agent Mode Indicator (Status Bar)
+   ---------------------------------------------------------------- */
+.teacher-agent-mode-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 1px 10px;
+    border-radius: 10px;
+    transition: background-color 0.15s ease;
+    user-select: none;
+}
+
+.teacher-agent-mode-indicator:hover {
+    background-color: var(--surface-3);
+}
+
+.teacher-agent-mode-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: teacher-breathing-glow 2400ms ease-in-out infinite;
+}
+
+/* Supervised = blue */
+.teacher-agent-dot-supervised {
+    background-color: #3B82F6;
+    color: #3B82F6;
+}
+
+/* Auto-edit = amber */
+.teacher-agent-dot-auto-edit {
+    background-color: #E8A948;
+    color: #E8A948;
+}
+
+/* Plan Only = green */
+.teacher-agent-dot-plan-only {
+    background-color: #4ADE80;
+    color: #4ADE80;
+}
+
+/* Autonomous = red */
+.teacher-agent-dot-autonomous {
+    background-color: #EF4444;
+    color: #EF4444;
+}
+
+.teacher-agent-mode-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+/* ----------------------------------------------------------------
+   Agent Action Counter (Status Bar)
+   ---------------------------------------------------------------- */
+.teacher-agent-action-counter {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* ----------------------------------------------------------------
+   Agent Session Timer (Status Bar)
+   ---------------------------------------------------------------- */
+.teacher-agent-session-timer {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-tertiary);
+}
+
+/* ----------------------------------------------------------------
+   Reduced Motion — Agent Mode
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .teacher-agent-mode-dot {
+        animation: none;
+    }
+}

@@ -28,6 +28,13 @@ import { TeacherQuickInputStyling } from './teacher-quick-input';
 import { TeacherFocusModeContribution } from './teacher-focus-mode';
 import { PulsePanelWidget } from './pulse-panel-widget';
 import { PulsePanelContribution } from './pulse-panel-contribution';
+import { ChatWelcomeMessageProvider } from '@theia/ai-chat-ui/lib/browser/chat-tree-view';
+import { TeacherChatWelcomeProvider } from './teacher-chat-welcome';
+import { AgentModeService } from './agent-mode-service';
+import { AgentSessionManager } from './agent-session-manager';
+import { AgentContextProvider } from './agent-context-provider';
+import { AgentCommandContribution } from './agent-commands';
+import { AgentsMdProvider } from './agents-md-provider';
 
 const TeacherUIPreferencesSchema: PreferenceSchema = {
     properties: {
@@ -40,9 +47,29 @@ const TeacherUIPreferencesSchema: PreferenceSchema = {
 };
 
 export default new ContainerModule((bind, _unbind, _isBound, rebind) => {
+    // === Layer A: Agent-First Services (singletons) ===
+
+    // AgentModeService — permission matrix + mode cycling (Shift+Tab)
+    bind(AgentModeService).toSelf().inSingletonScope();
+
+    // AgentSessionManager — actions, checkpoints, plans
+    bind(AgentSessionManager).toSelf().inSingletonScope();
+
+    // AgentContextProvider — IDE state for agent context injection (Flow Awareness)
+    bind(AgentContextProvider).toSelf().inSingletonScope();
+
+    // AGENTS.md Provider — workspace-level agent instructions
+    bind(AgentsMdProvider).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(AgentsMdProvider);
+
+    // Agent Commands + Keybindings (Shift+Tab, Cmd+Shift+C, Cmd+Shift+Z, etc.)
+    bind(AgentCommandContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(AgentCommandContribution);
+    bind(KeybindingContribution).toService(AgentCommandContribution);
+
     // === Layer C: DI Rebinds ===
 
-    // 1. StatusBar → TeacherStatusBar (strips confetti, adds Pulse + lesson objective)
+    // 1. StatusBar → TeacherStatusBar (agent mode indicator, action counter, session timer)
     bind(TeacherStatusBar).toSelf().inSingletonScope();
     rebind(StatusBar).toService(TeacherStatusBar);
 
@@ -78,6 +105,10 @@ export default new ContainerModule((bind, _unbind, _isBound, rebind) => {
     bind(TeacherFocusModeContribution).toSelf().inSingletonScope();
     bind(CommandContribution).toService(TeacherFocusModeContribution);
     bind(KeybindingContribution).toService(TeacherFocusModeContribution);
+
+    // 7. Chat welcome message → Teacher courses + prompts
+    bind(TeacherChatWelcomeProvider).toSelf().inSingletonScope();
+    bind(ChatWelcomeMessageProvider).toService(TeacherChatWelcomeProvider);
 
     // === Widgets ===
 

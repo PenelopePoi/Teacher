@@ -8,6 +8,7 @@
     "url": "https://github.com/PenelopePoi/Teacher.git"
   },
   "dependencies": {
+    "@theia/ai-chat-ui": "1.70.0",
     "@theia/core": "1.70.0",
     "@theia/monaco": "1.70.0",
     "@theia/editor": "1.70.0",
