@@ -8,23 +8,127 @@
             "id": "python-basics",
             "title": "Python Basics",
             "lessons": [
-                { "id": "hello-world", "title": "Your First Program", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 15, "prerequisiteSkills": [] },
-                { "id": "variables", "title": "Variables and Data Types", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] }
+                {
+                    "id": "hello-world",
+                    "title": "Your First Program",
+                    "objectives": [
+                        "Understand what a program is and how Python executes code",
+                        "Use the print() function to display output",
+                        "Write and run a complete Python script"
+                    ],
+                    "hints": [
+                        "The print() function displays text to the console. Try: print('something')",
+                        "Strings in Python are wrapped in quotes — single or double quotes both work",
+                        "Look at the TODO comments in main.py for exactly what to fill in"
+                    ],
+                    "assessmentCriteria": [
+                        "Program runs without errors",
+                        "Output includes a personalized greeting",
+                        "Output includes a statement about what the student wants to learn"
+                    ],
+                    "estimatedMinutes": 15,
+                    "prerequisiteSkills": []
+                },
+                {
+                    "id": "variables",
+                    "title": "Variables and Data Types",
+                    "objectives": [
+                        "Create and assign variables in Python",
+                        "Understand the difference between strings, integers, floats, and booleans",
+                        "Use type() to inspect data types",
+                        "Convert between data types with int(), str(), float()"
+                    ],
+                    "hints": [
+                        "Variables are created with the = operator: name = 'Alex'",
+                        "Python has four basic types: str, int, float, bool. Use type(x) to check.",
+                        "To convert types: int('42') gives 42, str(42) gives '42'"
+                    ],
+                    "assessmentCriteria": [
+                        "All variables are assigned with correct types",
+                        "Type conversions produce the expected values",
+                        "Program runs without TypeError or ValueError"
+                    ],
+                    "estimatedMinutes": 25,
+                    "prerequisiteSkills": ["hello-world"]
+                }
             ]
         },
         {
             "id": "control-flow",
             "title": "Control Flow",
             "lessons": [
-                { "id": "conditionals", "title": "Making Decisions with If/Else", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] },
-                { "id": "loops", "title": "Repeating Actions with Loops", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 35, "prerequisiteSkills": [] }
+                {
+                    "id": "conditionals",
+                    "title": "Making Decisions with If/Else",
+                    "objectives": [
+                        "Write if, elif, and else statements",
+                        "Use comparison operators (==, !=, <, >, <=, >=)",
+                        "Combine conditions with and, or, not",
+                        "Build a simple decision-making program"
+                    ],
+                    "hints": [
+                        "An if statement checks a condition: if age >= 18: print('adult')",
+                        "Use elif for additional conditions, else for the fallback case",
+                        "Combine conditions: if age >= 13 and age < 18: print('teenager')"
+                    ],
+                    "assessmentCriteria": [
+                        "Program uses if/elif/else correctly",
+                        "Comparison operators produce correct boolean results",
+                        "Edge cases are handled"
+                    ],
+                    "estimatedMinutes": 30,
+                    "prerequisiteSkills": ["variables"]
+                },
+                {
+                    "id": "loops",
+                    "title": "Repeating Actions with Loops",
+                    "objectives": [
+                        "Use for loops to iterate over sequences",
+                        "Use while loops for conditional repetition",
+                        "Control loop flow with break and continue",
+                        "Use range() to generate number sequences"
+                    ],
+                    "hints": [
+                        "A for loop iterates over items: for item in [1, 2, 3]: print(item)",
+                        "range(5) generates numbers 0 through 4. range(1, 6) generates 1 through 5.",
+                        "Use 'break' to exit a loop early, 'continue' to skip to the next iteration"
+                    ],
+                    "assessmentCriteria": [
+                        "for and while loops are used correctly",
+                        "Loop termination conditions prevent infinite loops",
+                        "break and continue are used appropriately"
+                    ],
+                    "estimatedMinutes": 35,
+                    "prerequisiteSkills": ["variables", "conditionals"]
+                }
             ]
         },
         {
             "id": "functions-module",
             "title": "Functions and Reuse",
             "lessons": [
-                { "id": "functions", "title": "Writing Reusable Functions", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 40, "prerequisiteSkills": [] }
+                {
+                    "id": "functions",
+                    "title": "Writing Reusable Functions",
+                    "objectives": [
+                        "Define functions with def and return values",
+                        "Use parameters and arguments effectively",
+                        "Understand variable scope (local vs global)",
+                        "Write functions with default parameter values"
+                    ],
+                    "hints": [
+                        "Define a function: def add(a, b): return a + b",
+                        "Default parameters: def greet(name='World'): return f'Hello, {name}'",
+                        "Variables inside a function are local — they don't exist outside it"
+                    ],
+                    "assessmentCriteria": [
+                        "Functions are defined with correct syntax",
+                        "Return values are used instead of print inside functions",
+                        "Parameters and default values work correctly"
+                    ],
+                    "estimatedMinutes": 40,
+                    "prerequisiteSkills": ["variables", "conditionals", "loops"]
+                }
             ]
         }
     ]

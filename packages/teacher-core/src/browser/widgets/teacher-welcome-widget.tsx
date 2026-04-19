@@ -11,6 +11,9 @@ export namespace TeacherWelcomeCommands {
     export const ASK_TUTOR = 'teacher.askTutor';
     export const START_LESSON = 'teacher.startLesson';
     export const VIEW_PROGRESS = 'teacher.viewProgress';
+    export const BROWSE_SKILLS = 'teacher.browseSkills';
+    export const VIEW_ACHIEVEMENTS = 'teacher.viewAchievements';
+    export const DAILY_CHALLENGES = 'teacher.dailyChallenges';
 }
 
 @injectable()
@@ -137,6 +140,18 @@ export class TeacherWelcomeWidget extends ReactWidget {
                         <i className='codicon codicon-graph' aria-hidden='true'></i>
                         <span>{nls.localize('theia/teacher/viewProgress', 'View Progress')}</span>
                     </button>
+                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onBrowseSkills} aria-label='Browse Skills'>
+                        <i className='codicon codicon-library' aria-hidden='true'></i>
+                        <span>{nls.localize('theia/teacher/browseSkills', 'Browse Skills')}</span>
+                    </button>
+                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onViewAchievements} aria-label='View Achievements'>
+                        <i className='codicon codicon-trophy' aria-hidden='true'></i>
+                        <span>{nls.localize('theia/teacher/viewAchievements', 'View Achievements')}</span>
+                    </button>
+                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onDailyChallenges} aria-label='Daily Challenges'>
+                        <i className='codicon codicon-flame' aria-hidden='true'></i>
+                        <span>{nls.localize('theia/teacher/dailyChallenges', 'Daily Challenges')}</span>
+                    </button>
                 </div>
             </div>
         );
@@ -202,5 +217,17 @@ export class TeacherWelcomeWidget extends ReactWidget {
 
     protected onViewProgress = (): void => {
         this.commandRegistry.executeCommand(TeacherWelcomeCommands.VIEW_PROGRESS);
+    };
+
+    protected onBrowseSkills = (): void => {
+        this.commandRegistry.executeCommand(TeacherWelcomeCommands.BROWSE_SKILLS);
+    };
+
+    protected onViewAchievements = (): void => {
+        this.commandRegistry.executeCommand(TeacherWelcomeCommands.VIEW_ACHIEVEMENTS);
+    };
+
+    protected onDailyChallenges = (): void => {
+        this.commandRegistry.executeCommand(TeacherWelcomeCommands.DAILY_CHALLENGES);
     };
 }

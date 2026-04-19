@@ -76,6 +76,7 @@ import { QuickQuizContribution } from './widgets/quick-quiz-contribution';
 import { ProjectTrackerWidget } from './widgets/project-tracker-widget';
 import { ProjectTrackerContribution } from './widgets/project-tracker-contribution';
 import { LessonCommandContribution } from './commands/lesson-commands';
+import { WelcomeCommandContribution } from './commands/welcome-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
 import { KnowledgeSurvivorshipContribution } from './commands/export-snapshot-command';
@@ -362,6 +363,10 @@ export default new ContainerModule(bind => {
     bind(LessonCommandContribution).toSelf().inSingletonScope();
     bind(CommandContribution).toService(LessonCommandContribution);
     bind(KeybindingContribution).toService(LessonCommandContribution);
+
+    // Welcome Commands (Ask Tutor, Open Curriculum, View Progress, Browse Skills, Achievements, Challenges)
+    bind(WelcomeCommandContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(WelcomeCommandContribution);
 
     // Voice Input Command (Ctrl+Alt+M — Cursor-inspired)
     bind(VoiceInputContribution).toSelf().inSingletonScope();

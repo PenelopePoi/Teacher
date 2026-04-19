@@ -8,24 +8,150 @@
             "id": "html-basics",
             "title": "HTML Basics",
             "lessons": [
-                { "id": "html-structure", "title": "Building a Page Structure", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] },
-                { "id": "headings-paragraphs", "title": "Headings, Paragraphs & Lists", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] }
+                {
+                    "id": "html-structure",
+                    "title": "Building a Page Structure",
+                    "objectives": [
+                        "Understand the purpose of HTML as the skeleton of every web page",
+                        "Use semantic tags (html, head, body, header, main, footer) to organize content",
+                        "Create a valid HTML5 document from scratch"
+                    ],
+                    "hints": [
+                        "Every HTML page starts with <!DOCTYPE html> — this tells the browser which version of HTML you're using",
+                        "The <head> contains metadata (title, charset) while <body> contains everything the user sees",
+                        "Semantic tags like <header>, <main>, and <footer> tell browsers and screen readers what each section means"
+                    ],
+                    "assessmentCriteria": [
+                        "Page has a valid DOCTYPE declaration",
+                        "Document contains html, head, and body elements",
+                        "Page uses semantic elements: header, main, and footer",
+                        "Head includes a title and charset meta tag"
+                    ],
+                    "estimatedMinutes": 20,
+                    "prerequisiteSkills": []
+                },
+                {
+                    "id": "headings-paragraphs",
+                    "title": "Headings, Paragraphs & Lists",
+                    "objectives": [
+                        "Use heading tags (h1-h6) to create a content hierarchy",
+                        "Write paragraphs and apply emphasis with <strong> and <em>",
+                        "Build ordered and unordered lists to organize information"
+                    ],
+                    "hints": [
+                        "Headings go from h1 (most important) to h6 (least) — use them in order, don't skip levels",
+                        "<strong> means strong importance (usually bold), <em> means emphasis (usually italic)",
+                        "<ul> creates bullet lists, <ol> creates numbered lists — both use <li> for items"
+                    ],
+                    "assessmentCriteria": [
+                        "Page uses h1 through at least h3 in proper hierarchy",
+                        "Content includes paragraphs with inline emphasis elements",
+                        "Page contains both an ordered and unordered list",
+                        "Lists have at least 3 items each"
+                    ],
+                    "estimatedMinutes": 20,
+                    "prerequisiteSkills": ["html-structure"]
+                }
             ]
         },
         {
             "id": "css-styling",
             "title": "CSS Styling",
             "lessons": [
-                { "id": "css-colors", "title": "Colors, Fonts & Visual Identity", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] },
-                { "id": "css-layout", "title": "Layout with Flexbox", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] }
+                {
+                    "id": "css-colors",
+                    "title": "Colors, Fonts & Visual Identity",
+                    "objectives": [
+                        "Apply colors using named colors, hex codes, and RGB values",
+                        "Set font families, sizes, and weights to establish visual hierarchy",
+                        "Understand the cascade — how CSS rules are applied and overridden"
+                    ],
+                    "hints": [
+                        "Colors can be named ('crimson'), hex (#DC143C), or rgb(220, 20, 60) — they all work",
+                        "Use font-family with fallbacks: font-family: 'Georgia', 'Times New Roman', serif",
+                        "More specific selectors override less specific ones — an ID beats a class beats an element"
+                    ],
+                    "assessmentCriteria": [
+                        "Stylesheet defines a body background color and text color",
+                        "At least two different font families are used",
+                        "Colors are applied using at least two different formats (hex, rgb, named)",
+                        "Headings have distinct styling from body text"
+                    ],
+                    "estimatedMinutes": 25,
+                    "prerequisiteSkills": ["html-structure", "headings-paragraphs"]
+                },
+                {
+                    "id": "css-layout",
+                    "title": "Layout with Flexbox",
+                    "objectives": [
+                        "Use display: flex to create flexible, responsive layouts",
+                        "Control alignment and spacing with justify-content and align-items",
+                        "Build a card-based layout that adapts to different screen widths"
+                    ],
+                    "hints": [
+                        "display: flex on a container makes its children flex items — they'll line up in a row by default",
+                        "flex-wrap: wrap lets items flow to the next line instead of shrinking to fit",
+                        "justify-content controls horizontal spacing, align-items controls vertical alignment"
+                    ],
+                    "assessmentCriteria": [
+                        "At least one container uses display: flex",
+                        "Layout uses flex-wrap for responsive behavior",
+                        "justify-content and align-items are used for alignment",
+                        "A card or grid-like pattern is created with consistent spacing"
+                    ],
+                    "estimatedMinutes": 30,
+                    "prerequisiteSkills": ["css-colors"]
+                }
             ]
         },
         {
             "id": "javascript-intro",
             "title": "JavaScript Intro",
             "lessons": [
-                { "id": "js-variables", "title": "Variables & Data Types", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] },
-                { "id": "js-functions", "title": "Functions That Do Real Work", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] }
+                {
+                    "id": "js-variables",
+                    "title": "Variables & Data Types",
+                    "objectives": [
+                        "Declare variables with let and const and understand when to use each",
+                        "Work with strings, numbers, booleans, arrays, and objects",
+                        "Use template literals to build dynamic strings"
+                    ],
+                    "hints": [
+                        "Use const for values that never change (like a tax rate), let for values that do (like a running total)",
+                        "Template literals use backticks and ${} — `Hello, ${name}!` inserts the variable's value",
+                        "Arrays hold ordered lists: ['apple', 'banana']. Objects hold named properties: { name: 'Ada', age: 30 }"
+                    ],
+                    "assessmentCriteria": [
+                        "Variables are declared with const and let appropriately (no var)",
+                        "At least 3 different data types are used",
+                        "Template literals are used for string building",
+                        "An array and an object are created with real-world data"
+                    ],
+                    "estimatedMinutes": 25,
+                    "prerequisiteSkills": []
+                },
+                {
+                    "id": "js-functions",
+                    "title": "Functions That Do Real Work",
+                    "objectives": [
+                        "Write functions with parameters, default values, and return statements",
+                        "Use arrow functions and understand when they're appropriate",
+                        "Build utility functions that solve practical problems"
+                    ],
+                    "hints": [
+                        "A function should do one thing well — if you're writing 'and' in the description, consider splitting it",
+                        "Arrow functions: const add = (a, b) => a + b; — great for short, simple operations",
+                        "Default parameters: function greet(name = 'friend') lets you call greet() without arguments"
+                    ],
+                    "assessmentCriteria": [
+                        "At least one function declaration and one arrow function are used",
+                        "Functions use parameters with at least one default value",
+                        "All functions return values (no relying on side effects alone)",
+                        "Functions solve real calculation or formatting problems"
+                    ],
+                    "estimatedMinutes": 30,
+                    "prerequisiteSkills": ["js-variables"]
+                }
             ]
         }
     ]

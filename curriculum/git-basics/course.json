@@ -8,16 +8,100 @@
             "id": "getting-started",
             "title": "Getting Started",
             "lessons": [
-                { "id": "init-and-commit", "title": "Initialize a Repository & Make Your First Commit", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] },
-                { "id": "staging-and-status", "title": "The Staging Area & Reading Status", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] }
+                {
+                    "id": "init-and-commit",
+                    "title": "Initialize a Repository & Make Your First Commit",
+                    "objectives": [
+                        "Understand what version control is and why it matters",
+                        "Initialize a new Git repository with git init",
+                        "Create files, stage them with git add, and commit with git commit"
+                    ],
+                    "hints": [
+                        "git init creates a hidden .git folder — that's where Git stores the entire history of your project",
+                        "git add <file> stages a file (marks it for the next commit). git add . stages everything",
+                        "git commit -m 'Your message' saves a snapshot. Write messages that explain WHY, not just what"
+                    ],
+                    "assessmentCriteria": [
+                        "Student can explain the difference between a working directory and a repository",
+                        "A new Git repository is initialized successfully",
+                        "At least one file is created, staged, and committed",
+                        "Commit message is descriptive and meaningful"
+                    ],
+                    "estimatedMinutes": 20,
+                    "prerequisiteSkills": []
+                },
+                {
+                    "id": "staging-and-status",
+                    "title": "The Staging Area & Reading Status",
+                    "objectives": [
+                        "Understand the three states of a file: untracked, staged, and committed",
+                        "Use git status and git diff to inspect changes before committing",
+                        "Selectively stage files to create focused, meaningful commits"
+                    ],
+                    "hints": [
+                        "git diff shows unstaged changes. git diff --staged shows what's about to be committed",
+                        "You don't have to stage everything at once — stage related changes together for cleaner history",
+                        "git restore --staged <file> removes a file from staging without losing your changes"
+                    ],
+                    "assessmentCriteria": [
+                        "Student can read git status output and explain each section",
+                        "Student uses git diff to review changes before staging",
+                        "Multiple files are committed in separate, logical commits",
+                        "Student demonstrates unstaging a file with git restore"
+                    ],
+                    "estimatedMinutes": 20,
+                    "prerequisiteSkills": ["init-and-commit"]
+                }
             ]
         },
         {
             "id": "working-with-branches",
             "title": "Working with Branches",
             "lessons": [
-                { "id": "branching", "title": "Creating & Switching Branches", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] },
-                { "id": "merging", "title": "Merging Branches & Resolving Conflicts", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] }
+                {
+                    "id": "branching",
+                    "title": "Creating & Switching Branches",
+                    "objectives": [
+                        "Understand branches as parallel timelines of development",
+                        "Create new branches with git branch and switch with git checkout or git switch",
+                        "Work on a feature branch without affecting the main branch"
+                    ],
+                    "hints": [
+                        "git switch -c feature-name creates a new branch AND switches to it in one command",
+                        "Branches are cheap in Git — create one for every feature, bug fix, or experiment",
+                        "git log --oneline --graph --all shows all branches visually in the terminal"
+                    ],
+                    "assessmentCriteria": [
+                        "Student creates at least two branches besides main",
+                        "Student makes commits on a feature branch without affecting main",
+                        "Student can switch between branches and observe different file states",
+                        "Student uses git log --graph to visualize branch history"
+                    ],
+                    "estimatedMinutes": 25,
+                    "prerequisiteSkills": ["staging-and-status"]
+                },
+                {
+                    "id": "merging",
+                    "title": "Merging Branches & Resolving Conflicts",
+                    "objectives": [
+                        "Merge feature branches back into main with git merge",
+                        "Understand fast-forward vs. three-way merges",
+                        "Resolve merge conflicts when two branches edit the same file"
+                    ],
+                    "hints": [
+                        "Always switch to the branch you want to merge INTO first (usually main), then run git merge <branch>",
+                        "Conflict markers look like <<<<<<< HEAD ... ======= ... >>>>>>> branch-name — keep the code you want and delete the markers",
+                        "After resolving conflicts, stage the fixed files and commit to complete the merge"
+                    ],
+                    "assessmentCriteria": [
+                        "Student successfully merges at least one feature branch into main",
+                        "Student creates and resolves at least one merge conflict",
+                        "Student can explain the difference between fast-forward and three-way merges",
+                        "Final git log shows a clean merge history"
+                    ],
+                    "estimatedMinutes": 30,
+                    "prerequisiteSkills": ["branching"]
+                }
             ]
         }
     ]
