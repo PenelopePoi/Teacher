@@ -3,6 +3,7 @@ import '../../src/browser/style/teacher-identity.css';
 import '../../src/browser/style/before-after.css';
 import '../../src/browser/style/ghost-timeline.css';
 import '../../src/browser/style/teachable-moments.css';
+import '../../src/browser/style/notification-orbit.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -33,6 +34,7 @@ import { CanvasWidget } from './widgets/canvas-widget';
 import { CanvasContribution } from './widgets/canvas-contribution';
 import { CanvasService } from './canvas-service';
 import { PulseService } from './pulse/pulse-service';
+import { NotificationOrbitService } from './pulse/notification-orbit-service';
 import { TeacherStatusContribution } from './status/teacher-status-contribution';
 import { DragToAskContribution } from './components/drag-to-ask-contribution';
 import { GhostTimelineWidget } from './widgets/ghost-timeline-widget';
@@ -168,6 +170,9 @@ export default new ContainerModule(bind => {
 
     // Pulse — §6 signature primitive (breathing orb service)
     bind(PulseService).toSelf().inSingletonScope();
+
+    // G12 — Notification Orbit (non-interrupting peripheral flags via the Pulse)
+    bind(NotificationOrbitService).toSelf().inSingletonScope();
 
     // §1 P#5 — Status bar rebuild (hide stock confetti, add Pulse + project + model)
     bind(TeacherStatusContribution).toSelf().inSingletonScope();

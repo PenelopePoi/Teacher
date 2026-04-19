@@ -1,0 +1,179 @@
+/* ─────────────────────────────────────────────────────────────────────
+   G12 — Notification Orbit
+   Non-interrupting peripheral notifications that orbit the Pulse.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Count badge ─────────────────────────────────────────────────── */
+
+.teacher-orbit-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: var(--teacher-ai-suggesting, #d97706);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ── Panel chrome ────────────────────────────────────────────────── */
+
+.teacher-orbit-panel {
+    position: relative;
+    overflow: hidden;
+    transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+
+.teacher-orbit-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.teacher-orbit-header-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--theia-foreground, #ccc);
+    opacity: 0.85;
+}
+
+.teacher-orbit-mark-all {
+    margin-left: auto;
+    padding: 2px 6px;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--teacher-ai-suggesting, #d97706);
+    font-size: 10px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+}
+
+.teacher-orbit-mark-all:hover {
+    opacity: 1;
+    background: var(--theia-toolbar-hoverBackground, rgba(255,255,255,0.06));
+}
+
+/* ── Notification list ───────────────────────────────────────────── */
+
+.teacher-orbit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 4px 6px;
+    animation: teacher-orbit-fade-in 0.2s ease;
+}
+
+@keyframes teacher-orbit-fade-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Empty state ─────────────────────────────────────────────────── */
+
+.teacher-orbit-empty {
+    padding: 16px 8px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--theia-descriptionForeground, #888);
+    font-style: italic;
+}
+
+/* ── Notification card ───────────────────────────────────────────── */
+
+.teacher-orbit-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: var(--theia-editor-background, var(--theia-editorWidget-background, #252526));
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease;
+    animation: teacher-orbit-fade-in 0.25s ease;
+}
+
+.teacher-orbit-card:hover {
+    background: var(--theia-list-hoverBackground, rgba(255,255,255,0.04));
+}
+
+/* Unread: amber left border */
+.teacher-orbit-card--unread {
+    border-left: 3px solid var(--teacher-ai-suggesting, #d97706);
+}
+
+/* Read: dimmer, no border accent */
+.teacher-orbit-card--read {
+    border-left: 3px solid transparent;
+    opacity: 0.55;
+}
+
+/* ── Card icon ───────────────────────────────────────────────────── */
+
+.teacher-orbit-card-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 14px;
+    color: var(--theia-foreground, #ccc);
+}
+
+/* ── Card body ───────────────────────────────────────────────────── */
+
+.teacher-orbit-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.teacher-orbit-card-message {
+    font-size: 12px;
+    color: var(--theia-foreground, #ccc);
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+.teacher-orbit-card-meta {
+    font-size: 10px;
+    color: var(--theia-descriptionForeground, #888);
+}
+
+/* ── Dismiss button ──────────────────────────────────────────────── */
+
+.teacher-orbit-card-dismiss {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--theia-foreground, #ccc);
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.teacher-orbit-card:hover .teacher-orbit-card-dismiss {
+    opacity: 0.6;
+}
+
+.teacher-orbit-card-dismiss:hover {
+    opacity: 1 !important;
+    background: var(--theia-toolbar-hoverBackground, rgba(255,255,255,0.08));
+}
