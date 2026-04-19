@@ -19,16 +19,24 @@
 
 ## What is Teacher?
 
-Teacher is a fork of Eclipse Theia, customized as an educational IDE that pairs real software development with AI-powered guidance. It supports VS Code extensions, multiple languages, and runs in the browser or as a desktop app.
+Teacher is a fork of Eclipse Theia with a custom visual identity (Glassmorphic Industrial — warm charcoal + amber accent), three teaching-focused AI agents, a structured curriculum system, and 8 InversifyJS DI rebinds that break the VS Code shell geometry. It supports VS Code extensions, multiple languages, and runs in the browser or as a desktop app.
 
 **Key differences from upstream Theia:**
-- AI tutoring integration — contextual explanations, not just autocomplete
-- Curriculum-aware workspace templates with guided lessons
-- Progress tracking, skill mastery, and assessment engine
-- Local-first AI via Ollama + multi-agent ASI system
+- **Custom shell** — 8 DI rebinds: rounded tab renderer, sidebar rail, hidden menu bar with brand wordmark, glass command palette, ambient Pulse Panel, stripped status bar, focus mode
+- **Glassmorphic Industrial design** — warm charcoal surfaces (#12151A), amber accent (#E8A948), Geist/Geist Mono typography, 2400ms breathing glow signature, Teacher Dark syntax theme
+- **AI tutoring** — Socratic agents that guide discovery, not autocomplete
+- **Curriculum system** — workspace templates, assessments, progress tracking
+- **Local-first AI** — Ollama + multi-agent ASI system, zero cloud dependency
 - Built for nonprofit educational use (Aurality Foundation)
 
 ## Features
+
+### Visual Identity
+- **Teacher Dark theme** — warm industrial charcoal palette with amber accent, periwinkle functions, teal strings, violet keywords
+- **Glassmorphic surfaces** — frosted glass on command palette, dialogs, AI panels; flat chrome on editor viewport
+- **Pulse Panel** — ambient AI status strip with 2400ms breathing glow (idle / thinking / suggesting / ready)
+- **Focus Mode** (`Cmd+Shift+F`) — strips to essentials for beginners
+- **Brand wordmark** — "Teacher" replaces menu bar, opens command palette on click
 
 ### AI Agents
 - **Tutor Agent** — Socratic AI coding mentor that guides discovery instead of giving answers
@@ -36,8 +44,8 @@ Teacher is a fork of Eclipse Theia, customized as an educational IDE that pairs 
 - **Teaching Review Agent** — Code review that teaches the concepts behind each suggestion
 
 ### Curriculum System
-- Course browser with modules and lessons
-- Workspace templates with starter code and tests
+- 3 courses: Intro to Python (5 lessons), Web Fundamentals (6 lessons), Git Basics (4 lessons)
+- Workspace templates with starter code, tests, and `.teacher/lesson.json` metadata
 - Assessment engine (code challenges, AI evaluation, quizzes)
 - Lesson commands: Start Lesson (`Ctrl+Shift+L`), Check My Work (`Ctrl+Shift+C`), Get Hint (`Ctrl+Shift+H`)
 - AI context injection — lesson objectives automatically inform all agent responses
@@ -45,8 +53,13 @@ Teacher is a fork of Eclipse Theia, customized as an educational IDE that pairs 
 ### Progress Tracking
 - Student dashboard with skill mastery visualization
 - Lesson completion and score tracking
-- Time-spent analytics
+- Time-spent analytics and learning path timeline
 - Suggested next lessons
+
+### VS Code Extensions
+- **Teacher Theme** — dark + light variants matching the industrial palette
+- **Teacher Snippets** — 16 Python + 16 JavaScript educational snippets with teaching comments
+- **Teacher Welcome** — 5-step guided walkthrough for new users
 
 ### Platform
 - Full IDE capabilities (syntax highlighting, debugging, terminal, git, extensions)
@@ -110,44 +123,76 @@ docker run -p 3000:3000 teacher-ide
 
 ## Architecture
 
+Teacher extends Theia via two custom packages — no upstream source modifications.
+
 ```
 Teacher (Theia Fork)
 ├── packages/
-│   ├── teacher-core/      # Teacher-specific extension
+│   ├── teacher-core/         # AI agents, curriculum, progress (backend + frontend)
 │   │   ├── src/browser/
-│   │   │   ├── agents/    # Tutor, Explain, Teaching Review agents
-│   │   │   ├── commands/  # Lesson commands (Start, Check, Hint, Submit)
-│   │   │   ├── widgets/   # Welcome page, Progress Dashboard, Curriculum Browser
-│   │   │   └── style/     # Teacher CSS (Theia variables only)
+│   │   │   ├── agents/       # Tutor, Explain, Teaching Review agents
+│   │   │   ├── commands/     # Lesson commands + keybindings
+│   │   │   ├── widgets/      # Welcome, Dashboard, Curriculum Browser, Canvas
+│   │   │   └── style/        # Widget CSS
 │   │   ├── src/node/
-│   │   │   ├── asi-bridge-service.ts      # Local ASI HTTP bridge
-│   │   │   ├── curriculum-service.ts      # Course/lesson loader
-│   │   │   ├── assessment-service.ts      # Test runner + AI evaluation
-│   │   │   ├── template-service.ts        # Workspace template engine
-│   │   │   └── progress-service.ts        # Student progress persistence
-│   │   └── src/common/    # RPC protocols, preferences, types
-│   ├── ai-core/           # Agent framework, LLM abstraction
-│   ├── ai-ollama/         # Ollama integration (localhost:11434)
-│   ├── ai-chat/           # Chat agents framework
-│   ├── core/              # Platform foundation
-│   ├── editor/            # Editor framework
-│   ├── monaco/            # Monaco editor integration
-│   ├── teacher-ui/        # Teacher-branded UI shell, theming, layout
-│   └── ...                # 77 packages total
-├── curriculum/            # Sample courses (Intro to Python)
-├── examples/              # Browser + Electron apps
-├── .github/workflows/     # CI, Docker publish, Electron release
-├── Dockerfile             # Browser mode container
-├── docker-compose.yml     # IDE + Ollama stack
-└── logo/                  # Teacher branding assets
+│   │   │   ├── asi-bridge-service.ts     # Local ASI HTTP bridge
+│   │   │   ├── curriculum-service.ts     # Course/lesson loader
+│   │   │   ├── assessment-service.ts     # Test runner + AI evaluation
+│   │   │   ├── template-service.ts       # Workspace template engine
+│   │   │   └── progress-service.ts       # Student progress persistence
+│   │   └── src/common/       # RPC protocols, preferences, types
+│   │
+│   ├── teacher-ui/           # Visual shell — DI rebinds + CSS (frontend only)
+│   │   └── src/browser/
+│   │       ├── teacher-tab-bar-renderer.ts    # Rounded tabs, amber underline
+│   │       ├── teacher-side-panel-handler.ts  # Sidebar rail, immovable tabs
+│   │       ├── teacher-status-bar.ts          # Stripped status bar + Pulse
+│   │       ├── teacher-menu-bar.ts            # Hidden menu, brand wordmark
+│   │       ├── teacher-quick-input.ts         # Glass command palette
+│   │       ├── teacher-focus-mode.ts          # Cmd+Shift+F minimal UI
+│   │       ├── pulse-panel-widget.tsx          # 2400ms breathing AI status
+│   │       └── style/
+│   │           ├── teacher-shell.css           # Glassmorphic Industrial theme
+│   │           └── teacher-identity.css        # Font declarations
+│   │
+│   ├── monaco/data/monaco-themes/vscode/
+│   │   └── dark_teacher.json  # Teacher Dark color theme
+│   │
+│   ├── ai-core/              # Agent framework, LLM abstraction
+│   ├── ai-ollama/            # Ollama integration (localhost:11434)
+│   ├── ai-chat/              # Chat agents framework
+│   ├── core/                 # Platform foundation
+│   ├── editor/               # Editor framework
+│   └── ...                   # 78 packages total
+│
+├── curriculum/               # 3 courses, 15 lessons
+│   ├── intro-to-python/      # 5 lessons with tests
+│   ├── web-fundamentals/     # 6 lessons (HTML/CSS/JS)
+│   └── git-basics/           # 4 lessons with setup scripts
+│
+├── teacher-plugins/          # VS Code extensions
+│   ├── teacher-theme/        # Dark + Light color themes
+│   ├── teacher-snippets/     # 32 educational snippets (Python + JS)
+│   └── teacher-welcome-ext/  # 5-step onboarding walkthrough
+│
+├── .github/workflows/        # CI, Docker publish, Electron release
+├── doc/
+│   ├── DESIGN-SPEC.md        # Glassmorphic Industrial design system
+│   └── DESIGN-SPEC-v2.md     # Dual-surface canonical reference
+├── Dockerfile                # Browser mode container
+├── docker-compose.yml        # IDE + Ollama stack
+└── logo/                     # Teacher branding assets
 ```
 
-**Per-package code organization:**
-- `src/common/` — Shared APIs (runs everywhere)
-- `src/browser/` — Browser/DOM APIs
-- `src/node/` — Node.js backend APIs
-- `src/electron-browser/` — Electron renderer
-- `src/electron-main/` — Electron main process
+### Customization Layers
+
+| Layer | What | How |
+|-------|------|-----|
+| **A — Theme** | 500+ color tokens | `dark_teacher.json` in monaco-themes |
+| **B — CSS** | Variables, glass effects, animations | `teacher-shell.css` overrides `--theia-*` |
+| **C — DI** | 8 InversifyJS rebinds | `teacher-ui-frontend-module.ts` calls `rebind()` |
+
+No upstream files modified. All Teacher code lives in `teacher-core/`, `teacher-ui/`, `curriculum/`, and `teacher-plugins/`.
 
 ## Development
 
