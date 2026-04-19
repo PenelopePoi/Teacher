@@ -31,6 +31,7 @@ const TEACHER_STATUS_CLASS = 'teacher-status-rebuilt';
 const PULSE_ENTRY_ID     = 'teacher.status.pulse';
 const PROJECT_ENTRY_ID   = 'teacher.status.project';
 const MODEL_ENTRY_ID     = 'teacher.status.model';
+const GAMIFY_ENTRY_ID    = 'teacher.status.gamification';
 
 const PULSE_GLYPH: Record<string, string> = {
     off:        '$(circle-slash)',
@@ -70,6 +71,8 @@ export class TeacherStatusContribution implements FrontendApplicationContributio
 
         this.renderModel();
         this.modelPollTimer = setInterval(() => this.renderModel(), 15_000);
+
+        this.renderGamification();
     }
 
     onStop(): void {
@@ -135,6 +138,32 @@ export class TeacherStatusContribution implements FrontendApplicationContributio
                 : nls.localize('theia/teacher/modelDown', 'Ollama offline — start it with `ollama serve`'),
         };
         this.statusBar.setElement(MODEL_ENTRY_ID, entry);
+    }
+
+    protected renderGamification(): void {
+        const level = 12;
+        const pct = 62;
+        const streak = 7;
+        const bar = this.buildProgressBar(pct);
+        const entry: StatusBarEntry = {
+            text: `$(star-full) Lv.${level} | ${bar} ${pct}% | $(flame) ${streak}`,
+            alignment: StatusBarAlignment.RIGHT,
+            priority: 9_000,
+            className: 'teacher-status-gamification',
+            tooltip: nls.localize(
+                'theia/teacher/gamificationTooltip',
+                'Level {0} — {1}% to next level — {2} day streak. Click to open Player Profile.',
+                String(level), String(pct), String(streak),
+            ),
+            command: 'teacher.xpLevel.open',
+        };
+        this.statusBar.setElement(GAMIFY_ENTRY_ID, entry);
+    }
+
+    protected buildProgressBar(pct: number): string {
+        const filled = Math.round(pct / 20);
+        const empty = 5 - filled;
+        return '\u2588'.repeat(filled) + '\u2591'.repeat(empty);
     }
 
     protected defaultLabel(state: string): string {

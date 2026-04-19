@@ -105,6 +105,12 @@ import { SpiralReviewService } from './teachable-moments/spiral-review-service';
 import { SpiralReviewWidget } from './teachable-moments/spiral-review-widget';
 import { SkillMapService } from './skill-map/skill-map-service';
 import { SkillMapWidget } from './skill-map/skill-map-widget';
+import { XPLevelWidget } from './widgets/xp-level-widget';
+import { XPLevelContribution } from './widgets/xp-level-contribution';
+import { AchievementsWidget } from './widgets/achievements-widget';
+import { AchievementsContribution } from './widgets/achievements-contribution';
+import { ChallengesWidget } from './widgets/challenges-widget';
+import { ChallengesContribution } from './widgets/challenges-contribution';
 
 export default new ContainerModule(bind => {
     // Agent Handoff Service — manages inter-agent communication and handoffs
@@ -461,6 +467,30 @@ export default new ContainerModule(bind => {
         createWidget: () => context.container.get<ProjectTrackerWidget>(ProjectTrackerWidget),
     })).inSingletonScope();
     bindViewContribution(bind, ProjectTrackerContribution);
+
+    // Gamification — XP Level widget (right panel, auto-visible)
+    bind(XPLevelWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: XPLevelWidget.ID,
+        createWidget: () => context.container.get<XPLevelWidget>(XPLevelWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, XPLevelContribution);
+
+    // Gamification — Achievements widget (main area)
+    bind(AchievementsWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: AchievementsWidget.ID,
+        createWidget: () => context.container.get<AchievementsWidget>(AchievementsWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, AchievementsContribution);
+
+    // Gamification — Challenges widget (right panel)
+    bind(ChallengesWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: ChallengesWidget.ID,
+        createWidget: () => context.container.get<ChallengesWidget>(ChallengesWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, ChallengesContribution);
 
     // C8 Drag-to-Ask Service — injectable singleton for selection-as-context
     bind(DragToAskService).toSelf().inSingletonScope();

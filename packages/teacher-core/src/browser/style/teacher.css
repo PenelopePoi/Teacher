@@ -6715,3 +6715,740 @@ textarea:focus-visible {
 .teacher-project-tracker {
     scrollbar-gutter: stable;
 }
+
+/* ============================================================
+ * Gamification System — XP Level, Achievements, Challenges
+ * ============================================================ */
+
+/* --- Shared noise + scrollbar for gamification widgets --- */
+
+.teacher-xp-level,
+.teacher-achievements,
+.teacher-challenges {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.01'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+}
+
+/* ========== XP Level Widget ========== */
+
+.teacher-xp-level-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 16px;
+    font-family: var(--teacher-font-ui);
+    color: var(--teacher-text-primary);
+}
+
+.teacher-xp-level-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.teacher-xp-level-badge {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+.teacher-xp-level-badge::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.teacher-xp-level-badge--blue {
+    background: var(--teacher-surface-3);
+}
+
+.teacher-xp-level-badge--blue::before {
+    background: linear-gradient(135deg, #4A90D9, #7B9BD1);
+}
+
+.teacher-xp-level-badge--green {
+    background: var(--teacher-surface-3);
+}
+
+.teacher-xp-level-badge--green::before {
+    background: linear-gradient(135deg, #4FB286, #6EC49A);
+}
+
+.teacher-xp-level-badge--amber {
+    background: var(--teacher-surface-3);
+}
+
+.teacher-xp-level-badge--amber::before {
+    background: linear-gradient(135deg, var(--teacher-accent-amber, #E8A948), var(--teacher-accent-yellow, #F5C518));
+}
+
+.teacher-xp-level-badge--purple {
+    background: var(--teacher-surface-3);
+}
+
+.teacher-xp-level-badge--purple::before {
+    background: linear-gradient(135deg, #9B6ED1, #C79BE8);
+}
+
+.teacher-xp-level-badge-num {
+    font-family: var(--teacher-font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--teacher-text-primary);
+    z-index: 1;
+}
+
+.teacher-xp-level-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-xp-level-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-xp-level-bar-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.teacher-xp-level-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--teacher-surface-3);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.teacher-xp-level-bar-fill {
+    height: 100%;
+    background: var(--teacher-accent-amber, #E8A948);
+    border-radius: 4px;
+    transition: width 600ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+.teacher-xp-level-bar-text {
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+}
+
+/* Streak section */
+
+.teacher-xp-level-streak {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--teacher-surface-3);
+    border-radius: 8px;
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-xp-level-streak-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-xp-level-flame {
+    color: var(--teacher-accent-amber, #E8A948);
+    font-size: 18px;
+}
+
+.teacher-xp-level-streak-count {
+    font-family: var(--teacher-font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-xp-level-streak-label {
+    font-size: 13px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-xp-level-multiplier {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: rgba(232, 169, 72, 0.15);
+    color: var(--teacher-accent-amber, #E8A948);
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Today's XP */
+
+.teacher-xp-level-today {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-xp-level-today-header {
+    display: flex;
+    align-items: center;
+}
+
+.teacher-xp-level-today-amount {
+    font-family: var(--teacher-font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-ai-confident, #4FB286);
+}
+
+.teacher-xp-level-today-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 40px;
+}
+
+.teacher-xp-level-today-bar {
+    flex: 1;
+    min-width: 4px;
+    background: var(--teacher-accent-amber, #E8A948);
+    border-radius: 2px 2px 0 0;
+    opacity: 0.7;
+    transition: opacity var(--teacher-duration-fast, 150ms) ease;
+}
+
+.teacher-xp-level-today-bar:last-child {
+    opacity: 1;
+    background: var(--teacher-ai-confident, #4FB286);
+}
+
+.teacher-xp-level-today-bar:hover {
+    opacity: 1;
+}
+
+/* Quick stats row */
+
+.teacher-xp-level-stats {
+    display: flex;
+    gap: 8px;
+}
+
+.teacher-xp-level-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 4px;
+    background: var(--teacher-surface-3);
+    border-radius: 8px;
+    border: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-xp-level-stat-value {
+    font-family: var(--teacher-font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-xp-level-stat-label {
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ========== Achievements Widget ========== */
+
+.teacher-achievements-container {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+    max-width: 960px;
+    margin: 0 auto;
+    font-family: var(--teacher-font-ui);
+    color: var(--teacher-text-primary);
+}
+
+.teacher-achievements-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.teacher-achievements-title .codicon {
+    color: var(--teacher-accent-amber, #E8A948);
+}
+
+.teacher-achievements-summary {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.teacher-achievements-summary-count {
+    font-family: var(--teacher-font-mono);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.teacher-achievements-summary-label {
+    font-size: 14px;
+    color: var(--teacher-text-secondary);
+}
+
+/* Filter tabs */
+
+.teacher-achievements-filters {
+    display: flex;
+    gap: 4px;
+    padding: 2px;
+    background: var(--teacher-surface-3);
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.teacher-achievements-filter {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--teacher-text-secondary);
+    font-family: var(--teacher-font-ui);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--teacher-duration-fast, 150ms) ease;
+}
+
+.teacher-achievements-filter:hover {
+    color: var(--teacher-text-primary);
+    background: var(--teacher-surface-4);
+}
+
+.teacher-achievements-filter--active {
+    background: var(--teacher-surface-1);
+    color: var(--teacher-text-primary);
+    font-weight: 600;
+}
+
+/* Achievement grid */
+
+.teacher-achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.teacher-achievements-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--teacher-surface-3);
+    border-radius: 8px;
+    border-left: 3px solid var(--teacher-border-subtle);
+    transition:
+        transform var(--teacher-duration-fast, 150ms) var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1)),
+        box-shadow var(--teacher-duration-fast, 150ms) ease;
+    position: relative;
+}
+
+.teacher-achievements-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Rarity border colors */
+.teacher-achievements-card--common { border-left-color: var(--teacher-text-tertiary); }
+.teacher-achievements-card--uncommon { border-left-color: #4FB286; }
+.teacher-achievements-card--rare { border-left-color: #4A90D9; }
+.teacher-achievements-card--epic { border-left-color: #9B6ED1; }
+.teacher-achievements-card--legendary { border-left-color: var(--teacher-accent-amber, #E8A948); }
+
+/* Locked state */
+.teacher-achievements-card--locked {
+    opacity: 0.4;
+    filter: grayscale(0.6);
+}
+
+.teacher-achievements-card--locked .teacher-achievements-card-icon {
+    position: relative;
+}
+
+.teacher-achievements-card-icon {
+    font-size: 20px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-achievements-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.teacher-achievements-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-achievements-card-desc {
+    font-size: 11px;
+    color: var(--teacher-text-secondary);
+    line-height: 1.4;
+}
+
+.teacher-achievements-card-date {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+}
+
+/* Progress bar within card */
+.teacher-achievements-card-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.teacher-achievements-card-progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--teacher-surface-4);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.teacher-achievements-card-progress-fill {
+    height: 100%;
+    background: var(--teacher-accent-amber, #E8A948);
+    border-radius: 2px;
+}
+
+.teacher-achievements-card-progress-text {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+}
+
+/* Rarity badge */
+.teacher-achievements-card-rarity {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.teacher-achievements-card-rarity--common { color: var(--teacher-text-tertiary); background: var(--teacher-surface-4); }
+.teacher-achievements-card-rarity--uncommon { color: #4FB286; background: rgba(79, 178, 134, 0.12); }
+.teacher-achievements-card-rarity--rare { color: #4A90D9; background: rgba(74, 144, 217, 0.12); }
+.teacher-achievements-card-rarity--epic { color: #9B6ED1; background: rgba(155, 110, 209, 0.12); }
+.teacher-achievements-card-rarity--legendary { color: var(--teacher-accent-amber, #E8A948); background: rgba(232, 169, 72, 0.12); }
+
+/* Unlock animation */
+@keyframes teacher-achievement-unlock {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.teacher-achievements-card--just-unlocked {
+    animation: teacher-achievement-unlock 600ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+    box-shadow: 0 0 20px rgba(232, 169, 72, 0.3);
+}
+
+/* ========== Challenges Widget ========== */
+
+.teacher-challenges-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 20px;
+    font-family: var(--teacher-font-ui);
+    color: var(--teacher-text-primary);
+}
+
+.teacher-challenges-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.teacher-challenges-title .codicon {
+    color: var(--teacher-accent-amber, #E8A948);
+}
+
+.teacher-challenges-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-challenges-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--teacher-text-tertiary);
+    margin: 0;
+}
+
+.teacher-challenges-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-challenges-card {
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    overflow: hidden;
+    background: var(--teacher-surface-3);
+    border-radius: 8px;
+    border: 1px solid var(--teacher-border-subtle);
+    transition: border-color var(--teacher-duration-fast, 150ms) ease;
+}
+
+.teacher-challenges-card:hover {
+    border-color: var(--teacher-border-strong);
+}
+
+.teacher-challenges-card--completed {
+    background: rgba(79, 178, 134, 0.06);
+    border-color: rgba(79, 178, 134, 0.25);
+}
+
+/* Vertical progress bar on left */
+.teacher-challenges-card-progress-bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--teacher-accent-amber, #E8A948);
+    border-radius: 0 0 0 8px;
+    transition: height 400ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+.teacher-challenges-card--completed .teacher-challenges-card-progress-bar {
+    background: var(--teacher-ai-confident, #4FB286);
+}
+
+.teacher-challenges-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px 10px 10px;
+}
+
+.teacher-challenges-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-challenges-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-challenges-card-xp {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: rgba(232, 169, 72, 0.12);
+    color: var(--teacher-accent-amber, #E8A948);
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.teacher-challenges-card--completed .teacher-challenges-card-xp {
+    background: rgba(79, 178, 134, 0.12);
+    color: var(--teacher-ai-confident, #4FB286);
+}
+
+.teacher-challenges-card-desc {
+    font-size: 11px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-challenges-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.teacher-challenges-card-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--teacher-surface-4);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.teacher-challenges-card-bar-fill {
+    height: 100%;
+    background: var(--teacher-accent-amber, #E8A948);
+    border-radius: 2px;
+    transition: width 400ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+.teacher-challenges-card--completed .teacher-challenges-card-bar-fill {
+    background: var(--teacher-ai-confident, #4FB286);
+}
+
+.teacher-challenges-card-progress-text {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    white-space: nowrap;
+}
+
+.teacher-challenges-card-timer {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    white-space: nowrap;
+}
+
+.teacher-challenges-card-timer--urgent {
+    color: var(--teacher-accent-amber, #E8A948);
+    font-weight: 600;
+}
+
+.teacher-challenges-card-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    color: var(--teacher-ai-confident, #4FB286);
+    font-size: 18px;
+}
+
+/* ========== Level-Up Celebration Overlay ========== */
+
+.teacher-level-up-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(11, 13, 16, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: teacher-level-up-fade-in 200ms ease forwards;
+    pointer-events: none;
+}
+
+@keyframes teacher-level-up-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes teacher-level-up-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.teacher-level-up-overlay--exiting {
+    animation: teacher-level-up-fade-out 400ms ease forwards;
+}
+
+.teacher-level-up-text {
+    font-family: var(--teacher-font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--teacher-accent-amber, #E8A948);
+    text-shadow: 0 0 20px rgba(232, 169, 72, 0.6);
+    margin-bottom: 12px;
+    animation: teacher-level-up-glow 1.5s ease infinite alternate;
+}
+
+@keyframes teacher-level-up-glow {
+    from { text-shadow: 0 0 20px rgba(232, 169, 72, 0.4); }
+    to { text-shadow: 0 0 40px rgba(232, 169, 72, 0.8), 0 0 80px rgba(232, 169, 72, 0.3); }
+}
+
+.teacher-level-up-number {
+    font-family: var(--teacher-font-mono);
+    font-size: 96px;
+    font-weight: 700;
+    color: var(--teacher-text-primary);
+    text-shadow: 0 0 20px rgba(232, 169, 72, 0.5);
+    animation: teacher-level-up-scale 800ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+}
+
+@keyframes teacher-level-up-scale {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.teacher-level-up-title {
+    font-family: var(--teacher-font-ui);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--teacher-text-secondary);
+    margin-top: 8px;
+    opacity: 0;
+    animation: teacher-level-up-title-fade 400ms ease 400ms forwards;
+}
+
+@keyframes teacher-level-up-title-fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Level-up particles reusing confetti keyframes */
+.teacher-level-up-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: teacher-confetti-pop 800ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+}
+
+.teacher-level-up-particle:nth-child(odd) {
+    background: var(--teacher-accent-amber, #E8A948);
+}
+
+.teacher-level-up-particle:nth-child(even) {
+    background: var(--teacher-ai-confident, #4FB286);
+}
