@@ -2,6 +2,7 @@ import '../../src/browser/style/teacher.css';
 import '../../src/browser/style/teacher-identity.css';
 import '../../src/browser/style/before-after.css';
 import '../../src/browser/style/ghost-timeline.css';
+import '../../src/browser/style/teachable-moments.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -66,6 +67,10 @@ import { BeforeAfterWidget } from './before-after/before-after-widget';
 import { BeforeAfterContribution } from './before-after/before-after-contribution';
 import { IntentDockWidget } from './intents/intent-dock-widget';
 import { PinnedThoughtGutter } from './intents/pinned-thought-gutter';
+import { TeachableMomentService } from './teachable-moments/teachable-moment-service';
+import { TeachableMomentDetector } from './teachable-moments/teachable-moment-detector';
+import { TeachableMomentExplainerWidget } from './teachable-moments/teachable-moment-widget';
+import { PedagogyLibraryWidget } from './teachable-moments/pedagogy-library-widget';
 
 export default new ContainerModule(bind => {
     // Tutor Agent
@@ -312,4 +317,22 @@ export default new ContainerModule(bind => {
     // Pinned Thought Gutter — Monaco editor margin decorations
     bind(PinnedThoughtGutter).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(PinnedThoughtGutter);
+
+    // C9 Teachable Moments — the pedagogy primitive that survives 100 years
+    bind(TeachableMomentService).toSelf().inSingletonScope();
+    bind(TeachableMomentDetector).toSelf().inSingletonScope();
+
+    // C9 Teachable Moment Explainer widget (floating concept cards)
+    bind(TeachableMomentExplainerWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: TeachableMomentExplainerWidget.ID,
+        createWidget: () => context.container.get<TeachableMomentExplainerWidget>(TeachableMomentExplainerWidget),
+    })).inSingletonScope();
+
+    // C9 Pedagogy Library widget (personal curriculum built through working)
+    bind(PedagogyLibraryWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: PedagogyLibraryWidget.ID,
+        createWidget: () => context.container.get<PedagogyLibraryWidget>(PedagogyLibraryWidget),
+    })).inSingletonScope();
 });

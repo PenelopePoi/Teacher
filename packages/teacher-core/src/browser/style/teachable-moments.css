@@ -1,0 +1,603 @@
+/* ═══════════════════════════════════════════════════════════════
+   C9 — Teachable Moments — The pedagogy primitive that survives 100 years
+   Gold underline, glass card, amber accents, teacher-ease-out curves
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Design Tokens ─── */
+
+:root {
+    --teacher-tm-gold: #E8A948;
+    --teacher-tm-gold-dim: rgba(232, 169, 72, 0.15);
+    --teacher-tm-gold-glow: rgba(232, 169, 72, 0.3);
+    --teacher-tm-surface: rgba(30, 30, 30, 0.92);
+    --teacher-tm-surface-hover: rgba(40, 40, 40, 0.95);
+    --teacher-tm-border: rgba(232, 169, 72, 0.25);
+    --teacher-tm-text: var(--theia-foreground, #e0e0e0);
+    --teacher-tm-text-dim: var(--theia-descriptionForeground, #999);
+    --teacher-tm-radius: 12px;
+    --teacher-tm-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ─── Gold Underline (inline teachable anchor) ─── */
+
+.teacher-teachable {
+    position: relative;
+    display: inline;
+    cursor: pointer;
+}
+
+.teacher-teachable-anchor {
+    border-bottom: 2px solid var(--teacher-tm-gold);
+    padding-bottom: 1px;
+    animation: teacher-tm-underline-fade-in 400ms var(--teacher-tm-ease) both;
+    transition: border-color 200ms var(--teacher-tm-ease);
+}
+
+.teacher-teachable:hover .teacher-teachable-anchor,
+.teacher-teachable:focus .teacher-teachable-anchor {
+    border-bottom-color: var(--teacher-tm-gold);
+    text-shadow: 0 0 8px var(--teacher-tm-gold-glow);
+}
+
+@keyframes teacher-tm-underline-fade-in {
+    from {
+        border-bottom-color: transparent;
+        opacity: 0.5;
+    }
+    to {
+        border-bottom-color: var(--teacher-tm-gold);
+        opacity: 1;
+    }
+}
+
+/* ─── Inline Tooltip Card ─── */
+
+.teacher-teachable-card {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 280px;
+    max-width: 380px;
+    padding: 12px 16px;
+    background: var(--teacher-tm-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--teacher-tm-border);
+    border-left: 3px solid var(--teacher-tm-gold);
+    border-radius: var(--teacher-tm-radius);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(232, 169, 72, 0.1);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: teacher-tm-card-enter 250ms var(--teacher-tm-ease) both;
+}
+
+@keyframes teacher-tm-card-enter {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.teacher-teachable-term {
+    font-weight: 600;
+    color: var(--teacher-tm-gold);
+    font-size: 13px;
+}
+
+.teacher-teachable-body {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-teachable-dismiss {
+    align-self: flex-end;
+    padding: 4px 14px;
+    border: none;
+    border-radius: 999px;
+    background: var(--teacher-tm-gold);
+    color: #1a1a1a;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 200ms var(--teacher-tm-ease), transform 100ms ease;
+}
+
+.teacher-teachable-dismiss:hover {
+    background: #f0b85a;
+    transform: scale(1.03);
+}
+
+.teacher-teachable-dismiss:active {
+    transform: scale(0.97);
+}
+
+/* ─── Explainer Widget (Panel) ─── */
+
+.teacher-tm-explainer {
+    overflow-y: auto;
+}
+
+.teacher-tm-container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-tm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--teacher-tm-border);
+}
+
+.teacher-tm-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-tm-header h2 .codicon {
+    color: var(--teacher-tm-gold);
+}
+
+.teacher-tm-count {
+    font-size: 11px;
+    color: var(--teacher-tm-text-dim);
+}
+
+.teacher-tm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ─── Concept Card (in explainer panel) ─── */
+
+.teacher-tm-card {
+    background: var(--teacher-tm-surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--teacher-tm-border);
+    border-left: 3px solid var(--teacher-tm-gold);
+    border-radius: var(--teacher-tm-radius);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: teacher-tm-card-slide-in 300ms var(--teacher-tm-ease) both;
+    transition: border-color 200ms var(--teacher-tm-ease), background 200ms var(--teacher-tm-ease);
+}
+
+.teacher-tm-card:hover {
+    background: var(--teacher-tm-surface-hover);
+    border-color: var(--teacher-tm-gold-glow);
+}
+
+@keyframes teacher-tm-card-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.teacher-tm-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.teacher-tm-card-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-tm-card-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.teacher-tm-card-oneliner {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--teacher-tm-text);
+    margin: 0;
+}
+
+.teacher-tm-card-expanded {
+    animation: teacher-tm-expand 250ms var(--teacher-tm-ease) both;
+}
+
+@keyframes teacher-tm-expand {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 600px;
+    }
+}
+
+.teacher-tm-card-full {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--teacher-tm-text-dim);
+    margin: 0 0 8px 0;
+}
+
+.teacher-tm-card-code {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: var(--theia-code-font-family, 'Geist Mono', monospace);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--teacher-tm-text-dim);
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+}
+
+.teacher-tm-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 4px;
+}
+
+.teacher-tm-expand-btn,
+.teacher-tm-playground-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border: 1px solid var(--teacher-tm-border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--teacher-tm-text-dim);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 200ms var(--teacher-tm-ease);
+}
+
+.teacher-tm-expand-btn:hover,
+.teacher-tm-playground-btn:hover {
+    background: var(--teacher-tm-gold-dim);
+    color: var(--teacher-tm-gold);
+    border-color: var(--teacher-tm-gold-glow);
+}
+
+.teacher-tm-playground-btn .codicon {
+    color: var(--teacher-tm-gold);
+}
+
+.teacher-tm-gotit-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 14px;
+    border: none;
+    border-radius: 999px;
+    background: var(--teacher-tm-gold);
+    color: #1a1a1a;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: auto;
+    transition: background 200ms var(--teacher-tm-ease), transform 100ms ease;
+}
+
+.teacher-tm-gotit-btn:hover {
+    background: #f0b85a;
+    transform: scale(1.03);
+}
+
+.teacher-tm-gotit-btn:active {
+    transform: scale(0.97);
+}
+
+/* ─── Empty State ─── */
+
+.teacher-tm-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+    gap: 12px;
+    color: var(--teacher-tm-text-dim);
+}
+
+.teacher-tm-empty-icon .codicon {
+    font-size: 32px;
+    color: var(--teacher-tm-gold);
+    opacity: 0.5;
+}
+
+.teacher-tm-empty h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-tm-empty p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 300px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Pedagogy Library Widget
+   ═══════════════════════════════════════════════════════════════ */
+
+.teacher-pedagogy-library {
+    overflow-y: auto;
+}
+
+.teacher-pl-container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-pl-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--teacher-tm-border);
+}
+
+.teacher-pl-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-pl-header h2 .codicon {
+    color: var(--teacher-tm-gold);
+}
+
+.teacher-pl-stats {
+    display: flex;
+    gap: 12px;
+}
+
+.teacher-pl-stat {
+    font-size: 11px;
+    color: var(--teacher-tm-text-dim);
+}
+
+/* ─── Filters ─── */
+
+.teacher-pl-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.teacher-pl-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 160px;
+}
+
+.teacher-pl-search .codicon {
+    color: var(--teacher-tm-text-dim);
+    font-size: 12px;
+}
+
+.teacher-pl-search-input {
+    flex: 1;
+    font-size: 12px;
+}
+
+.teacher-pl-select {
+    font-size: 12px;
+    min-width: 100px;
+}
+
+/* ─── Category Groups ─── */
+
+.teacher-pl-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.teacher-pl-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-pl-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border-left: 3px solid var(--teacher-tm-gold);
+    background: var(--teacher-tm-gold-dim);
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-pl-group-count {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--teacher-tm-text-dim);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 8px;
+    border-radius: 999px;
+}
+
+/* ─── Library Entry ─── */
+
+.teacher-pl-entry {
+    background: var(--teacher-tm-surface);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: background 200ms var(--teacher-tm-ease);
+}
+
+.teacher-pl-entry:hover {
+    background: var(--teacher-tm-surface-hover);
+}
+
+.teacher-pl-entry--dismissed {
+    opacity: 0.6;
+}
+
+.teacher-pl-entry-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.teacher-pl-entry-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-pl-entry-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.teacher-pl-entry-explanation {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--teacher-tm-text-dim);
+    margin: 0;
+}
+
+.teacher-pl-entry-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 4px;
+    font-size: 10px;
+    color: var(--teacher-tm-text-dim);
+}
+
+.teacher-pl-entry-date,
+.teacher-pl-entry-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.teacher-pl-revisit-btn {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 10px;
+    border: 1px solid var(--teacher-tm-border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--teacher-tm-gold);
+    font-size: 10px;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 200ms var(--teacher-tm-ease);
+}
+
+.teacher-pl-revisit-btn:hover {
+    background: var(--teacher-tm-gold-dim);
+    border-color: var(--teacher-tm-gold);
+}
+
+.teacher-pl-active-badge {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #4ADE80;
+    font-size: 10px;
+    margin-left: auto;
+}
+
+.teacher-pl-active-badge .codicon {
+    font-size: 6px;
+}
+
+/* ─── Empty State ─── */
+
+.teacher-pl-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+    gap: 12px;
+    color: var(--teacher-tm-text-dim);
+}
+
+.teacher-pl-empty .codicon {
+    font-size: 32px;
+    color: var(--teacher-tm-gold);
+    opacity: 0.5;
+}
+
+.teacher-pl-empty h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-tm-text);
+}
+
+.teacher-pl-empty p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 320px;
+}
