@@ -7,6 +7,7 @@ import {
     CanvasArtifact,
     CanvasChartArtifact,
     CanvasCodeArtifact,
+    CanvasConnectionsArtifact,
     CanvasKeyValueArtifact,
     CanvasListArtifact,
     CanvasMarkdownArtifact,
@@ -111,13 +112,14 @@ export class CanvasWidget extends ReactWidget {
 
     protected renderBody(artifact: CanvasArtifact): React.ReactNode {
         switch (artifact.kind) {
-            case 'table':    return this.renderTable(artifact);
-            case 'markdown': return this.renderMarkdown(artifact);
-            case 'code':     return this.renderCode(artifact);
-            case 'list':     return this.renderList(artifact);
-            case 'keyValue': return this.renderKeyValue(artifact);
-            case 'chart':    return this.renderChart(artifact);
-            default:         return undefined;
+            case 'table':       return this.renderTable(artifact);
+            case 'markdown':    return this.renderMarkdown(artifact);
+            case 'code':        return this.renderCode(artifact);
+            case 'list':        return this.renderList(artifact);
+            case 'keyValue':    return this.renderKeyValue(artifact);
+            case 'chart':       return this.renderChart(artifact);
+            case 'connections': return this.renderConnections(artifact);
+            default:            return undefined;
         }
     }
 
@@ -186,6 +188,120 @@ export class CanvasWidget extends ReactWidget {
                         </span>
                     </div>
                 ))}
+            </div>
+        );
+    }
+
+    protected renderConnections(a: CanvasConnectionsArtifact): React.ReactNode {
+        const size = 420;
+        const cx = size / 2;
+        const cy = size / 2;
+        const radius = size / 2 - 60;
+        const n = Math.max(1, a.nodes.length);
+
+        const nodePos = new Map<string, { x: number; y: number; angle: number }>();
+        a.nodes.forEach((node, i) => {
+            const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+            nodePos.set(node.id, {
+                x: cx + Math.cos(angle) * radius,
+                y: cy + Math.sin(angle) * radius,
+                angle,
+            });
+        });
+
+        const groups = Array.from(new Set(a.nodes.map(node => node.group ?? '_default')));
+        const groupColorVar = (group: string | undefined): string => {
+            const idx = groups.indexOf(group ?? '_default');
+            const palette = [
+                'var(--theia-textLink-foreground)',
+                'var(--theia-testing-iconPassed)',
+                'var(--theia-testing-iconFailed)',
+                'var(--theia-progressBar-background)',
+                'var(--theia-button-background)',
+            ];
+            return palette[idx % palette.length];
+        };
+
+        return (
+            <div className="teacher-canvas-connections">
+                {a.caption && <p className="teacher-canvas-connections-caption">{a.caption}</p>}
+                <svg
+                    viewBox={`0 0 ${size} ${size}`}
+                    className="teacher-canvas-connections-svg"
+                    role="img"
+                    aria-label={a.title}
+                >
+                    <g className="teacher-canvas-connections-edges">
+                        {a.edges.map((edge, i) => {
+                            const src = nodePos.get(edge.source);
+                            const tgt = nodePos.get(edge.target);
+                            if (!src || !tgt) { return undefined; }
+                            const midX = (src.x + tgt.x) / 2;
+                            const midY = (src.y + tgt.y) / 2;
+                            const strokeWidth = 0.8 + (edge.weight ?? 0.5) * 2.2;
+                            return (
+                                <g key={`edge-${i}`}>
+                                    <line
+                                        x1={src.x} y1={src.y} x2={tgt.x} y2={tgt.y}
+                                        strokeWidth={strokeWidth}
+                                        className="teacher-canvas-connections-edge"
+                                    />
+                                    {edge.label && (
+                                        <text
+                                            x={midX} y={midY}
+                                            textAnchor="middle"
+                                            dy="-4"
+                                            className="teacher-canvas-connections-edge-label"
+                                        >
+                                            {edge.label}
+                                        </text>
+                                    )}
+                                </g>
+                            );
+                        })}
+                    </g>
+                    <g className="teacher-canvas-connections-nodes">
+                        {a.nodes.map(node => {
+                            const pos = nodePos.get(node.id);
+                            if (!pos) { return undefined; }
+                            const labelOffset = Math.cos(pos.angle) >= 0 ? 16 : -16;
+                            const labelAnchor = Math.cos(pos.angle) >= 0 ? 'start' : 'end';
+                            const attrsSummary = node.attrs
+                                ? Object.entries(node.attrs).map(([k, v]) => `${k}: ${v}`).join('\n')
+                                : node.label;
+                            return (
+                                <g key={node.id} className="teacher-canvas-connections-node">
+                                    <title>{attrsSummary}</title>
+                                    <circle
+                                        cx={pos.x} cy={pos.y} r="8"
+                                        fill={groupColorVar(node.group)}
+                                    />
+                                    <text
+                                        x={pos.x + labelOffset}
+                                        y={pos.y + 4}
+                                        textAnchor={labelAnchor}
+                                        className="teacher-canvas-connections-node-label"
+                                    >
+                                        {node.label}
+                                    </text>
+                                </g>
+                            );
+                        })}
+                    </g>
+                </svg>
+                {groups.length > 1 && (
+                    <ul className="teacher-canvas-connections-legend">
+                        {groups.map(g => (
+                            <li key={g}>
+                                <span
+                                    className="teacher-canvas-connections-legend-dot"
+                                    style={{ background: groupColorVar(g) }}
+                                />
+                                {g === '_default' ? 'other' : g}
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
         );
     }

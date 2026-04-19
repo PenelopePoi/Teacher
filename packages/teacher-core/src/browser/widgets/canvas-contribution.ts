@@ -90,10 +90,39 @@ export class CanvasContribution extends AbstractViewContribution<CanvasWidget> {
                     sourceAgent: 'Teacher Canvas demo',
                     ordered: true,
                     items: [
-                        'Canvas widget with six artifact kinds',
+                        'Canvas widget with seven artifact kinds',
                         'Voice input (Ctrl+Alt+M) via the Web Speech API',
                         'Learning Workspace preset command',
                         'Keybindings for fast toggle',
+                    ],
+                });
+                this.canvasService.add({
+                    kind: 'connections',
+                    title: 'Reconsumeralization ecosystem — shared infrastructure',
+                    sourceAgent: 'Teacher Canvas demo',
+                    caption: 'Lay the projects side by side. The coincidences stop looking like coincidences.',
+                    nodes: [
+                        { id: 'teacher',   label: 'Teacher IDE',        group: 'product' },
+                        { id: 'sands',     label: 'Soul & Sentence',    group: 'product' },
+                        { id: 'xela',      label: 'XELA Creative',      group: 'product' },
+                        { id: 'asi',       label: 'Local ASI',          group: 'infra',  attrs: { role: 'multi-agent swarm' } },
+                        { id: 'mcp',       label: 'teacher-link MCP',   group: 'infra' },
+                        { id: 'skills',    label: '326-skill library',  group: 'infra' },
+                        { id: 'vercel',    label: 'Vercel hosting',     group: 'infra' },
+                        { id: 'github',    label: 'PenelopePoi GitHub', group: 'infra' },
+                    ],
+                    edges: [
+                        { source: 'teacher', target: 'asi',    label: 'runs against', weight: 0.9 },
+                        { source: 'teacher', target: 'mcp',    label: 'exposes',      weight: 0.9 },
+                        { source: 'teacher', target: 'skills', label: 'uses',         weight: 0.7 },
+                        { source: 'asi',     target: 'skills', label: 'indexes',      weight: 0.6 },
+                        { source: 'asi',     target: 'mcp',    label: 'behind',       weight: 0.8 },
+                        { source: 'teacher', target: 'github', label: 'published',    weight: 0.6 },
+                        { source: 'sands',   target: 'github', label: 'published',    weight: 0.6 },
+                        { source: 'sands',   target: 'vercel', label: 'deployed',     weight: 0.7 },
+                        { source: 'teacher', target: 'vercel', label: 'marketing',    weight: 0.5 },
+                        { source: 'xela',    target: 'vercel', label: 'marketing',    weight: 0.5 },
+                        { source: 'xela',    target: 'teacher', label: 'funds',       weight: 1.0 },
                     ],
                 });
                 this.openView({ reveal: true, activate: true });

@@ -6,7 +6,8 @@ export type CanvasArtifactKind =
     | 'code'
     | 'list'
     | 'keyValue'
-    | 'chart';
+    | 'chart'
+    | 'connections';
 
 export interface CanvasArtifactBase {
     id: string;
@@ -56,13 +57,49 @@ export interface CanvasChartArtifact extends CanvasArtifactBase {
     unit?: string;
 }
 
+export interface CanvasConnectionsNode {
+    id: string;
+    label: string;
+    /** Optional cluster tag — nodes sharing a group render in the same color band. */
+    group?: string;
+    /** Optional free-form attributes. Rendered on hover. */
+    attrs?: Record<string, string>;
+}
+
+export interface CanvasConnectionsEdge {
+    source: string;
+    target: string;
+    /** Optional explanation: why are these two connected? Drives the "coincidence" → "pattern" reveal. */
+    label?: string;
+    /** Optional weight 0..1 — thicker edge = stronger / more load-bearing connection. */
+    weight?: number;
+}
+
+/**
+ * A node-edge graph rendered in-widget as an SVG circle layout.
+ *
+ * Use case: pattern recognition across "unrelated" entities. When you lay
+ * names side by side and draw edges for shared attributes, the
+ * coincidences stop looking like coincidences. Surfaces structure in
+ * skill libraries, knowledge-base entries, incident timelines, or any
+ * set of items with overlapping metadata.
+ */
+export interface CanvasConnectionsArtifact extends CanvasArtifactBase {
+    kind: 'connections';
+    nodes: CanvasConnectionsNode[];
+    edges: CanvasConnectionsEdge[];
+    /** Optional caption shown above the graph. */
+    caption?: string;
+}
+
 export type CanvasArtifact =
     | CanvasTableArtifact
     | CanvasMarkdownArtifact
     | CanvasCodeArtifact
     | CanvasListArtifact
     | CanvasKeyValueArtifact
-    | CanvasChartArtifact;
+    | CanvasChartArtifact
+    | CanvasConnectionsArtifact;
 
 /**
  * Input accepted by CanvasService#add. A discriminated union where each
@@ -72,9 +109,10 @@ export type CanvasArtifact =
  * kind-specific fields on a TS discriminated union.
  */
 export type CanvasArtifactInput =
-    | (Omit<CanvasTableArtifact,    'id' | 'createdAt'> & { id?: string })
-    | (Omit<CanvasMarkdownArtifact, 'id' | 'createdAt'> & { id?: string })
-    | (Omit<CanvasCodeArtifact,     'id' | 'createdAt'> & { id?: string })
-    | (Omit<CanvasListArtifact,     'id' | 'createdAt'> & { id?: string })
-    | (Omit<CanvasKeyValueArtifact, 'id' | 'createdAt'> & { id?: string })
-    | (Omit<CanvasChartArtifact,    'id' | 'createdAt'> & { id?: string });
+    | (Omit<CanvasTableArtifact,       'id' | 'createdAt'> & { id?: string })
+    | (Omit<CanvasMarkdownArtifact,    'id' | 'createdAt'> & { id?: string })
+    | (Omit<CanvasCodeArtifact,        'id' | 'createdAt'> & { id?: string })
+    | (Omit<CanvasListArtifact,        'id' | 'createdAt'> & { id?: string })
+    | (Omit<CanvasKeyValueArtifact,    'id' | 'createdAt'> & { id?: string })
+    | (Omit<CanvasChartArtifact,       'id' | 'createdAt'> & { id?: string })
+    | (Omit<CanvasConnectionsArtifact, 'id' | 'createdAt'> & { id?: string });
