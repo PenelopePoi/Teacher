@@ -69,6 +69,7 @@ export class TeacherWelcomeWidget extends ReactWidget {
                 {this.renderConnectionStatus()}
                 {this.renderQuickActions()}
                 {this.renderProgressSummary()}
+                {this.renderAIInsight()}
             </div>
         );
     }
@@ -203,6 +204,34 @@ export class TeacherWelcomeWidget extends ReactWidget {
                         <span>{nls.localize('theia/teacher/suggestedNext', 'Suggested Next')}: {summary.suggestedNextLesson}</span>
                     </div>
                 )}
+            </div>
+        );
+    }
+
+    protected readonly aiInsights: string[] = [
+        nls.localize('theia/teacher/insightMon', 'Every expert was once a beginner. The code you struggle with today will feel natural in a month.'),
+        nls.localize('theia/teacher/insightTue', "Debugging isn't about finding bugs \u2014 it's about understanding how your code actually behaves vs how you expected it to."),
+        nls.localize('theia/teacher/insightWed', "The best programmers don't memorize syntax. They know how to ask the right questions."),
+        nls.localize('theia/teacher/insightThu', "Reading other people's code is a superpower. Open source projects are free textbooks written by experts."),
+        nls.localize('theia/teacher/insightFri', "Ship something today. A finished project that's imperfect teaches more than a perfect project that's never done."),
+        nls.localize('theia/teacher/insightSat', 'Take breaks. Your brain consolidates learning during rest. A walk does more for a hard bug than another hour of staring.'),
+        nls.localize('theia/teacher/insightSun', "You're not just learning to code. You're learning to think in systems. That skill transfers to everything."),
+    ];
+
+    protected renderAIInsight(): React.ReactNode {
+        const dayOfWeek = new Date().getDay();
+        const insightIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        const insight = this.aiInsights[insightIndex];
+
+        return (
+            <div className='teacher-ai-insight-card'>
+                <div className='teacher-ai-insight-header'>
+                    <i className='codicon codicon-lightbulb teacher-ai-insight-icon'></i>
+                    <span className='teacher-ai-insight-title'>
+                        {nls.localize('theia/teacher/aiInsightOfDay', 'AI Insight of the Day')}
+                    </span>
+                </div>
+                <p className='teacher-ai-insight-text'>{insight}</p>
             </div>
         );
     }

@@ -53,6 +53,7 @@ export class ProgressDashboardWidget extends ReactWidget {
                 {this.renderStreakCounter()}
                 {this.renderOverviewCards()}
                 {this.renderSkillMastery()}
+                {this.renderAIAnalysis()}
                 {this.renderSuggestedNextLesson()}
             </div>
         );
@@ -179,6 +180,23 @@ export class ProgressDashboardWidget extends ReactWidget {
                         </div>
                     ))}
                 </div>
+            </div>
+        );
+    }
+
+    protected renderAIAnalysis(): React.ReactNode {
+        return (
+            <div className='teacher-ai-analysis'>
+                <h2 className='teacher-dashboard-section-title'>
+                    <i className='codicon codicon-symbol-misc'></i>
+                    {nls.localize('theia/teacher/aiAnalysis', 'AI Analysis')}
+                </h2>
+                <p className='teacher-ai-analysis-text'>
+                    {nls.localize(
+                        'theia/teacher/aiAnalysisBody',
+                        "Based on your progress, you're strongest in HTML structure and CSS styling. Your JavaScript skills are developing \u2014 you've mastered variables and functions but haven't tackled async patterns yet. I recommend focusing on loops and array methods next, as they're the bridge to more advanced concepts. Your 7-day streak shows great consistency \u2014 keep it up!"
+                    )}
+                </p>
             </div>
         );
     }

@@ -154,6 +154,37 @@ export class XPLevelWidget extends ReactWidget {
                     </div>
                 </div>
 
+                <div className='teacher-xp-level-breakdown'>
+                    <h3 className='teacher-xp-level-breakdown-title'>
+                        <i className='codicon codicon-list-unordered'></i>
+                        {nls.localize('theia/teacher/xpBreakdown', 'XP Breakdown (Today)')}
+                    </h3>
+                    <div className='teacher-xp-level-breakdown-list'>
+                        <div className='teacher-xp-level-breakdown-item'>
+                            <span>{nls.localize('theia/teacher/xpLesson', 'Lesson complete')}</span>
+                            <span className='teacher-xp-level-breakdown-xp'>+150 XP</span>
+                        </div>
+                        <div className='teacher-xp-level-breakdown-item'>
+                            <span>{nls.localize('theia/teacher/xpQuiz', 'Quiz perfect score')}</span>
+                            <span className='teacher-xp-level-breakdown-xp'>+100 XP</span>
+                        </div>
+                        <div className='teacher-xp-level-breakdown-item'>
+                            <span>{nls.localize('theia/teacher/xpStreak', 'Streak bonus')}</span>
+                            <span className='teacher-xp-level-breakdown-xp'>+50 XP</span>
+                        </div>
+                        <div className='teacher-xp-level-breakdown-item'>
+                            <span>{nls.localize('theia/teacher/xpBugFix', 'Bug fix')}</span>
+                            <span className='teacher-xp-level-breakdown-xp'>+40 XP</span>
+                        </div>
+                    </div>
+                    <div className='teacher-xp-level-next-reward'>
+                        <i className='codicon codicon-gift'></i>
+                        <span>
+                            {nls.localize('theia/teacher/nextReward', 'Level 13 unlocks: Custom Theme Editor')}
+                        </span>
+                    </div>
+                </div>
+
                 <div className='teacher-xp-level-stats'>
                     <div className='teacher-xp-level-stat'>
                         <span className='teacher-xp-level-stat-value'>{p.totalLessons}</span>

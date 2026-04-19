@@ -144,6 +144,10 @@ export class QuickQuizWidget extends ReactWidget {
                         </button>
                     </div>
                 </div>
+                <div className='teacher-quick-quiz-adapted-banner'>
+                    <i className='codicon codicon-symbol-misc'></i>
+                    <span>{nls.localize('theia/teacher/quizAdapted', 'Questions adapted to your level')}</span>
+                </div>
                 <div className='teacher-quick-quiz-progress'>
                     {this.questions.map((q, i) => {
                         const state = this.quizStates.get(q.id);
@@ -220,9 +224,22 @@ export class QuickQuizWidget extends ReactWidget {
                     })}
                 </div>
                 {state.answered && (
-                    <div className={`teacher-quick-quiz-feedback ${isCorrect ? 'teacher-quick-quiz-feedback--correct' : 'teacher-quick-quiz-feedback--wrong'}`}>
-                        <i className={`codicon ${isCorrect ? 'codicon-pass-filled' : 'codicon-info'}`}></i>
-                        <span>{question.explanation}</span>
+                    <div className='teacher-ai-explanation'>
+                        <div className='teacher-ai-explanation-header'>
+                            <i className={`codicon ${isCorrect ? 'codicon-pass-filled' : 'codicon-info'}`}></i>
+                            <span className='teacher-ai-explanation-title'>
+                                {isCorrect
+                                    ? nls.localize('theia/teacher/quizCorrectTitle', 'Correct! Here\'s a deeper insight:')
+                                    : nls.localize('theia/teacher/quizWrongTitle', 'Not quite \u2014 here\'s why:')}
+                            </span>
+                        </div>
+                        <p className='teacher-ai-explanation-text'>{question.explanation}</p>
+                        {isCorrect && (
+                            <p className='teacher-ai-explanation-bonus'>
+                                <i className='codicon codicon-lightbulb'></i>
+                                {nls.localize('theia/teacher/quizBonusFact', 'Bonus: This concept is used in nearly every JavaScript project. Master it and you unlock powerful data transformation patterns.')}
+                            </p>
+                        )}
                     </div>
                 )}
                 <div className='teacher-quick-quiz-nav'>

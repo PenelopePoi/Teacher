@@ -87,6 +87,7 @@ export class LearningAnalyticsWidget extends ReactWidget {
                 {this.renderTimeDistribution()}
                 {this.renderSkillHeatmap()}
                 {this.renderWeakAreas()}
+                {this.renderAIPredictions()}
             </div>
         );
     }
@@ -289,6 +290,31 @@ export class LearningAnalyticsWidget extends ReactWidget {
                                 <i className='codicon codicon-lightbulb'></i>
                                 {ws.suggestion}
                             </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    protected renderAIPredictions(): React.ReactNode {
+        const predictions = [
+            { icon: 'codicon-graph-line', text: nls.localize('theia/teacher/aiPrediction1', "At your current pace, you'll complete Web Fundamentals in ~12 days") },
+            { icon: 'codicon-arrow-up', text: nls.localize('theia/teacher/aiPrediction2', 'Your CSS skills are improving 40% faster than average') },
+            { icon: 'codicon-target', text: nls.localize('theia/teacher/aiPrediction3', "Recommended focus: JavaScript loops \u2014 you're close to a breakthrough") },
+        ];
+
+        return (
+            <div className='teacher-analytics-section'>
+                <h2 className='teacher-analytics-section-title'>
+                    <i className='codicon codicon-symbol-misc'></i>
+                    {nls.localize('theia/teacher/aiPredictions', 'AI Predictions')}
+                </h2>
+                <div className='teacher-ai-predictions-grid'>
+                    {predictions.map((pred, i) => (
+                        <div key={i} className='teacher-ai-prediction-card'>
+                            <i className={`codicon ${pred.icon} teacher-ai-prediction-icon`}></i>
+                            <span className='teacher-ai-prediction-text'>{pred.text}</span>
                         </div>
                     ))}
                 </div>

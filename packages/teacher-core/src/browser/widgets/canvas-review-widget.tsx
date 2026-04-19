@@ -231,15 +231,31 @@ export class CanvasReviewWidget extends ReactWidget {
 
     protected renderExplanation(): React.ReactNode {
         return (
-            <div className='teacher-canvas-review-explanation'>
-                <i className='codicon codicon-lightbulb' />
-                <span>
-                    {nls.localize(
-                        'theia/teacher/canvasExplanation',
-                        "Added a 'Save' button with amber accent styling and hover animation"
-                    )}
-                </span>
-            </div>
+            <React.Fragment>
+                <div className='teacher-ai-explanation'>
+                    <div className='teacher-ai-explanation-header'>
+                        <i className='codicon codicon-lightbulb' />
+                        <span className='teacher-ai-explanation-title'>
+                            {nls.localize('theia/teacher/aiExplanation', 'AI Explanation')}
+                        </span>
+                    </div>
+                    <p className='teacher-ai-explanation-text'>
+                        {nls.localize(
+                            'theia/teacher/canvasAIExplanation',
+                            "I added a 'Save Changes' button to the profile card. This gives users a clear call-to-action to persist their changes. The button uses the amber accent color for visual prominence and includes a hover transition for polish. The margin-bottom on the avatar row creates breathing room above the new button."
+                        )}
+                    </p>
+                </div>
+                <div className='teacher-ai-confidence-meter'>
+                    <span className='teacher-ai-confidence-label'>
+                        {nls.localize('theia/teacher/aiConfidenceLabel', 'AI is fairly confident about this change')}
+                    </span>
+                    <div className='teacher-ai-confidence-bar-wrap'>
+                        <div className='teacher-ai-confidence-bar-fill' style={{ width: '87%' }}></div>
+                    </div>
+                    <span className='teacher-ai-confidence'>87%</span>
+                </div>
+            </React.Fragment>
         );
     }
 }

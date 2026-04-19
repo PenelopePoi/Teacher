@@ -175,6 +175,7 @@ export class PlanModeWidget extends ReactWidget {
                             {nls.localize('theia/teacher/planEstMinutes', '~{0}m', step.estimatedMinutes)}
                         </span>
                     </div>
+                    {this.renderAIReasoning(step)}
                     {step.dependsOn.length > 0 && (
                         <div className='teacher-plan-mode-dependencies'>
                             <i className='codicon codicon-git-merge' />
@@ -189,6 +190,63 @@ export class PlanModeWidget extends ReactWidget {
                         </div>
                     )}
                 </div>
+            </div>
+        );
+    }
+
+    protected readonly aiReasoningMap: Record<number, string> = {
+        1: nls.localize('theia/teacher/planReason1', 'Authentication service is the foundation \u2014 all other auth features depend on it. Starting here ensures clean separation of concerns.'),
+        2: nls.localize('theia/teacher/planReason2', 'The login component provides the user-facing entry point. Building it right after the service keeps the feedback loop tight.'),
+        3: nls.localize('theia/teacher/planReason3', 'JWT middleware secures all API routes. Setting this up before database changes ensures no unprotected endpoints exist during development.'),
+        4: nls.localize('theia/teacher/planReason4', 'Schema changes are high-risk and irreversible in production. Placing this step after middleware ensures the auth layer is verified first.'),
+        5: nls.localize('theia/teacher/planReason5', 'Route guards enforce frontend access control. They depend on the JWT middleware being functional to validate tokens.'),
+        6: nls.localize('theia/teacher/planReason6', 'Integration tests come last to verify the entire auth flow end-to-end after all components are in place.'),
+    };
+
+    protected readonly altApproachSteps: Record<number, string> = {
+        3: nls.localize('theia/teacher/planAlt3', 'The AI considered using session-based auth instead of JWT, but JWT is more scalable for API-first architectures.'),
+        4: nls.localize('theia/teacher/planAlt4', 'The AI considered using an ORM migration tool, but raw SQL gives more control over the schema for this use case.'),
+    };
+
+    protected expandedReasoningSteps: Set<number> = new Set();
+
+    protected handleToggleReasoning = (stepId: number): void => {
+        if (this.expandedReasoningSteps.has(stepId)) {
+            this.expandedReasoningSteps.delete(stepId);
+        } else {
+            this.expandedReasoningSteps.add(stepId);
+        }
+        this.update();
+    };
+
+    protected renderAIReasoning(step: PlanStep): React.ReactNode {
+        const reasoning = this.aiReasoningMap[step.id];
+        if (!reasoning) { return null; }
+        const isExpanded = this.expandedReasoningSteps.has(step.id);
+        const altApproach = this.altApproachSteps[step.id];
+
+        return (
+            <div className='teacher-ai-reasoning'>
+                <button
+                    type='button'
+                    className='teacher-ai-reasoning-toggle'
+                    onClick={() => this.handleToggleReasoning(step.id)}
+                >
+                    <i className={`codicon ${isExpanded ? 'codicon-chevron-down' : 'codicon-chevron-right'}`} />
+                    <i className='codicon codicon-info' />
+                    {nls.localize('theia/teacher/whyThisStep', 'Why this step?')}
+                </button>
+                {isExpanded && (
+                    <div className='teacher-ai-reasoning-body'>
+                        <p className='teacher-ai-reasoning-text'>{reasoning}</p>
+                        {altApproach && (
+                            <div className='teacher-ai-reasoning-alt'>
+                                <i className='codicon codicon-git-compare' />
+                                <span>{altApproach}</span>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         );
     }

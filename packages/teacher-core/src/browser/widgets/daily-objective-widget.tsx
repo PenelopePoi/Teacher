@@ -94,7 +94,24 @@ export class DailyObjectiveWidget extends ReactWidget {
             <div className='teacher-daily-objective-body'>
                 <div className='teacher-daily-objective-goal'>
                     <span className='teacher-daily-objective-goal-text'>{this.objective.goal}</span>
+                    <span className='teacher-ai-recommended-badge'>
+                        {nls.localize('theia/teacher/aiSuggested', 'AI suggested')}
+                    </span>
                     <span className='teacher-daily-objective-goal-pct'>{this.objective.progressPercent}%</span>
+                </div>
+                <div className='teacher-daily-objective-micro-goals'>
+                    <div className='teacher-daily-objective-micro-goal'>
+                        <i className='codicon codicon-circle-outline'></i>
+                        <span>{nls.localize('theia/teacher/microGoal1', '1. Read the docs (5 min)')}</span>
+                    </div>
+                    <div className='teacher-daily-objective-micro-goal'>
+                        <i className='codicon codicon-circle-outline'></i>
+                        <span>{nls.localize('theia/teacher/microGoal2', '2. Try the example (10 min)')}</span>
+                    </div>
+                    <div className='teacher-daily-objective-micro-goal'>
+                        <i className='codicon codicon-circle-outline'></i>
+                        <span>{nls.localize('theia/teacher/microGoal3', '3. Build your own (15 min)')}</span>
+                    </div>
                 </div>
                 <div className='teacher-daily-objective-bar'>
                     <div

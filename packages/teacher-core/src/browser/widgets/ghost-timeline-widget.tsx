@@ -231,6 +231,9 @@ export class GhostTimelineWidget extends ReactWidget {
                 <span className={`teacher-ghost-clip-title ${clip.muted ? 'teacher-ghost-clip-title--struck' : ''}`}>
                     {clip.action}
                 </span>
+                <span className='teacher-ai-confidence'>
+                    {this.getAIConfidence(clip.id)}%
+                </span>
                 <span className='teacher-ghost-clip-time'>{this.formatTime(clip.timestamp)}</span>
             </div>
         );
@@ -249,6 +252,12 @@ export class GhostTimelineWidget extends ReactWidget {
                     <span className='teacher-ghost-detail-time'>{this.formatTime(clip.timestamp)}</span>
                 </div>
                 <p className='teacher-ghost-detail-action'>{clip.action}</p>
+                {this.hasLearnMore(clip.id) && (
+                    <div className='teacher-ghost-detail-learn-more'>
+                        <i className='codicon codicon-question'></i>
+                        <span>{nls.localize('theia/teacher/timelineWhy', 'Why? The AI chose this approach because it minimizes side effects and follows the single-responsibility principle.')}</span>
+                    </div>
+                )}
                 {clip.filesChanged.length > 0 && (
                     <div className='teacher-ghost-detail-files'>
                         <span className='teacher-ghost-detail-files-label'>
@@ -277,6 +286,21 @@ export class GhostTimelineWidget extends ReactWidget {
             </div>
         );
     }
+
+    protected readonly clipConfidenceMap: Record<string, number> = {};
+
+    protected getAIConfidence = (clipId: string): number => {
+        if (!this.clipConfidenceMap[clipId]) {
+            this.clipConfidenceMap[clipId] = Math.floor(Math.random() * 20) + 78;
+        }
+        return this.clipConfidenceMap[clipId];
+    };
+
+    protected hasLearnMore = (clipId: string): boolean => {
+        const clips = this.timelineService.getClips();
+        const idx = clips.findIndex(c => c.id === clipId);
+        return idx === 0 || idx === 2;
+    };
 
     protected formatTime(ts: number): string {
         const d = new Date(ts);

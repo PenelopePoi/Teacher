@@ -206,6 +206,19 @@ export class TeachableMomentsWidget extends ReactWidget {
                 <p className='teacher-teachable-moments-card-explanation'>
                     {concept.explanation}
                 </p>
+                <div className='teacher-spaced-repetition'>
+                    <i className='codicon codicon-clock' />
+                    <span>{this.getSpacedRepetitionLabel(concept)}</span>
+                </div>
+                <div className='teacher-teachable-moments-related'>
+                    <i className='codicon codicon-link' />
+                    <span className='teacher-teachable-moments-related-label'>
+                        {nls.localize('theia/teacher/relatedConcepts', 'Related:')}
+                    </span>
+                    {this.getRelatedConcepts(concept.id).map(rc => (
+                        <span key={rc} className='teacher-teachable-moments-related-chip'>{rc}</span>
+                    ))}
+                </div>
                 <div className='teacher-teachable-moments-card-footer'>
                     <span className='teacher-teachable-moments-card-time'>
                         <i className='codicon codicon-clock' />
@@ -287,6 +300,38 @@ export class TeachableMomentsWidget extends ReactWidget {
             </div>
         );
     }
+
+    protected getSpacedRepetitionLabel = (concept: TeachableConcept): string => {
+        if (concept.timesSeen >= 6) {
+            return nls.localize('theia/teacher/srMastered', 'Mastered \u2014 no review needed');
+        }
+        if (concept.timesSeen >= 3) {
+            return nls.localize('theia/teacher/srWeek', 'Review in: 1 week');
+        }
+        return nls.localize('theia/teacher/srDays', 'Review in: 2 days');
+    };
+
+    protected readonly relatedConceptsMap: Record<string, string[]> = {
+        c1: ['Promises', 'callbacks', 'event loop'],
+        c2: ['Array.filter()', 'Array.reduce()', 'for...of'],
+        c3: ['Array.map()', 'Array.find()', 'Array.some()'],
+        c4: ['spread operator', 'rest parameters', 'default values'],
+        c5: ['Flexbox', 'grid-template-areas', 'auto-fit'],
+        c6: ['CSS Grid', 'align-items', 'justify-content'],
+        c7: ['calc()', 'currentColor', 'theming'],
+        c8: ['useReducer()', 'state lifting', 'immutability'],
+        c9: ['cleanup functions', 'dependency arrays', 'useMemo()'],
+        c10: ['React.createElement', 'fragments', 'conditional rendering'],
+        c11: ['children prop', 'PropTypes', 'default props'],
+        c12: ['abstraction', 'modularity', 'single responsibility'],
+        c13: ['tagged templates', 'String.raw', 'interpolation'],
+        c14: ['InversifyJS', 'service locator', 'IoC containers'],
+        c15: ['border-radius', 'backdrop-filter', 'elevation'],
+    };
+
+    protected getRelatedConcepts = (conceptId: string): string[] => {
+        return this.relatedConceptsMap[conceptId] ?? ['functions', 'variables', 'scope'];
+    };
 
     protected formatRelative(ts: number): string {
         const diff = Date.now() - ts;

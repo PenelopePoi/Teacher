@@ -50,12 +50,40 @@ export class ChallengesWidget extends ReactWidget {
         const weekly = this.challenges.filter(c => c.type === 'weekly');
         const milestone = this.challenges.filter(c => c.type === 'milestone');
 
+        const streakDays = 7;
+
         return (
             <div className='teacher-challenges-container'>
                 <h1 className='teacher-challenges-title'>
                     <i className='codicon codicon-flame'></i>
                     {nls.localize('theia/teacher/challengesTitle', 'Challenges')}
                 </h1>
+
+                {streakDays >= 7 && (
+                    <div className='teacher-streak-banner'>
+                        <i className='codicon codicon-flame'></i>
+                        <span>{nls.localize('theia/teacher/streakBonusBanner', '2x XP active \u2014 7-day streak!')}</span>
+                    </div>
+                )}
+
+                <div className='teacher-challenges-ai-generated'>
+                    <div className='teacher-challenges-ai-generated-header'>
+                        <i className='codicon codicon-sparkle'></i>
+                        <span className='teacher-challenges-ai-generated-title'>
+                            {nls.localize('theia/teacher/aiGeneratedChallenge', 'AI-Generated Challenge')}
+                        </span>
+                        <span className='teacher-challenges-ai-generated-xp'>250 XP</span>
+                    </div>
+                    <p className='teacher-challenges-ai-generated-desc'>
+                        {nls.localize(
+                            'theia/teacher/aiChallengeDesc',
+                            'Based on your recent work: Write a function that converts Celsius to Fahrenheit using what you learned about parameters'
+                        )}
+                    </p>
+                    <div className='teacher-challenges-ai-generated-bar'>
+                        <div className='teacher-challenges-ai-generated-bar-fill' style={{ width: '0%' }}></div>
+                    </div>
+                </div>
 
                 {this.renderSection(nls.localize('theia/teacher/dailyChallenges', 'Daily Challenges'), daily)}
                 {this.renderSection(nls.localize('theia/teacher/weeklyChallenges', 'Weekly Challenges'), weekly)}

@@ -163,6 +163,14 @@ export class RewindPanelWidget extends ReactWidget {
         );
     }
 
+    protected isAIRecommended = (cp: CheckpointView): boolean => {
+        return this.checkpoints.length >= 3 && cp.id === this.checkpoints[Math.floor(this.checkpoints.length / 2)].id && !cp.isCurrent;
+    };
+
+    protected getImpactLines = (cp: CheckpointView): number => {
+        return cp.fileDiffs.reduce((sum, d) => sum + d.linesAdded + d.linesRemoved, 0) || (cp.fileCount * 15);
+    };
+
     protected renderCheckpoint(cp: CheckpointView): React.ReactNode {
         return (
             <div
@@ -185,6 +193,12 @@ export class RewindPanelWidget extends ReactWidget {
                             {this.formatRelativeTime(cp.timestamp)}
                         </span>
                     </div>
+                    {this.isAIRecommended(cp) && (
+                        <div className='teacher-ai-recommended-badge teacher-rewind-ai-recommend'>
+                            <i className='codicon codicon-lightbulb' />
+                            {nls.localize('theia/teacher/rewindAIRecommend', 'AI recommends rewinding to this point \u2014 the approach taken after this was less efficient')}
+                        </div>
+                    )}
                     <div className='teacher-rewind-checkpoint-badges'>
                         {cp.fileCount > 0 && (
                             <span className='teacher-rewind-file-badge'>
@@ -231,6 +245,14 @@ export class RewindPanelWidget extends ReactWidget {
                             >
                                 <i className='codicon codicon-history' aria-hidden='true' />
                             </button>
+                        </div>
+                    )}
+                    {this.hoveredCheckpointId === cp.id && (
+                        <div className='teacher-rewind-impact-preview'>
+                            <i className='codicon codicon-info' />
+                            <span>
+                                {nls.localize('theia/teacher/rewindImpact', 'Rewinding will undo: {0} file changes, {1} lines', cp.fileCount, this.getImpactLines(cp))}
+                            </span>
                         </div>
                     )}
                     {this.hoveredCheckpointId === cp.id && cp.fileDiffs.length > 0 && (

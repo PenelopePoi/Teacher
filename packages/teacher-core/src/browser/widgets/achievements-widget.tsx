@@ -79,6 +79,44 @@ export class AchievementsWidget extends ReactWidget {
         this.update();
     };
 
+    protected renderNextAchievement(): React.ReactNode {
+        const inProgress = this.achievements.filter(a => !a.unlockedAt && a.progress !== undefined && a.maxProgress !== undefined);
+        if (inProgress.length === 0) { return null; }
+        const closest = inProgress.sort((a, b) => ((b.progress ?? 0) / (b.maxProgress ?? 1)) - ((a.progress ?? 0) / (a.maxProgress ?? 1)))[0];
+        const pct = Math.round(((closest.progress ?? 0) / (closest.maxProgress ?? 1)) * 100);
+
+        return (
+            <div className='teacher-achievements-next'>
+                <i className='codicon codicon-star-half'></i>
+                <span className='teacher-achievements-next-text'>
+                    {nls.localize('theia/teacher/almostThere', "Almost there! '{0}' \u2014 {1}/{2}", closest.name, closest.progress ?? 0, closest.maxProgress ?? 0)}
+                </span>
+                <div className='teacher-achievements-next-bar'>
+                    <div className='teacher-achievements-next-bar-fill' style={{ width: `${pct}%` }}></div>
+                </div>
+            </div>
+        );
+    }
+
+    protected renderRarityStats(): React.ReactNode {
+        const counts: Record<string, { unlocked: number; total: number }> = {};
+        for (const rarity of RARITY_ORDER) {
+            const all = this.achievements.filter(a => a.rarity === rarity);
+            const unlocked = all.filter(a => !!a.unlockedAt);
+            counts[rarity] = { unlocked: unlocked.length, total: all.length };
+        }
+
+        return (
+            <div className='teacher-achievements-rarity-stats'>
+                {RARITY_ORDER.slice().reverse().map(r => (
+                    <span key={r} className={`teacher-achievements-rarity-stat teacher-achievements-rarity-stat--${r}`}>
+                        {RARITY_LABEL[r]}: {counts[r].unlocked}/{counts[r].total}
+                    </span>
+                ))}
+            </div>
+        );
+    }
+
     protected getFiltered(): Achievement[] {
         switch (this.filter) {
             case 'unlocked':
@@ -113,6 +151,9 @@ export class AchievementsWidget extends ReactWidget {
                         {nls.localize('theia/teacher/unlocked', 'Unlocked')} ({pct}%)
                     </span>
                 </div>
+
+                {this.renderNextAchievement()}
+                {this.renderRarityStats()}
 
                 <div className='teacher-achievements-filters'>
                     {(['all', 'unlocked', 'locked', 'rarity'] as FilterMode[]).map(mode => (

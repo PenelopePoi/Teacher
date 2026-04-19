@@ -124,7 +124,29 @@ export class CurriculumBrowserWidget extends ReactWidget {
         );
     }
 
+    protected readonly aiDifficultyMap: Record<string, number> = {
+        'intro-html': 1, 'html-elements': 1, 'html-forms': 2, 'css-basics': 1, 'css-layout': 2,
+        'css-grid': 3, 'css-flexbox': 2, 'js-variables': 1, 'js-functions': 2, 'js-loops': 2,
+        'js-arrays': 3, 'js-objects': 3, 'js-async': 4, 'js-dom': 3, 'ts-basics': 3,
+        'ts-generics': 4, 'react-intro': 3, 'react-hooks': 4, 'react-state': 4, 'testing-intro': 3,
+    };
+
+    protected readonly aiRecommendedLessons: Set<string> = new Set(['js-loops', 'js-arrays', 'css-grid']);
+
+    protected getDifficultyForLesson = (lessonId: string): number => {
+        return this.aiDifficultyMap[lessonId] ?? Math.min(5, Math.max(1, Math.ceil(Math.random() * 3) + 1));
+    };
+
+    protected getDifficultyColor = (level: number): string => {
+        if (level <= 2) { return 'teacher-ai-diff-green'; }
+        if (level <= 3) { return 'teacher-ai-diff-amber'; }
+        return 'teacher-ai-diff-red';
+    };
+
     protected renderLesson(lesson: LessonManifest): React.ReactNode {
+        const difficulty = this.getDifficultyForLesson(lesson.id);
+        const isRecommended = this.aiRecommendedLessons.has(lesson.id);
+
         return (
             <div key={lesson.id} className='teacher-curriculum-node'>
                 <div
@@ -134,6 +156,16 @@ export class CurriculumBrowserWidget extends ReactWidget {
                 >
                     <i className='codicon codicon-file-code'></i>
                     <span className='teacher-curriculum-node-label'>{lesson.title}</span>
+                    {isRecommended && (
+                        <span className='teacher-ai-recommended-badge'>
+                            {nls.localize('theia/teacher/aiRecommended', 'Recommended')}
+                        </span>
+                    )}
+                    <span className='teacher-ai-difficulty' title={nls.localize('theia/teacher/aiDifficulty', 'AI estimated difficulty: {0}/5', difficulty)}>
+                        {Array.from({ length: 5 }, (_, i) => (
+                            <span key={i} className={`teacher-ai-diff-dot ${i < difficulty ? this.getDifficultyColor(difficulty) : 'teacher-ai-diff-empty'}`}></span>
+                        ))}
+                    </span>
                     <span className='teacher-curriculum-lesson-time'>
                         <i className='codicon codicon-clock'></i>
                         {lesson.estimatedMinutes}m
