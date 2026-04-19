@@ -2,40 +2,25 @@ import { ReactWidget } from '@theia/core/lib/browser';
 import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
-import { CanvasService } from '../canvas-service';
-import { CanvasArtifact } from '../../common/canvas-protocol';
+import { TimelineService, TimelineClip } from '../ghost-timeline/timeline-service';
 
 /**
- * §2 item #2 — Ghost Timeline.
+ * C7 Ghost Timeline Widget
  *
- * An Ableton-style horizontal ribbon showing AI actions as colored clips.
- * Each clip represents one AI action with color coding by action type:
- *   blue = edit, green = create, amber = suggest, red = delete.
- * Includes a playhead, mute/revert toggles, and demo clips for testing.
+ * A horizontal ribbon (48px collapsed, 120px expanded) showing every AI action
+ * as a colored clip. Drag the playhead to scrub through history. Mute a clip
+ * to revert. Non-linear, visual undo -- Ableton's clip metaphor applied to
+ * agent work.
+ *
+ * Clip colors:
+ *   amber  = code changes
+ *   teal   = explanations
+ *   violet = reviews
+ *   green  = assessments
+ *
+ * Muted clips render at 30% opacity with strikethrough and dashed border.
+ * Playhead is a vertical amber line with a small triangle handle, draggable.
  */
-
-type ActionType = 'edit' | 'create' | 'suggest' | 'delete';
-
-interface TimelineClip {
-    readonly id: string;
-    readonly label: string;
-    readonly actionType: ActionType;
-    readonly timestamp: number;
-    readonly sizeWeight: number;  // 1-5, affects width
-}
-
-const DEMO_CLIPS: TimelineClip[] = [
-    { id: 'dc1', label: 'Added login form', actionType: 'create', timestamp: Date.now() - 3600000, sizeWeight: 4 },
-    { id: 'dc2', label: 'Fixed CSS alignment', actionType: 'edit', timestamp: Date.now() - 3200000, sizeWeight: 2 },
-    { id: 'dc3', label: 'Refactored auth service', actionType: 'edit', timestamp: Date.now() - 2800000, sizeWeight: 5 },
-    { id: 'dc4', label: 'Suggested error handling', actionType: 'suggest', timestamp: Date.now() - 2400000, sizeWeight: 3 },
-    { id: 'dc5', label: 'Created user model', actionType: 'create', timestamp: Date.now() - 2000000, sizeWeight: 4 },
-    { id: 'dc6', label: 'Removed legacy endpoint', actionType: 'delete', timestamp: Date.now() - 1600000, sizeWeight: 2 },
-    { id: 'dc7', label: 'Updated validation logic', actionType: 'edit', timestamp: Date.now() - 1200000, sizeWeight: 3 },
-    { id: 'dc8', label: 'Suggested test coverage', actionType: 'suggest', timestamp: Date.now() - 800000, sizeWeight: 3 },
-    { id: 'dc9', label: 'Added dark mode styles', actionType: 'create', timestamp: Date.now() - 400000, sizeWeight: 4 },
-    { id: 'dc10', label: 'Fixed race condition', actionType: 'edit', timestamp: Date.now() - 120000, sizeWeight: 2 },
-];
 
 @injectable()
 export class GhostTimelineWidget extends ReactWidget {
@@ -43,11 +28,12 @@ export class GhostTimelineWidget extends ReactWidget {
     static readonly ID = 'teacher-ghost-timeline';
     static readonly LABEL = nls.localize('theia/teacher/ghostTimeline', 'AI Timeline');
 
-    @inject(CanvasService) protected readonly canvasService: CanvasService;
+    @inject(TimelineService) protected readonly timelineService: TimelineService;
 
-    protected mutedIds = new Set<string>();
     protected selectedId: string | undefined;
-    protected demoClips: TimelineClip[] = DEMO_CLIPS.map(c => ({ ...c }));
+    protected expanded = false;
+    protected draggingPlayhead = false;
+    protected trackRef: HTMLDivElement | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -57,7 +43,7 @@ export class GhostTimelineWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-history';
         this.addClass('teacher-ghost-timeline-widget');
-        this.toDispose.push(this.canvasService.onDidChange(() => this.update()));
+        this.toDispose.push(this.timelineService.onDidChange(() => this.update()));
     }
 
     protected handleClipClick = (clipId: string): void => {
@@ -65,28 +51,66 @@ export class GhostTimelineWidget extends ReactWidget {
         this.update();
     };
 
-    protected handleMuteClick = (e: React.MouseEvent, clipId: string): void => {
+    protected handleMuteToggle = (e: React.MouseEvent, clipId: string): void => {
         e.stopPropagation();
-        if (this.mutedIds.has(clipId)) {
-            this.mutedIds.delete(clipId);
-        } else {
-            this.mutedIds.add(clipId);
+        const clip = this.timelineService.getClipById(clipId);
+        if (!clip) {
+            return;
         }
+        if (clip.muted) {
+            this.timelineService.unmuteClip(clipId);
+        } else {
+            this.timelineService.muteClip(clipId);
+        }
+    };
+
+    protected handleToggleExpand = (): void => {
+        this.expanded = !this.expanded;
         this.update();
     };
 
+    protected handlePlayheadMouseDown = (e: React.MouseEvent): void => {
+        e.preventDefault();
+        this.draggingPlayhead = true;
+        const onMove = (ev: MouseEvent): void => {
+            if (!this.draggingPlayhead || !this.trackRef) {
+                return;
+            }
+            const rect = this.trackRef.getBoundingClientRect();
+            const pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
+            const clips = this.timelineService.getClips();
+            if (clips.length < 2) {
+                return;
+            }
+            const first = clips[0].timestamp;
+            const last = clips[clips.length - 1].timestamp;
+            const position = first + pct * (last - first);
+            this.timelineService.setPlayhead(position);
+        };
+        const onUp = (): void => {
+            this.draggingPlayhead = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+    };
+
+    protected setTrackRef = (el: HTMLDivElement | null): void => {
+        this.trackRef = el;
+    };
+
     protected render(): React.ReactNode {
-        const canvasArtifacts = [...this.canvasService.artifacts].reverse();
-        const hasCanvasData = canvasArtifacts.length > 0;
-        const clips = hasCanvasData ? this.artifactsToClips(canvasArtifacts) : this.demoClips;
+        const clips = this.timelineService.getClips();
+        const height = this.expanded ? 120 : 48;
 
         if (clips.length === 0) {
             return (
                 <div className='teacher-ghost-empty'>
-                    <p>{nls.localize('theia/teacher/timelineEmpty', 'Timeline is empty.')}</p>
-                    <p className='teacher-ghost-empty-hint'>
-                        {nls.localize('theia/teacher/timelineHint', 'AI actions appear here as colored clips. Click to inspect, mute to revert.')}
-                    </p>
+                    <p>{nls.localize(
+                        'theia/teacher/timelineEmptyC7',
+                        'Your AI timeline is empty. Actions will appear here as you work with Teacher.'
+                    )}</p>
                 </div>
             );
         }
@@ -94,83 +118,141 @@ export class GhostTimelineWidget extends ReactWidget {
         const first = clips[0].timestamp;
         const last = Math.max(first + 1, clips[clips.length - 1].timestamp);
         const span = last - first;
+        const playheadPos = this.timelineService.getPlayheadPosition();
+        const playheadPct = span > 0 ? ((playheadPos - first) / span) * 100 : 100;
 
         return (
             <div className='teacher-ghost-scroll'>
+                {/* Ruler */}
                 <div className='teacher-ghost-ruler'>
-                    <span className='teacher-ghost-ruler-mark'>{this.formatAbs(first)}</span>
+                    <span className='teacher-ghost-ruler-mark'>{this.formatTime(first)}</span>
+                    <button
+                        type='button'
+                        className='teacher-ghost-expand-btn'
+                        onClick={this.handleToggleExpand}
+                        title={this.expanded
+                            ? nls.localize('theia/teacher/timelineCollapse', 'Collapse timeline')
+                            : nls.localize('theia/teacher/timelineExpand', 'Expand timeline')}
+                    >
+                        <i className={`codicon ${this.expanded ? 'codicon-chevron-down' : 'codicon-chevron-up'}`} />
+                    </button>
                     <span className='teacher-ghost-ruler-mark teacher-ghost-ruler-now'>
-                        {nls.localize('theia/teacher/timelineNow', 'now')} · {clips.length} {nls.localize('theia/teacher/timelineClips', 'clips')}
+                        {clips.length} {nls.localize('theia/teacher/timelineClips', 'clips')}
                     </span>
                 </div>
-                <div className='teacher-ghost-track'>
+
+                {/* Track */}
+                <div
+                    className='teacher-ghost-track'
+                    style={{ height: `${height}px` }}
+                    ref={this.setTrackRef}
+                >
                     {/* Playhead */}
-                    <div className='teacher-ghost-playhead' />
+                    <div
+                        className='teacher-ghost-playhead'
+                        style={{ left: `${Math.min(100, Math.max(0, playheadPct))}%` }}
+                        onMouseDown={this.handlePlayheadMouseDown}
+                    >
+                        <div className='teacher-ghost-playhead-handle' />
+                    </div>
 
-                    {clips.map(clip => {
-                        const pct = ((clip.timestamp - first) / Math.max(1, span)) * 100;
-                        const muted = this.mutedIds.has(clip.id);
-                        const selected = this.selectedId === clip.id;
-                        const widthPx = 60 + (clip.sizeWeight * 20);
+                    {/* Clips */}
+                    {clips.map(clip => this.renderClip(clip, first, span, height))}
+                </div>
 
-                        const classNames = [
-                            'teacher-ghost-clip',
-                            `teacher-ghost-clip--${clip.actionType}`,
-                            muted ? 'teacher-ghost-clip--muted' : '',
-                            selected ? 'teacher-ghost-clip--selected' : '',
-                        ].filter(Boolean).join(' ');
+                {/* Detail panel (expanded only) */}
+                {this.expanded && this.selectedId && this.renderDetail(this.selectedId)}
+            </div>
+        );
+    }
 
-                        return (
-                            <div
-                                key={clip.id}
-                                className={classNames}
-                                style={{ left: `${pct}%`, width: `${widthPx}px` }}
-                                title={`${clip.label}\n${this.formatAbs(clip.timestamp)}${muted ? '\n(reverted)' : ''}`}
-                                onClick={() => this.handleClipClick(clip.id)}
-                            >
-                                <div className='teacher-ghost-clip-top'>
-                                    <span className='teacher-ghost-clip-kind'>{clip.actionType}</span>
-                                    <button
-                                        type='button'
-                                        className='teacher-ghost-clip-mute-btn'
-                                        onClick={(e) => this.handleMuteClick(e, clip.id)}
-                                        title={muted
-                                            ? nls.localize('theia/teacher/timelineUnmute', 'Restore')
-                                            : nls.localize('theia/teacher/timelineMute', 'Revert')}
-                                    >
-                                        <i className={`codicon ${muted ? 'codicon-unmute' : 'codicon-mute'}`} />
-                                    </button>
-                                </div>
-                                <span className='teacher-ghost-clip-title'>{clip.label}</span>
-                            </div>
-                        );
-                    })}
+    protected renderClip(clip: TimelineClip, first: number, span: number, trackHeight: number): React.ReactNode {
+        const pct = ((clip.timestamp - first) / Math.max(1, span)) * 100;
+        const selected = this.selectedId === clip.id;
+        const clipHeight = trackHeight - 8;
+
+        const classNames = [
+            'teacher-ghost-clip',
+            TimelineClip.cssClassForCategory(clip.category),
+            clip.muted ? 'teacher-ghost-clip--muted' : '',
+            selected ? 'teacher-ghost-clip--selected' : '',
+        ].filter(Boolean).join(' ');
+
+        return (
+            <div
+                key={clip.id}
+                className={classNames}
+                style={{ left: `${pct}%`, height: `${clipHeight}px` }}
+                title={`${clip.agentName}: ${clip.action}\n${this.formatTime(clip.timestamp)}${clip.muted ? '\n(reverted)' : ''}`}
+                onClick={() => this.handleClipClick(clip.id)}
+            >
+                <div className='teacher-ghost-clip-top'>
+                    <span className='teacher-ghost-clip-agent'>
+                        <i className='codicon codicon-hubot' />
+                    </span>
+                    <span className='teacher-ghost-clip-kind'>{clip.category}</span>
+                    <button
+                        type='button'
+                        className='teacher-ghost-clip-mute-btn'
+                        onClick={e => this.handleMuteToggle(e, clip.id)}
+                        title={clip.muted
+                            ? nls.localize('theia/teacher/timelineUnmute', 'Restore')
+                            : nls.localize('theia/teacher/timelineMute', 'Revert')}
+                    >
+                        <i className={`codicon ${clip.muted ? 'codicon-unmute' : 'codicon-mute'}`} />
+                    </button>
+                </div>
+                <span className={`teacher-ghost-clip-title ${clip.muted ? 'teacher-ghost-clip-title--struck' : ''}`}>
+                    {clip.action}
+                </span>
+                <span className='teacher-ghost-clip-time'>{this.formatTime(clip.timestamp)}</span>
+            </div>
+        );
+    }
+
+    protected renderDetail(clipId: string): React.ReactNode {
+        const clip = this.timelineService.getClipById(clipId);
+        if (!clip) {
+            return null;
+        }
+        return (
+            <div className='teacher-ghost-detail'>
+                <div className='teacher-ghost-detail-header'>
+                    <i className='codicon codicon-hubot' />
+                    <strong>{clip.agentName}</strong>
+                    <span className='teacher-ghost-detail-time'>{this.formatTime(clip.timestamp)}</span>
+                </div>
+                <p className='teacher-ghost-detail-action'>{clip.action}</p>
+                {clip.filesChanged.length > 0 && (
+                    <div className='teacher-ghost-detail-files'>
+                        <span className='teacher-ghost-detail-files-label'>
+                            {nls.localize('theia/teacher/timelineFiles', 'Files changed:')}
+                        </span>
+                        <ul>
+                            {clip.filesChanged.map(f => <li key={f}>{f}</li>)}
+                        </ul>
+                    </div>
+                )}
+                <div className='teacher-ghost-detail-badges'>
+                    <span className={`teacher-ghost-detail-badge teacher-ghost-detail-badge--${clip.category}`}>
+                        {clip.category}
+                    </span>
+                    {clip.undoable && (
+                        <span className='teacher-ghost-detail-badge teacher-ghost-detail-badge--undoable'>
+                            {nls.localize('theia/teacher/timelineUndoable', 'undoable')}
+                        </span>
+                    )}
+                    {clip.muted && (
+                        <span className='teacher-ghost-detail-badge teacher-ghost-detail-badge--muted'>
+                            {nls.localize('theia/teacher/timelineReverted', 'reverted')}
+                        </span>
+                    )}
                 </div>
             </div>
         );
     }
 
-    protected artifactsToClips(artifacts: CanvasArtifact[]): TimelineClip[] {
-        return artifacts.map(a => ({
-            id: a.id,
-            label: a.title,
-            actionType: this.kindToAction(a.kind),
-            timestamp: a.createdAt,
-            sizeWeight: 3,
-        }));
-    }
-
-    protected kindToAction(kind: string): ActionType {
-        switch (kind) {
-            case 'code': return 'edit';
-            case 'markdown': return 'create';
-            case 'table': return 'suggest';
-            case 'chart': return 'suggest';
-            default: return 'create';
-        }
-    }
-
-    protected formatAbs(ts: number): string {
+    protected formatTime(ts: number): string {
         const d = new Date(ts);
         return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }

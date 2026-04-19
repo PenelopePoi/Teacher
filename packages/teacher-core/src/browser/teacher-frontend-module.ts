@@ -1,6 +1,7 @@
 import '../../src/browser/style/teacher.css';
 import '../../src/browser/style/teacher-identity.css';
 import '../../src/browser/style/before-after.css';
+import '../../src/browser/style/ghost-timeline.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -58,6 +59,8 @@ import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
 import { KnowledgeSurvivorshipContribution } from './commands/export-snapshot-command';
 import { LessonContextVariableContribution } from './lesson-context-variable';
+import { TimelineService } from './ghost-timeline/timeline-service';
+import { ModeCycleContribution } from './commands/mode-cycle-command';
 import { BeforeAfterService } from './before-after/before-after-service';
 import { BeforeAfterWidget } from './before-after/before-after-widget';
 import { BeforeAfterContribution } from './before-after/before-after-contribution';
@@ -169,7 +172,10 @@ export default new ContainerModule(bind => {
     bind(DragToAskContribution).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(DragToAskContribution);
 
-    // §2 item #2 — Ghost Timeline widget (bottom dock area)
+    // C7 Ghost Timeline — TimelineService (Ableton-style AI action tracking)
+    bind(TimelineService).toSelf().inSingletonScope();
+
+    // C7 Ghost Timeline widget (bottom dock area)
     bind(GhostTimelineWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(context => ({
         id: GhostTimelineWidget.ID,
@@ -209,7 +215,13 @@ export default new ContainerModule(bind => {
     })).inSingletonScope();
     bindViewContribution(bind, RewindPanelContribution);
 
-    // Permission Mode widget (trust level display)
+    // C16 Mode Cycle — four-mode permission cycle (Review/Assist/Autonomous/Observer)
+    bind(ModeCycleContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(ModeCycleContribution);
+    bind(KeybindingContribution).toService(ModeCycleContribution);
+    bind(FrontendApplicationContribution).toService(ModeCycleContribution);
+
+    // Permission Mode widget (trust level display — uses ModeCycleContribution)
     bind(PermissionModeWidget).toSelf();
     bind(WidgetFactory).toDynamicValue(context => ({
         id: PermissionModeWidget.ID,

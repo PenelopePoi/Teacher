@@ -1,0 +1,313 @@
+/* ============================================================
+ * C7 Ghost Timeline — Ableton-inspired AI action ribbon
+ *
+ * Clip colors:
+ *   amber  (--teacher-clip-amber)  = code changes
+ *   teal   (--teacher-clip-teal)   = explanations
+ *   violet (--teacher-clip-violet) = reviews
+ *   green  (--teacher-clip-green)  = assessments
+ * ============================================================ */
+
+:root {
+    --teacher-clip-amber:  #E8A948;
+    --teacher-clip-teal:   #2DD4BF;
+    --teacher-clip-violet: #A78BFA;
+    --teacher-clip-green:  #4ADE80;
+}
+
+/* ---- Container ---- */
+
+.teacher-ghost-timeline-widget {
+    overflow: hidden;
+    background: var(--teacher-surface-1, #1a1a2e);
+    font-family: var(--teacher-font-ui, system-ui, sans-serif);
+}
+
+/* ---- Empty State ---- */
+
+.teacher-ghost-empty {
+    padding: 24px;
+    color: var(--teacher-text-tertiary, #888);
+    font-size: var(--teacher-size-sm, 13px);
+    text-align: center;
+    line-height: 1.6;
+}
+
+/* ---- Scroll Container ---- */
+
+.teacher-ghost-scroll {
+    padding: 8px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+}
+
+/* ---- Ruler ---- */
+
+.teacher-ghost-ruler {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--teacher-font-mono, 'JetBrains Mono', monospace);
+    font-size: var(--teacher-size-micro, 10px);
+    color: var(--teacher-text-tertiary, #888);
+    letter-spacing: var(--teacher-track-wide, 0.04em);
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-ghost-ruler-now {
+    color: var(--teacher-clip-amber);
+}
+
+.teacher-ghost-expand-btn {
+    background: transparent;
+    border: 1px solid var(--teacher-border-subtle, #333);
+    border-radius: 4px;
+    color: var(--teacher-text-tertiary, #888);
+    cursor: pointer;
+    padding: 2px 6px;
+    font-size: 10px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+.teacher-ghost-expand-btn:hover {
+    color: var(--teacher-text-primary, #eee);
+    border-color: var(--teacher-clip-amber);
+}
+
+/* ---- Track ---- */
+
+.teacher-ghost-track {
+    position: relative;
+    min-width: 100%;
+    width: max-content;
+    min-height: 48px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--teacher-border-subtle, #333) 0 1px,
+        transparent 1px 10%
+    );
+    border-radius: 4px;
+    transition: height 0.2s ease;
+}
+
+/* ---- Clips (shared) ---- */
+
+.teacher-ghost-clip {
+    position: absolute;
+    top: 4px;
+    min-width: 100px;
+    max-width: 200px;
+    padding: 4px 8px;
+    border: 1px solid var(--teacher-border-strong, #444);
+    border-left: 3px solid var(--teacher-clip-amber);
+    border-radius: 4px;
+    background: var(--teacher-surface-3, #252540);
+    color: var(--teacher-text-primary, #eee);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--teacher-font-ui, system-ui, sans-serif);
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        opacity 0.2s ease;
+}
+
+.teacher-ghost-clip:hover {
+    transform: translateY(-2px);
+    z-index: 2;
+}
+
+/* ---- Clip category colors ---- */
+
+.teacher-ghost-clip--amber  { border-left-color: var(--teacher-clip-amber); }
+.teacher-ghost-clip--teal   { border-left-color: var(--teacher-clip-teal); }
+.teacher-ghost-clip--violet { border-left-color: var(--teacher-clip-violet); }
+.teacher-ghost-clip--green  { border-left-color: var(--teacher-clip-green); }
+
+/* ---- Muted clips: 30% opacity, dashed border ---- */
+
+.teacher-ghost-clip--muted {
+    opacity: 0.3;
+    border-style: dashed;
+    border-left-style: dashed;
+}
+
+/* ---- Selected clip ---- */
+
+.teacher-ghost-clip--selected {
+    border-color: var(--teacher-clip-amber);
+    box-shadow: 0 0 0 1px var(--teacher-clip-amber), 0 2px 8px rgba(232, 169, 72, 0.25);
+    z-index: 3;
+}
+
+/* ---- Clip internals ---- */
+
+.teacher-ghost-clip-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+}
+
+.teacher-ghost-clip-agent {
+    font-size: 10px;
+    color: var(--teacher-text-tertiary, #888);
+}
+
+.teacher-ghost-clip-kind {
+    font-family: var(--teacher-font-mono, monospace);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: var(--teacher-track-wide, 0.04em);
+    color: var(--teacher-text-tertiary, #888);
+    flex: 1;
+}
+
+.teacher-ghost-clip-title {
+    font-size: var(--teacher-size-micro, 10px);
+    font-weight: 500;
+    color: var(--teacher-text-primary, #eee);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-ghost-clip-title--struck {
+    text-decoration: line-through;
+    color: var(--teacher-text-tertiary, #888);
+}
+
+.teacher-ghost-clip-time {
+    font-family: var(--teacher-font-mono, monospace);
+    font-size: 9px;
+    color: var(--teacher-text-tertiary, #888);
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-ghost-clip-mute-btn {
+    background: transparent;
+    border: none;
+    color: var(--teacher-text-tertiary, #888);
+    cursor: pointer;
+    padding: 0 2px;
+    font-size: 10px;
+    line-height: 1;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teacher-ghost-clip-mute-btn:hover {
+    color: var(--teacher-text-primary, #eee);
+    background: var(--teacher-surface-4, #333);
+}
+
+/* ---- Playhead: 2px amber line with triangle handle ---- */
+
+.teacher-ghost-playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--teacher-clip-amber);
+    box-shadow: 0 0 6px rgba(232, 169, 72, 0.5);
+    z-index: 10;
+    cursor: col-resize;
+    transform: translateX(-1px);
+}
+
+.teacher-ghost-playhead-handle {
+    position: absolute;
+    top: -4px;
+    left: -5px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--teacher-clip-amber);
+    pointer-events: none;
+}
+
+/* ---- Detail panel (expanded view) ---- */
+
+.teacher-ghost-detail {
+    background: var(--teacher-surface-2, #1e1e36);
+    border: 1px solid var(--teacher-border-subtle, #333);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: var(--teacher-size-sm, 13px);
+    color: var(--teacher-text-primary, #eee);
+}
+
+.teacher-ghost-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.teacher-ghost-detail-time {
+    margin-left: auto;
+    font-family: var(--teacher-font-mono, monospace);
+    font-size: 10px;
+    color: var(--teacher-text-tertiary, #888);
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-ghost-detail-action {
+    margin: 0 0 8px;
+    line-height: 1.5;
+}
+
+.teacher-ghost-detail-files {
+    margin-bottom: 8px;
+}
+
+.teacher-ghost-detail-files-label {
+    font-size: 11px;
+    color: var(--teacher-text-tertiary, #888);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.teacher-ghost-detail-files ul {
+    margin: 4px 0 0;
+    padding-left: 16px;
+    font-family: var(--teacher-font-mono, monospace);
+    font-size: 11px;
+    color: var(--teacher-text-secondary, #aaa);
+}
+
+.teacher-ghost-detail-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.teacher-ghost-detail-badge {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    border: 1px solid var(--teacher-border-subtle, #333);
+    color: var(--teacher-text-tertiary, #888);
+}
+
+.teacher-ghost-detail-badge--code       { border-color: var(--teacher-clip-amber); color: var(--teacher-clip-amber); }
+.teacher-ghost-detail-badge--explanation { border-color: var(--teacher-clip-teal);  color: var(--teacher-clip-teal); }
+.teacher-ghost-detail-badge--review     { border-color: var(--teacher-clip-violet); color: var(--teacher-clip-violet); }
+.teacher-ghost-detail-badge--assessment { border-color: var(--teacher-clip-green);  color: var(--teacher-clip-green); }
+.teacher-ghost-detail-badge--undoable   { border-color: var(--teacher-clip-amber); color: var(--teacher-clip-amber); }
+.teacher-ghost-detail-badge--muted      { border-color: #E5484D; color: #E5484D; }
