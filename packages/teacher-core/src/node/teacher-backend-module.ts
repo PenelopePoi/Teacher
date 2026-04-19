@@ -9,6 +9,13 @@ import { CurriculumService, CURRICULUM_SERVICE_PATH, CurriculumServiceImpl } fro
 import { TemplateService, TEMPLATE_SERVICE_PATH, TemplateServiceImpl } from './template-service';
 import { AssessmentService, ASSESSMENT_SERVICE_PATH, AssessmentServiceImpl } from './assessment-service';
 import { TeacherPreferencesSchema } from '../common/teacher-preferences';
+import { SkillEngineService, SKILL_ENGINE_PATH } from '../common/skill-engine-protocol';
+import { SkillParser } from './skill-engine/skill-parser';
+import { SkillRegistry } from './skill-engine/skill-registry';
+import { SkillExecutor } from './skill-engine/skill-executor';
+import { WorkflowRunner } from './skill-engine/workflow-runner';
+import { AutoTriggerService } from './skill-engine/auto-trigger-service';
+import { SkillEngineServiceImpl } from './skill-engine/skill-engine-service-impl';
 
 const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
     bind(ASIBridgeServiceImpl).toSelf().inSingletonScope();
@@ -45,4 +52,16 @@ const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
 export default new ContainerModule(bind => {
     bind(PreferenceContribution).toConstantValue({ schema: TeacherPreferencesSchema });
     bind(ConnectionContainerModule).toConstantValue(teacherConnectionModule);
+
+    // Skill Runtime Engine — makes 343 SKILL.md files into live IDE citizens
+    bind(SkillParser).toSelf().inSingletonScope();
+    bind(SkillRegistry).toSelf().inSingletonScope();
+    bind(SkillExecutor).toSelf().inSingletonScope();
+    bind(WorkflowRunner).toSelf().inSingletonScope();
+    bind(AutoTriggerService).toSelf().inSingletonScope();
+    bind(SkillEngineServiceImpl).toSelf().inSingletonScope();
+    bind(SkillEngineService).toService(SkillEngineServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(SKILL_ENGINE_PATH, () => ctx.container.get(SkillEngineService))
+    ).inSingletonScope();
 });

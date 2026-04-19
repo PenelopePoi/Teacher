@@ -1,5 +1,6 @@
 import '../../src/browser/style/teacher.css';
 import '../../src/browser/style/teacher-identity.css';
+import '../../src/browser/style/before-after.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -16,6 +17,7 @@ import { TeachingReviewAgent } from './agents/review-agent';
 import { ASIBridgeService, ASI_BRIDGE_SERVICE_PATH } from '../common/asi-bridge-protocol';
 import { ProgressTrackingService, PROGRESS_SERVICE_PATH } from '../common/progress-protocol';
 import { TeacherService, TEACHER_SERVICE_PATH } from '../common/teacher-protocol';
+import { SkillEngineService, SKILL_ENGINE_PATH } from '../common/skill-engine-protocol';
 import { TeacherPreferencesSchema } from '../common/teacher-preferences';
 import { TeacherWelcomeWidget } from './widgets/teacher-welcome-widget';
 import { TeacherWelcomeContribution } from './widgets/teacher-welcome-contribution';
@@ -45,11 +47,22 @@ import { PermissionModeWidget } from './widgets/permission-mode-widget';
 import { PermissionModeContribution } from './widgets/permission-mode-contribution';
 import { CanvasReviewWidget } from './widgets/canvas-review-widget';
 import { CanvasReviewContribution } from './widgets/canvas-review-contribution';
+import { SkillCommandWidget } from './widgets/skill-command-widget';
+import { SkillCommandContribution } from './widgets/skill-command-contribution';
+import { WorkflowBuilderWidget } from './widgets/workflow-builder-widget';
+import { WorkflowBuilderContribution } from './widgets/workflow-builder-contribution';
+import { ImprovementDashboardWidget } from './widgets/improvement-dashboard-widget';
+import { ImprovementDashboardContribution } from './widgets/improvement-dashboard-contribution';
 import { LessonCommandContribution } from './commands/lesson-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
 import { KnowledgeSurvivorshipContribution } from './commands/export-snapshot-command';
 import { LessonContextVariableContribution } from './lesson-context-variable';
+import { BeforeAfterService } from './before-after/before-after-service';
+import { BeforeAfterWidget } from './before-after/before-after-widget';
+import { BeforeAfterContribution } from './before-after/before-after-contribution';
+import { IntentDockWidget } from './intents/intent-dock-widget';
+import { PinnedThoughtGutter } from './intents/pinned-thought-gutter';
 
 export default new ContainerModule(bind => {
     // Tutor Agent
@@ -83,6 +96,12 @@ export default new ContainerModule(bind => {
     bind(TeacherService).toDynamicValue(ctx => {
         const provider = ctx.container.get<ServiceConnectionProvider>(RemoteConnectionProvider);
         return provider.createProxy<TeacherService>(TEACHER_SERVICE_PATH);
+    }).inSingletonScope();
+
+    // Skill Engine (frontend proxy to backend service)
+    bind(SkillEngineService).toDynamicValue(ctx => {
+        const provider = ctx.container.get<ServiceConnectionProvider>(RemoteConnectionProvider);
+        return provider.createProxy<SkillEngineService>(SKILL_ENGINE_PATH);
     }).inSingletonScope();
 
     // Preferences
@@ -206,6 +225,30 @@ export default new ContainerModule(bind => {
     })).inSingletonScope();
     bindViewContribution(bind, CanvasReviewContribution);
 
+    // Skill Command widget (command-palette skill launcher — left panel)
+    bind(SkillCommandWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: SkillCommandWidget.ID,
+        createWidget: () => context.container.get<SkillCommandWidget>(SkillCommandWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, SkillCommandContribution);
+
+    // Workflow Builder widget (pipeline editor — right panel)
+    bind(WorkflowBuilderWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: WorkflowBuilderWidget.ID,
+        createWidget: () => context.container.get<WorkflowBuilderWidget>(WorkflowBuilderWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, WorkflowBuilderContribution);
+
+    // Improvement Dashboard widget (skill health metrics — main area)
+    bind(ImprovementDashboardWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: ImprovementDashboardWidget.ID,
+        createWidget: () => context.container.get<ImprovementDashboardWidget>(ImprovementDashboardWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, ImprovementDashboardContribution);
+
     // Canvas — service + widget + view contribution (Cursor-inspired)
     bind(CanvasService).toSelf().inSingletonScope();
     bind(CanvasWidget).toSelf();
@@ -237,4 +280,24 @@ export default new ContainerModule(bind => {
     // Lesson Context Variable (injects lesson objectives into AI agent prompts)
     bind(LessonContextVariableContribution).toSelf().inSingletonScope();
     bind(AIVariableContribution).toService(LessonContextVariableContribution);
+
+    // Before/After Canvas (C6) — visual diff review surface for creatives
+    bind(BeforeAfterService).toSelf().inSingletonScope();
+    bind(BeforeAfterWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: BeforeAfterWidget.ID,
+        createWidget: () => context.container.get<BeforeAfterWidget>(BeforeAfterWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, BeforeAfterContribution);
+
+    // Intent Dock (A5/A6) — pending intent cards sidebar
+    bind(IntentDockWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: IntentDockWidget.ID,
+        createWidget: () => context.container.get<IntentDockWidget>(IntentDockWidget),
+    })).inSingletonScope();
+
+    // Pinned Thought Gutter — Monaco editor margin decorations
+    bind(PinnedThoughtGutter).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(PinnedThoughtGutter);
 });
