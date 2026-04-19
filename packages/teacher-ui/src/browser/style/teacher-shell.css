@@ -426,3 +426,100 @@
         transform: none;
     }
 }
+
+/* ----------------------------------------------------------------
+   Teacher Tab — Rounded, amber underline (from TeacherTabBarRenderer)
+   ---------------------------------------------------------------- */
+.teacher-tab {
+    border-radius: 6px 6px 0 0 !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    transition: background-color 0.12s ease;
+}
+
+.teacher-tab.lm-mod-current,
+.teacher-tab.p-mod-current {
+    border-bottom-color: var(--accent-amber) !important;
+}
+
+.teacher-tab-close {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.teacher-tab:hover .teacher-tab-close {
+    opacity: 0.7;
+}
+
+/* ----------------------------------------------------------------
+   Teacher Workbench Rail — Sidebar override
+   ---------------------------------------------------------------- */
+.teacher-workbench-rail {
+    padding: 4px 0;
+}
+
+.teacher-workbench-rail .p-TabBar-tab,
+.teacher-workbench-rail .lm-TabBar-tab {
+    border-radius: 10px;
+    margin: 1px 4px;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.teacher-workbench-rail .p-TabBar-tab:hover,
+.teacher-workbench-rail .lm-TabBar-tab:hover {
+    transform: scale(1.04);
+    background-color: var(--surface-3);
+}
+
+.teacher-workbench-rail .p-TabBar-tab.p-mod-current,
+.teacher-workbench-rail .lm-TabBar-tab.lm-mod-current {
+    background-color: var(--surface-3);
+    box-shadow: 0 0 8px rgba(232, 169, 72, 0.12);
+}
+
+/* ----------------------------------------------------------------
+   Teacher Menu Bar — Hidden with brand wordmark
+   ---------------------------------------------------------------- */
+.teacher-menu-hidden {
+    display: none !important;
+}
+
+.teacher-wordmark {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 16px;
+    font-family: 'Geist', var(--theia-ui-font-family);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--accent-amber);
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s ease;
+}
+
+.teacher-wordmark:hover {
+    opacity: 0.8;
+}
+
+/* ----------------------------------------------------------------
+   Glass Command Palette
+   ---------------------------------------------------------------- */
+.teacher-glass-palette {
+    backdrop-filter: blur(32px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+    background-color: rgba(18, 21, 26, 0.85) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4) !important;
+    overflow: hidden;
+}
+
+.teacher-glass-palette .monaco-inputbox {
+    border-radius: 8px;
+}
+
+.teacher-glass-palette .quick-input-list {
+    border-radius: 0 0 12px 12px;
+}
