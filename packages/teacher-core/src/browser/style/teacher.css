@@ -1,0 +1,470 @@
+/* Teacher IDE — Phase 2 Widget Styles */
+/* Uses Theia CSS variables exclusively per coding guidelines */
+
+/* ===== Welcome Widget ===== */
+
+.teacher-welcome-widget {
+    overflow-y: auto;
+}
+
+.teacher-welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 24px;
+    max-width: 720px;
+    margin: 0 auto;
+    gap: 32px;
+}
+
+.teacher-welcome-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-welcome-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--theia-button-background);
+}
+
+.teacher-welcome-logo-icon {
+    font-size: 32px;
+    color: var(--theia-button-foreground);
+}
+
+.teacher-welcome-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 8px 0 0 0;
+}
+
+.teacher-welcome-motto {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--theia-descriptionForeground);
+    margin: 4px 0 0 0;
+}
+
+/* Connection Status */
+
+.teacher-welcome-status {
+    width: 100%;
+}
+
+.teacher-welcome-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0 0 12px 0;
+    border-bottom: 1px solid var(--theia-panel-border);
+    padding-bottom: 8px;
+}
+
+.teacher-welcome-status-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-welcome-status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.teacher-status-connected {
+    background: var(--theia-testing-iconPassed);
+}
+
+.teacher-status-disconnected {
+    background: var(--theia-testing-iconFailed);
+}
+
+/* Quick Actions */
+
+.teacher-welcome-actions {
+    width: 100%;
+}
+
+.teacher-welcome-action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.teacher-welcome-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Progress Summary */
+
+.teacher-welcome-progress {
+    width: 100%;
+}
+
+.teacher-welcome-empty {
+    color: var(--theia-descriptionForeground);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.teacher-welcome-progress-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.teacher-welcome-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 100px;
+    padding: 12px;
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 6px;
+}
+
+.teacher-welcome-stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--theia-textLink-foreground);
+}
+
+.teacher-welcome-stat-label {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.teacher-welcome-next-lesson {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--theia-textBlockQuote-background);
+    border-left: 3px solid var(--theia-textLink-foreground);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+}
+
+/* ===== Progress Dashboard ===== */
+
+.teacher-progress-dashboard {
+    overflow-y: auto;
+}
+
+.teacher-dashboard-container {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.teacher-dashboard-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0 0 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Dashboard Cards */
+
+.teacher-dashboard-cards {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.teacher-dashboard-card {
+    flex: 1;
+    min-width: 180px;
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-dashboard-card-icon {
+    font-size: 20px;
+    color: var(--theia-textLink-foreground);
+}
+
+.teacher-dashboard-card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-dashboard-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-dashboard-card-label {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.teacher-dashboard-card-bar {
+    height: 4px;
+    background: var(--theia-editorWidget-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+.teacher-dashboard-card-bar-fill {
+    height: 100%;
+    background: var(--theia-progressBar-background);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Skills Section */
+
+.teacher-dashboard-section {
+    margin-bottom: 24px;
+}
+
+.teacher-dashboard-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--theia-panel-border);
+    padding-bottom: 8px;
+}
+
+.teacher-dashboard-empty {
+    color: var(--theia-descriptionForeground);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.teacher-dashboard-skills {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-dashboard-skill {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.teacher-dashboard-skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-dashboard-skill-name {
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+    font-weight: 500;
+}
+
+.teacher-dashboard-skill-pct {
+    font-size: 12px;
+    color: var(--theia-descriptionForeground);
+    font-weight: 600;
+}
+
+.teacher-dashboard-skill-bar {
+    height: 6px;
+    background: var(--theia-editorWidget-border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.teacher-dashboard-skill-bar-fill {
+    height: 100%;
+    background: var(--theia-progressBar-background);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Suggestion Card */
+
+.teacher-dashboard-suggestion-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--theia-textBlockQuote-background);
+    border-left: 3px solid var(--theia-textLink-foreground);
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--theia-editor-foreground);
+    cursor: pointer;
+}
+
+.teacher-dashboard-suggestion-card:hover {
+    background: var(--theia-list-hoverBackground);
+}
+
+/* ===== Curriculum Browser ===== */
+
+.teacher-curriculum-browser {
+    overflow-y: auto;
+}
+
+.teacher-curriculum-container {
+    padding: 12px;
+}
+
+.teacher-curriculum-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.teacher-curriculum-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-curriculum-refresh-btn {
+    padding: 4px 8px;
+    min-width: auto;
+}
+
+.teacher-curriculum-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    color: var(--theia-descriptionForeground);
+    font-size: 13px;
+    text-align: center;
+}
+
+/* Curriculum Tree */
+
+.teacher-curriculum-tree {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-curriculum-node {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-curriculum-node-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+    user-select: none;
+}
+
+.teacher-curriculum-node-header:hover {
+    background: var(--theia-list-hoverBackground);
+}
+
+.teacher-curriculum-course {
+    font-weight: 600;
+}
+
+.teacher-curriculum-module {
+    padding-left: 20px;
+}
+
+.teacher-curriculum-lesson {
+    padding-left: 40px;
+    font-weight: 400;
+}
+
+.teacher-curriculum-node-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-curriculum-node-badge {
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+    white-space: nowrap;
+}
+
+.teacher-curriculum-lesson-time {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+}
+
+.teacher-curriculum-children {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-curriculum-description {
+    font-size: 12px;
+    color: var(--theia-descriptionForeground);
+    padding: 4px 8px 8px 28px;
+    margin: 0;
+    line-height: 1.4;
+}
