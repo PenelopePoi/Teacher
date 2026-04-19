@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 140" role="img" aria-label="Teacher — by XELA Creative Studio">
+  <title>Teacher — by XELA Creative Studio</title>
+
+  <g transform="translate(10,10)">
+    <g fill="#f5c542">
+      <circle cx="35" cy="10" r="3.6"/>
+      <circle cx="60" cy="5"  r="3.6"/>
+      <circle cx="85" cy="10" r="3.6"/>
+    </g>
+    <g stroke="#f5c542" stroke-width="1.2" opacity="0.7" stroke-linecap="round">
+      <line x1="35" y1="13" x2="42" y2="22"/>
+      <line x1="60" y1="8"  x2="60" y2="22"/>
+      <line x1="85" y1="13" x2="78" y2="22"/>
+    </g>
+    <g fill="#ffffff">
+      <rect x="18" y="22" width="84" height="14" rx="3"/>
+      <rect x="53" y="22" width="14" height="74" rx="3"/>
+    </g>
+    <rect x="28" y="104" width="64" height="4" rx="2" fill="#ffffff" opacity="0.45"/>
+  </g>
+
+  <g font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif" fill="#ffffff">
+    <text x="145" y="65" font-size="54" font-weight="700" letter-spacing="-1.5">Teacher</text>
+  </g>
+
+  <g font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+    <text x="148" y="92" font-size="12" font-weight="500" letter-spacing="1.5" fill="#cbd5e1">by</text>
+    <text x="165" y="92" font-size="13" font-weight="800" letter-spacing="4" fill="#f5c542">XELA</text>
+    <text x="215" y="92" font-size="12" font-weight="500" letter-spacing="2.5" fill="#cbd5e1">CREATIVE STUDIO</text>
+  </g>
+
+  <g font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+    <text x="148" y="115" font-size="11" font-weight="500" letter-spacing="2" fill="#94a3b8">LOCAL-FIRST AI MENTOR IDE</text>
+  </g>
+</svg>

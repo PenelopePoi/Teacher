@@ -1,0 +1,34 @@
+# Teacher + Ollama, self-hosted.
+# Expose only via a reverse proxy with TLS and auth in production.
+
+services:
+  teacher:
+    build: .
+    image: teacher:latest
+    container_name: teacher
+    ports:
+      - "3000:3000"
+    volumes:
+      - teacher_workspace:/home/teacher/workspace
+      - teacher_config:/home/teacher/.theia
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - THEIA_DEFAULT_PLUGINS=local-dir:/home/teacher/plugins
+    depends_on:
+      ollama:
+        condition: service_started
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: teacher-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  teacher_workspace:
+  teacher_config:
+  ollama_models:

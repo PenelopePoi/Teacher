@@ -1,4 +1,3 @@
-
 <br/>
 <div align="center">
   <img src="logo/teacher-logo.svg" alt="Teacher — by XELA Creative Studio" width="460"/>
@@ -8,7 +7,7 @@
 
 ---
 
-**Teacher** is a local-first, guardian-first AI mentor IDE — a published project of **[XELA Creative Studio](https://xela.studio)**, built on [Eclipse Theia](https://theia-ide.org). You get every Theia capability (Monaco, LSP, debug adapters, terminal, git, VS Code extensions, plugin API, electron + browser targets) plus an offline AI layer: Ollama models, a multi-agent ASI swarm with a self-accumulating knowledge base, and a 326-skill library covering code, security, creative, ethics, and daily operations.
+**Teacher** is a local-first, guardian-first AI mentor IDE — a published project of **[XELA Creative Studio](https://teacher.xela.studio)**, built on [Eclipse Theia](https://theia-ide.org). You get every Theia capability (Monaco, LSP, debug adapters, terminal, git, VS Code extensions, plugin API, electron + browser targets) plus an offline AI layer: Ollama models, a multi-agent ASI swarm with a self-accumulating knowledge base, and a 326-skill library covering code, security, creative, ethics, and daily operations.
 
 Crafted by David J. Weatherspoon and Alex Weatherspoon — Reconsumeralization LLC · Cocoa, FL.
 
@@ -18,12 +17,13 @@ Crafted by David J. Weatherspoon and Alex Weatherspoon — Reconsumeralization L
 - [Inherited from Theia](#inherited-from-theia)
 - [Ethical Doctrine](#ethical-doctrine)
 - [Getting Started](#getting-started)
+- [Deployment](#deployment)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [Upstream Attribution](#upstream-attribution)
 - [License](#license)
 - [Trademark](#trademark)
-- [About XELA](#about-xela-creative-studio)
+- [About XELA Creative Studio](#about-xela-creative-studio)
 
 ## What Teacher Adds
 
@@ -31,7 +31,7 @@ Crafted by David J. Weatherspoon and Alex Weatherspoon — Reconsumeralization L
 
 - `qwen2.5:7b` primary, `bonsai-8b` fallback, on `localhost:11434`
 - No API keys, no cloud dependency, full model ownership
-- Integrates through `ai-ollama` alongside Anthropic, OpenAI, Google, MCP, Claude Code, HuggingFace, Llamafile, Copilot, Codex, and Vercel AI — 24 AI packages total, all inherited from upstream Theia
+- Integrates through `ai-ollama` alongside Anthropic, OpenAI, Google, MCP, Claude Code, HuggingFace, Llamafile, Copilot, Codex, and Vercel AI — 24 AI packages total, inherited from upstream Theia
 
 ### Local ASI engine
 
@@ -100,7 +100,7 @@ Five immutable principles, enforced at prompt and policy level:
 
 ## Getting Started
 
-Requirements: Node.js ≥20, Python 3.10+ (for the ASI engine), [Ollama](https://ollama.com).
+Requirements: Node.js ≥22, Python 3.10+ (for the ASI engine), [Ollama](https://ollama.com).
 
 ```bash
 git clone https://github.com/PenelopePoi/Teacher.git
@@ -125,6 +125,16 @@ npm run watch           # browser + electron concurrent watch
 npm run lint
 npm run test
 ```
+
+## Deployment
+
+See [`DEPLOY.md`](DEPLOY.md) for full details. Three paths:
+
+1. **Self-hosted browser Teacher** — Docker + your VPS (see [`Dockerfile`](Dockerfile) + [`docker-compose.yml`](docker-compose.yml))
+2. **Desktop Teacher** — fork [Theia Blueprint](https://github.com/eclipse-theia/theia-blueprint), rebrand, build signed Electron binaries (steps in [`DEPLOY.md`](DEPLOY.md))
+3. **Marketing site** — Next.js landing page lives at [PenelopePoi/teacher-site](https://github.com/PenelopePoi/teacher-site) and deploys to Vercel at [teacher.xela.studio](https://teacher.xela.studio)
+
+Teacher itself (the IDE) cannot run on Vercel serverless — it needs a persistent Node backend, filesystem, and child-process spawning. Use Docker or Electron.
 
 ## Configuration
 
@@ -173,4 +183,4 @@ XELA / Weatherspoon additions (ASI engine, skill library, prompts, knowledge bas
 
 XELA Creative Studio is a premium creative branding studio in Cocoa, FL — founded by Alex Weatherspoon. Florida sunshine meets creative intensity. Confident without being arrogant. Warm without being soft. XELA designs brand identities for founders who move fast; Teacher is XELA's free, open-source mentor IDE — proof that the same creative engine can build elite tools for everyone.
 
-**Learn more · xela.studio** (if the domain isn't live, swap with your real URL).
+Learn more · [teacher.xela.studio](https://teacher.xela.studio)

@@ -1,0 +1,26 @@
+# Build context exclusions — see Dockerfile.
+.git
+.github
+.gitignore
+.claude
+.knowledge
+.local-asi
+.skills-library
+.skills
+.prompts
+.memory
+.vscode
+.idea
+.nyc_output
+**/node_modules
+**/lib
+**/dist
+**/coverage
+**/test-resources
+**/*.log
+**/*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+DEPLOY.md
+CHANGELOG.md
