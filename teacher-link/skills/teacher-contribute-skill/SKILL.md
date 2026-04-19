@@ -68,9 +68,15 @@ Style must match the existing library: direct, compressed, no hedging, no filler
      name: "cold-email-founders",
      description: "Draft high-conversion cold emails to technical founders...",
      content: "<full SKILL.md body or body-without-frontmatter>",
-     overwrite: false
+     overwrite: false,
+     // Provenance — optional but strongly recommended:
+     author:     "Alex + Claude (Opus 4.7), 2026-04-19",
+     source_url: "file:///Users/Alex/notes/cold-email-pattern.md",
+     reason:     "Captured after three successful cold emails; pattern generalises."
    })
    ```
+
+   Provenance fields show up in the audit log and in anomaly scans. Future-you wants to know where a skill came from and why — leaving these blank is borrowing trouble.
 
 5. **Verify.** `teacher_list_skills` should include the new name. `teacher_get_skill` with the name should return the content.
 6. **Report.** Tell the user the path written and that future sessions can now `teacher_get_skill` it.

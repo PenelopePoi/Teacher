@@ -1,6 +1,15 @@
 import { injectable } from '@theia/core/shared/inversify';
-import { ASIBridgeService, ASIResponse, ASIStatus } from '../common/asi-bridge-protocol';
+import {
+    ASIBridgeService,
+    ASIResponse,
+    ASIStatus,
+    ExportSnapshotResult,
+    AnomalyScanResult,
+} from '../common/asi-bridge-protocol';
 import * as http from 'http';
+import * as os from 'os';
+import * as path from 'path';
+import { execFile } from 'child_process';
 
 @injectable()
 export class ASIBridgeServiceImpl implements ASIBridgeService {
@@ -71,6 +80,82 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
                 processingTimeMs: Date.now() - startTime
             };
         }
+    }
+
+    async exportKnowledgeSnapshot(): Promise<ExportSnapshotResult> {
+        const script = path.join(os.homedir(), 'local-asi', 'export-snapshot.py');
+        try {
+            const { stdout, stderr } = await this.runPython(script, []);
+            const parsed = JSON.parse(stdout.trim().split('\n').slice(-Math.min(64, stdout.trim().split('\n').length)).join('\n'));
+            return {
+                ok:              Boolean(parsed.ok),
+                path:            parsed.path,
+                bytes:           parsed.bytes,
+                fileCount:       parsed.file_count,
+                elapsedSeconds:  parsed.elapsed_seconds,
+                stderr:          stderr || undefined,
+            };
+        } catch (err) {
+            const e = err as NodeJS.ErrnoException & { stdout?: string; stderr?: string };
+            return {
+                ok:    false,
+                error: e.message || 'unknown error',
+                stderr: e.stderr,
+            };
+        }
+    }
+
+    async detectAnomalies(): Promise<AnomalyScanResult> {
+        const script = path.join(os.homedir(), 'local-asi', 'detect-anomalies.py');
+        try {
+            const { stdout, stderr } = await this.runPython(script, [], { allowNonZeroExit: true });
+            // detect-anomalies exits 1 when there are findings, still valid.
+            const lines = stdout.trim().split('\n');
+            const totalLine = lines.find(l => l.startsWith('Anomaly scan complete.'));
+            const totalMatch = totalLine?.match(/Findings:\s+(\d+)/);
+            const total = totalMatch ? Number(totalMatch[1]) : 0;
+            const jsonLine = lines.find(l => l.trim().startsWith('JSON:'));
+            const mdLine = lines.find(l => l.trim().startsWith('MD:'));
+            return {
+                ok:            true,
+                findingsTotal: total,
+                jsonPath:      jsonLine?.split(':').slice(1).join(':').trim(),
+                markdownPath:  mdLine?.split(':').slice(1).join(':').trim(),
+                stderr:        stderr || undefined,
+            };
+        } catch (err) {
+            const e = err as NodeJS.ErrnoException & { stderr?: string };
+            return {
+                ok:            false,
+                findingsTotal: 0,
+                error:         e.message || 'unknown error',
+                stderr:        e.stderr,
+            };
+        }
+    }
+
+    protected runPython(
+        scriptPath: string,
+        args: string[],
+        options: { allowNonZeroExit?: boolean } = {},
+    ): Promise<{ stdout: string; stderr: string }> {
+        return new Promise((resolve, reject) => {
+            execFile(
+                'python3',
+                [scriptPath, ...args],
+                { maxBuffer: 32 * 1024 * 1024, timeout: 10 * 60 * 1000 },
+                (error, stdout, stderr) => {
+                    if (error && !options.allowNonZeroExit) {
+                        const wrapped = error as NodeJS.ErrnoException & { stdout?: string; stderr?: string };
+                        wrapped.stdout = stdout;
+                        wrapped.stderr = stderr;
+                        reject(wrapped);
+                        return;
+                    }
+                    resolve({ stdout, stderr });
+                },
+            );
+        });
     }
 
     protected httpGet(path: string): Promise<string> {

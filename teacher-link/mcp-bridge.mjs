@@ -111,14 +111,18 @@ const TOOLS = [
         description:
             'Write a new SKILL.md into the Teacher skill library. ' +
             'Pairs with the teacher-contribute-skill playbook: draft the skill in chat, get the user\'s explicit approval, THEN call this. ' +
-            'Frontmatter is auto-injected if not supplied. Kebab-case name required. Hot-reloaded — the skill is callable via teacher_get_skill immediately after.',
+            'Frontmatter is auto-injected if not supplied. Kebab-case name required. Hot-reloaded — the skill is callable via teacher_get_skill immediately after. ' +
+            'Provenance fields (author, source_url, reason) are optional but strongly recommended — every write is recorded to the audit log and surfaces in anomaly scans.',
         inputSchema: {
             type: 'object',
             properties: {
-                name: { type: 'string', description: 'Skill name in kebab-case (e.g. cold-email-founders). Used as directory name.' },
-                description: { type: 'string', description: 'One-line description for the SKILL.md frontmatter.' },
-                content: { type: 'string', description: 'Full SKILL.md body. Frontmatter is auto-prepended if missing.' },
-                overwrite: { type: 'boolean', description: 'Allow replacing an existing skill of the same name.', default: false },
+                name:        { type: 'string',  description: 'Skill name in kebab-case (e.g. cold-email-founders). Used as directory name.' },
+                description: { type: 'string',  description: 'One-line description for the SKILL.md frontmatter. ≤240 chars.' },
+                content:     { type: 'string',  description: 'Full SKILL.md body. Frontmatter is auto-prepended if missing. ≤32,000 bytes.' },
+                overwrite:   { type: 'boolean', description: 'Allow replacing an existing skill of the same name.', default: false },
+                author:      { type: 'string',  description: 'Optional provenance: who produced this skill. ≤120 chars.' },
+                source_url:  { type: 'string',  description: 'Optional provenance: http(s)://, file://, or absolute path where the material came from. ≤512 chars.' },
+                reason:      { type: 'string',  description: 'Optional provenance: short "why this skill exists now" note. ≤500 chars.' },
             },
             required: ['name', 'description', 'content'],
         },
