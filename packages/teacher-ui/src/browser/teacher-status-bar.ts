@@ -2,6 +2,7 @@ import * as React from 'react';
 import { injectable } from 'inversify';
 import { StatusBarImpl } from '@theia/core/lib/browser/status-bar/status-bar';
 import { StatusBarViewEntry } from '@theia/core/lib/browser/status-bar/status-bar-types';
+import { nls } from '@theia/core/lib/common/nls';
 
 /**
  * Filtered status bar for Teacher IDE.
@@ -24,41 +25,60 @@ export class TeacherStatusBar extends StatusBarImpl {
         'editor-status-tabFocusMode',
     ];
 
+    /** Current lesson objective text. */
+    private lessonObjective = '';
+
+    /** Update the lesson objective shown in the status bar. */
+    setLessonObjective(text: string): void {
+        this.lessonObjective = text;
+        this.update();
+    }
+
     protected override render(): React.ReactElement {
         const leftEntries: React.ReactNode[] = [];
         const rightEntries: React.ReactNode[] = [];
+
+        const pulseLabel = nls.localize('theia/teacher/aiPulse', 'AI Pulse');
 
         // Inject the AI Pulse indicator as the first left element
         leftEntries.push(
             React.createElement('div', {
                 key: 'teacher-pulse-indicator',
                 className: 'element teacher-pulse-dot-container',
-                title: 'AI Status',
+                title: pulseLabel,
+                'aria-label': pulseLabel,
             },
-                React.createElement('span', { className: 'teacher-pulse-dot' }),
-                React.createElement('span', { className: 'teacher-pulse-label' }, 'AI Ready')
+                React.createElement('span', { className: 'teacher-pulse-dot teacher-pulse-breathing-dot' }),
+                React.createElement('span', { className: 'teacher-pulse-label' }, pulseLabel)
             )
         );
 
-        // Inject current lesson objective placeholder
+        // Inject current lesson objective
         leftEntries.push(
             React.createElement('div', {
                 key: 'teacher-lesson-objective',
                 className: 'element teacher-lesson-objective',
-            }, '')
+                'aria-label': nls.localize('theia/teacher/lessonObjective', 'Lesson Objective'),
+            }, this.lessonObjective)
         );
 
-        // Filter and render remaining entries
-        for (const entry of this.viewModel.getLeft()) {
-            if (!this.isHiddenEntry(entry)) {
-                leftEntries.push(this.renderElement(entry));
-            }
-        }
+        // Filter and render remaining entries with error handling
+        try {
+            if (this.viewModel) {
+                for (const entry of this.viewModel.getLeft()) {
+                    if (!this.isHiddenEntry(entry)) {
+                        leftEntries.push(this.renderElement(entry));
+                    }
+                }
 
-        for (const entry of this.viewModel.getRight()) {
-            if (!this.isHiddenEntry(entry)) {
-                rightEntries.push(this.renderElement(entry));
+                for (const entry of this.viewModel.getRight()) {
+                    if (!this.isHiddenEntry(entry)) {
+                        rightEntries.push(this.renderElement(entry));
+                    }
+                }
             }
+        } catch (err) {
+            console.error('[TeacherStatusBar] Error rendering entries:', err);
         }
 
         return React.createElement(React.Fragment, null,

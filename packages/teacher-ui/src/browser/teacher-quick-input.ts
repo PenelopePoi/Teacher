@@ -1,11 +1,14 @@
 import { injectable } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution } from '@theia/core/lib/browser';
+import { Disposable } from '@theia/core/lib/common/disposable';
 
 @injectable()
-export class TeacherQuickInputStyling implements FrontendApplicationContribution {
+export class TeacherQuickInputStyling implements FrontendApplicationContribution, Disposable {
+
+    private observer: MutationObserver | undefined;
 
     onStart(): void {
-        const observer = new MutationObserver(mutations => {
+        this.observer = new MutationObserver(mutations => {
             for (const mutation of mutations) {
                 for (const node of Array.from(mutation.addedNodes)) {
                     if (node instanceof HTMLElement) {
@@ -20,9 +23,20 @@ export class TeacherQuickInputStyling implements FrontendApplicationContribution
             }
         });
 
-        observer.observe(document.body, {
+        this.observer.observe(document.body, {
             childList: true,
             subtree: true
         });
+    }
+
+    onStop(): void {
+        this.dispose();
+    }
+
+    dispose(): void {
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = undefined;
+        }
     }
 }

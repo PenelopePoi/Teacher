@@ -262,6 +262,10 @@
     animation: teacher-breathing-glow 2400ms ease-in-out infinite;
 }
 
+.teacher-pulse-breathing-dot {
+    animation: teacher-breathing-glow 2400ms ease-in-out infinite;
+}
+
 .teacher-pulse-label {
     font-size: 11px;
     color: var(--text-secondary);
@@ -340,14 +344,58 @@
     color: var(--text-secondary);
 }
 
+.teacher-pulse-log-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+}
+
+.teacher-pulse-clear-btn {
+    background: var(--surface-3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-family: var(--theia-ui-font-family);
+    transition: background-color 0.15s ease;
+}
+
+.teacher-pulse-clear-btn:hover {
+    background: var(--surface-4);
+    color: var(--text-primary);
+}
+
 .teacher-pulse-log-empty {
     color: var(--text-tertiary);
     font-style: italic;
 }
 
+.teacher-pulse-log-ts {
+    color: var(--text-tertiary);
+    margin-right: 8px;
+    font-size: 10px;
+}
+
 .teacher-pulse-log-entry {
     padding: 2px 0;
     border-bottom: 1px solid rgba(35, 39, 46, 0.5);
+}
+
+.teacher-pulse-error {
+    background-color: rgba(220, 50, 50, 0.1);
+    border-top: 1px solid rgba(220, 50, 50, 0.3);
+}
+
+.teacher-pulse-error-icon {
+    color: #DC3232;
+    margin-right: 6px;
+}
+
+.teacher-pulse-error-message {
+    color: #DC3232;
+    font-size: 11px;
 }
 
 /* ----------------------------------------------------------------

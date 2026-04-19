@@ -14,9 +14,17 @@ export class PulsePanelContribution implements FrontendApplicationContribution {
     protected readonly widgetManager: WidgetManager;
 
     async onStart(app: FrontendApplication): Promise<void> {
-        const widget = await this.widgetManager.getOrCreateWidget(PulsePanelWidget.ID);
-        if (widget) {
-            app.shell.addWidget(widget, { area: 'bottom' });
+        try {
+            console.info('[PulsePanelContribution] Registering Pulse Panel widget...');
+            const widget = await this.widgetManager.getOrCreateWidget(PulsePanelWidget.ID);
+            if (widget) {
+                app.shell.addWidget(widget, { area: 'bottom' });
+                console.info('[PulsePanelContribution] Pulse Panel widget added to bottom panel.');
+            } else {
+                console.warn('[PulsePanelContribution] Widget creation returned undefined.');
+            }
+        } catch (err) {
+            console.error('[PulsePanelContribution] Failed to create Pulse Panel widget:', err);
         }
     }
 }
