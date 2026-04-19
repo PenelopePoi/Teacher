@@ -4,6 +4,8 @@ import { inject, injectable, postConstruct } from '@theia/core/shared/inversify'
 import * as React from '@theia/core/shared/react';
 import { ASIBridgeService, ASIStatus } from '../../common/asi-bridge-protocol';
 import { ProgressTrackingService, ProgressSummary } from '../../common/progress-protocol';
+import { PulseService } from '../pulse/pulse-service';
+import { PulseIndicator } from '../pulse/pulse-indicator';
 
 export namespace TeacherWelcomeCommands {
     export const ASK_TUTOR = 'teacher.askTutor';
@@ -25,6 +27,9 @@ export class TeacherWelcomeWidget extends ReactWidget {
 
     @inject(CommandRegistry)
     protected readonly commandRegistry: CommandRegistry;
+
+    @inject(PulseService)
+    protected readonly pulseService: PulseService;
 
     protected asiStatus: ASIStatus | undefined;
     protected progressSummary: ProgressSummary | undefined;
@@ -77,6 +82,9 @@ export class TeacherWelcomeWidget extends ReactWidget {
                 <p className='teacher-welcome-motto'>
                     {nls.localize('theia/teacher/motto', 'From Pain to Purpose. From Passion to Prophet.')}
                 </p>
+                <div className='teacher-welcome-pulse' aria-label='Teacher Pulse'>
+                    <PulseIndicator service={this.pulseService} size={14} showLabel={true} />
+                </div>
             </div>
         );
     }

@@ -1,0 +1,134 @@
+/* ============================================================
+ * Teacher DNA — §6 Visual Palette (warm industrial charcoal)
+ * Committed values from the Design Spec v2 dual-surface doc.
+ * Cascade order: this file overrides teacher-identity.css for any
+ * colliding tokens; anywhere a pure Theia token is still used, the
+ * `--theia-*` aliases below rebind it to the DNA palette.
+ * ============================================================ */
+
+:root {
+    /* ---- Core neutrals (warm charcoal, ~3° blue tilt) ---- */
+    --teacher-surface-0:  #0B0D10;  /* hero / void */
+    --teacher-surface-1:  #12151A;  /* workspace background */
+    --teacher-surface-2:  #1A1D22;  /* panels, sidebar */
+    --teacher-surface-3:  #24282F;  /* elevated cards */
+    --teacher-surface-4:  #2A2E35;  /* hover / active chips */
+
+    --teacher-border-subtle: #23272E;
+    --teacher-border-strong: #34393F;
+
+    --teacher-text-primary:   #F2F4F7;
+    --teacher-text-secondary: #B8BEC7;
+    --teacher-text-tertiary:  #7A828E;
+
+    /* ---- Workshop accents (TE-coded) ---- */
+    --teacher-accent-amber:  #E8A948;  /* primary CTAs, active selection */
+    --teacher-accent-yellow: #F5C518;  /* numbered controls / TE chiclets */
+    --teacher-accent-hot:    #F57B20;  /* destructive highlight, live record */
+
+    /* ---- AI state colors ---- */
+    --teacher-ai-thinking:   #7B9BD1;  /* cool periwinkle, model processing */
+    --teacher-ai-suggesting: #E8A948;  /* amber — proposal ready */
+    --teacher-ai-confident:  #4FB286;  /* calm green-teal */
+    --teacher-ai-listening-gradient:
+        linear-gradient(115deg, #7B9BD1 0%, #C79BE8 40%, #E8A948 75%, #F57B20 100%);
+
+    /* ---- Semantic ---- */
+    --teacher-semantic-success: #4FB286;
+    --teacher-semantic-warn:    #F5C518;
+    --teacher-semantic-error:   #E5484D;
+    --teacher-semantic-info:    #7B9BD1;
+
+    /* ---- Glass (Workshop only — NOT used on Companion) ---- */
+    --teacher-glass-ai-bg:       rgba(26, 29, 34, 0.60);
+    --teacher-glass-ai-border:   rgba(255, 255, 255, 0.06);
+    --teacher-glass-elev-bg:     rgba(26, 29, 34, 0.55);
+    --teacher-glass-elev-border: rgba(255, 255, 255, 0.08);
+    --teacher-glass-blur:        24px;
+    --teacher-glass-blur-elev:   32px;
+    --teacher-glass-saturate:    180%;
+
+    /* ---- Shadows ---- */
+    --teacher-shadow-menu:    0 8px 24px rgba(0, 0, 0, 0.40);
+    --teacher-shadow-elev:    0 24px 64px rgba(0, 0, 0, 0.55);
+    --teacher-shadow-focus-ring: 0 0 0 3px rgba(232, 169, 72, 0.35);
+}
+
+/* ============================================================
+ * Theia token rebinds — make stock chrome wear Teacher DNA.
+ * Only colors that the spec explicitly ties to DNA are rebound;
+ * layout/geometry tokens are left alone so Theia keeps working.
+ * ============================================================ */
+
+:root {
+    /* Editor + main chrome surfaces */
+    --theia-editor-background:           var(--teacher-surface-1);
+    --theia-editor-foreground:           var(--teacher-text-primary);
+    --theia-editorWidget-background:     var(--teacher-surface-2);
+    --theia-editorWidget-border:         var(--teacher-border-subtle);
+    --theia-editorGroupHeader-tabsBackground: var(--teacher-surface-1);
+
+    /* Side panels + activity bar */
+    --theia-sideBar-background:          var(--teacher-surface-2);
+    --theia-sideBar-foreground:          var(--teacher-text-primary);
+    --theia-sideBar-border:              var(--teacher-border-subtle);
+    --theia-sideBarSectionHeader-background: var(--teacher-surface-3);
+    --theia-activityBar-background:      var(--teacher-surface-2);
+    --theia-activityBar-foreground:      var(--teacher-text-primary);
+    --theia-activityBar-inactiveForeground: var(--teacher-text-tertiary);
+    --theia-activityBarBadge-background: var(--teacher-accent-amber);
+    --theia-activityBarBadge-foreground: var(--teacher-surface-0);
+
+    /* Status bar — flat, no confetti */
+    --theia-statusBar-background:        var(--teacher-surface-2);
+    --theia-statusBar-foreground:        var(--teacher-text-secondary);
+    --theia-statusBar-border:            var(--teacher-border-subtle);
+
+    /* Tabs */
+    --theia-tab-activeBackground:        var(--teacher-surface-1);
+    --theia-tab-inactiveBackground:      var(--teacher-surface-2);
+    --theia-tab-activeForeground:        var(--teacher-text-primary);
+    --theia-tab-inactiveForeground:      var(--teacher-text-tertiary);
+    --theia-tab-activeBorderTop:         var(--teacher-accent-amber);
+    --theia-tab-border:                  var(--teacher-border-subtle);
+
+    /* Buttons + interactive */
+    --theia-button-background:           var(--teacher-accent-amber);
+    --theia-button-foreground:           var(--teacher-surface-0);
+    --theia-button-hoverBackground:      var(--teacher-accent-yellow);
+    --theia-button-secondaryBackground:  var(--teacher-surface-3);
+    --theia-button-secondaryForeground:  var(--teacher-text-primary);
+
+    /* Focus + links */
+    --theia-focusBorder:                 var(--teacher-accent-amber);
+    --theia-textLink-foreground:         var(--teacher-accent-amber);
+    --theia-textLink-activeForeground:   var(--teacher-accent-yellow);
+
+    /* Lists */
+    --theia-list-hoverBackground:        var(--teacher-surface-3);
+    --theia-list-activeSelectionBackground: var(--teacher-surface-4);
+    --theia-list-activeSelectionForeground: var(--teacher-text-primary);
+    --theia-list-focusBackground:        var(--teacher-surface-4);
+
+    /* Inputs */
+    --theia-input-background:            var(--teacher-surface-3);
+    --theia-input-foreground:            var(--teacher-text-primary);
+    --theia-input-border:                var(--teacher-border-subtle);
+
+    /* Progress + badges — amber, not default blue */
+    --theia-progressBar-background:      var(--teacher-accent-amber);
+    --theia-badge-background:            var(--teacher-accent-amber);
+    --theia-badge-foreground:            var(--teacher-surface-0);
+
+    /* Description + quote blocks */
+    --theia-descriptionForeground:       var(--teacher-text-tertiary);
+    --theia-textBlockQuote-background:   var(--teacher-surface-2);
+    --theia-textBlockQuote-border:       var(--teacher-accent-amber);
+
+    /* Testing / feedback colors — used by Canvas connections legend */
+    --theia-testing-iconPassed:          var(--teacher-semantic-success);
+    --theia-testing-iconFailed:          var(--teacher-semantic-error);
+
+    /* Panel / dock borders */
+    --theia-panel-border:                var(--teacher-border-subtle);
+}

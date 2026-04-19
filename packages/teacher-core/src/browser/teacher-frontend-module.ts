@@ -28,6 +28,7 @@ import { LearningPathWidget } from './widgets/learning-path-widget';
 import { CanvasWidget } from './widgets/canvas-widget';
 import { CanvasContribution } from './widgets/canvas-contribution';
 import { CanvasService } from './canvas-service';
+import { PulseService } from './pulse/pulse-service';
 import { LessonCommandContribution } from './commands/lesson-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
@@ -121,6 +122,9 @@ export default new ContainerModule(bind => {
         id: LearningPathWidget.ID,
         createWidget: () => context.container.get<LearningPathWidget>(LearningPathWidget),
     })).inSingletonScope();
+
+    // Pulse — §6 signature primitive (breathing orb service)
+    bind(PulseService).toSelf().inSingletonScope();
 
     // Canvas — service + widget + view contribution (Cursor-inspired)
     bind(CanvasService).toSelf().inSingletonScope();
