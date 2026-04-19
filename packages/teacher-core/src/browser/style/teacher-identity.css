@@ -1,0 +1,209 @@
+/* ============================================================
+   TEACHER IDE — GLASSMORPHIC INDUSTRIAL IDENTITY
+   Zed × Teenage Engineering × Ableton
+
+   This stylesheet overrides Theia's VS Code-inherited defaults
+   to establish Teacher's visual identity. It layers on top of
+   the base Theia theme system.
+   ============================================================ */
+
+/* ===== Design Tokens ===== */
+
+:root {
+    /* Primary Palette */
+    --teacher-accent-primary: #6366f1;
+    --teacher-accent-secondary: #8b5cf6;
+    --teacher-accent-glow: rgba(99, 102, 241, 0.25);
+
+    /* Neutrals — Warm darks */
+    --teacher-bg-deep: #0f0f1a;
+    --teacher-bg-base: #1a1a2e;
+    --teacher-bg-surface: #22223a;
+    --teacher-bg-hover: #2a2a45;
+    --teacher-fg-primary: #e8e8f0;
+    --teacher-fg-secondary: #a0a0b8;
+    --teacher-fg-muted: #606078;
+
+    /* Semantic */
+    --teacher-success: #34d399;
+    --teacher-warning: #fbbf24;
+    --teacher-error: #f87171;
+    --teacher-info: #60a5fa;
+
+    /* Glass */
+    --teacher-glass-bg: rgba(26, 26, 46, 0.8);
+    --teacher-glass-border: rgba(255, 255, 255, 0.06);
+
+    /* Motion */
+    --teacher-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --teacher-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --teacher-duration-fast: 0.15s;
+    --teacher-duration-normal: 0.25s;
+
+    /* Typography overrides */
+    --theia-ui-font-size1: 14px;
+    --theia-code-font-size: 15px;
+    --theia-code-line-height: 22px;
+    --theia-ui-padding: 8px;
+    --theia-border-width: 0px;
+    --theia-scrollbar-width: 6px;
+    --theia-scrollbar-rail-width: 6px;
+    --theia-statusBar-height: 28px;
+}
+
+/* ===== Activity Bar — Glassmorphic ===== */
+
+.theia-app-sidebar-container {
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    border-right: none !important;
+    box-shadow: inset -1px 0 0 var(--teacher-glass-border);
+}
+
+.theia-app-sides .lm-TabBar-tab {
+    border-radius: 12px;
+    margin: 2px 6px;
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-out),
+                transform 0.1s ease;
+}
+
+.theia-app-sides .lm-TabBar-tab:hover {
+    transform: scale(1.05);
+}
+
+.theia-app-sides .lm-TabBar-tab.lm-mod-current {
+    box-shadow: 0 0 12px var(--teacher-accent-glow);
+}
+
+/* ===== Tab Bar — Ableton flat style ===== */
+
+.theia-app-centers .lm-TabBar-tab {
+    border: none !important;
+    border-radius: 8px 8px 0 0;
+    padding: 0 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition: background var(--teacher-duration-fast) ease;
+}
+
+.theia-app-centers .lm-TabBar-tab.lm-mod-current {
+    border-bottom: 2px solid var(--teacher-accent-primary) !important;
+}
+
+/* Hide close buttons until hover */
+.lm-TabBar-tabCloseIcon {
+    opacity: 0;
+    transition: opacity var(--teacher-duration-fast);
+}
+.lm-TabBar-tab:hover .lm-TabBar-tabCloseIcon {
+    opacity: 0.6;
+}
+
+/* ===== Editor — Softer, more breathing room ===== */
+
+.monaco-editor .margin-view-overlays .line-numbers {
+    opacity: 0.35;
+    transition: opacity 0.2s;
+}
+.monaco-editor:hover .margin-view-overlays .line-numbers {
+    opacity: 0.7;
+}
+
+/* Smoother cursor */
+.monaco-editor .cursor {
+    border-radius: 2px;
+}
+
+/* ===== Status Bar — Glassmorphic with pills ===== */
+
+#theia-statusBar {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--teacher-glass-border) !important;
+    letter-spacing: 0.02em;
+}
+
+#theia-statusBar .element {
+    border-radius: 4px;
+    padding: 1px 8px;
+    margin: 2px 1px;
+    transition: background var(--teacher-duration-fast);
+}
+
+#theia-statusBar .element:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== Bottom Panel — Clean separation ===== */
+
+#theia-bottom-content-panel {
+    border-top: none !important;
+    box-shadow: 0 -1px 0 var(--teacher-glass-border);
+}
+
+#theia-bottom-content-panel .lm-TabBar-tab {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 0 14px;
+}
+
+/* ===== Scrollbars — Thin and subtle ===== */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+}
+
+/* ===== AI Presence Indicator ===== */
+
+.teacher-ai-presence {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--teacher-accent-primary);
+    animation: teacher-breathe 3s ease-in-out infinite;
+}
+
+@keyframes teacher-breathe {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.15); box-shadow: 0 0 12px var(--teacher-accent-glow); }
+}
+
+/* AI thinking state — subtle editor border pulse */
+.teacher-ai-thinking .monaco-editor {
+    animation: teacher-think-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes teacher-think-pulse {
+    0%, 100% { box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.08); }
+    50% { box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.25); }
+}
+
+/* ===== Focus Mode — Beginner-first minimal UI ===== */
+
+.teacher-focus-mode .theia-app-sidebar-container { display: none; }
+.teacher-focus-mode #theia-statusBar .area.right { display: none; }
+.teacher-focus-mode .theia-app-centers .lm-TabBar { height: 0; overflow: hidden; }
+
+/* ===== Dialogs — Rounded, softer ===== */
+
+.dialogBlock {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid var(--teacher-glass-border) !important;
+}
+
+/* ===== Reduced Motion ===== */
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,4 +1,5 @@
 import '../../src/browser/style/teacher.css';
+import '../../src/browser/style/teacher-identity.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -30,6 +31,7 @@ import { CanvasService } from './canvas-service';
 import { LessonCommandContribution } from './commands/lesson-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
+import { KnowledgeSurvivorshipContribution } from './commands/export-snapshot-command';
 import { LessonContextVariableContribution } from './lesson-context-variable';
 
 export default new ContainerModule(bind => {
@@ -143,6 +145,10 @@ export default new ContainerModule(bind => {
     bind(WorkspacePresetContribution).toSelf().inSingletonScope();
     bind(CommandContribution).toService(WorkspacePresetContribution);
     bind(KeybindingContribution).toService(WorkspacePresetContribution);
+
+    // Knowledge Survivorship Commands (Export Snapshot, Anomaly Scan)
+    bind(KnowledgeSurvivorshipContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(KnowledgeSurvivorshipContribution);
 
     // Lesson Context Variable (injects lesson objectives into AI agent prompts)
     bind(LessonContextVariableContribution).toSelf().inSingletonScope();
