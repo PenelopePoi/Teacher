@@ -4,6 +4,7 @@ import '../../src/browser/style/before-after.css';
 import '../../src/browser/style/ghost-timeline.css';
 import '../../src/browser/style/teachable-moments.css';
 import '../../src/browser/style/notification-orbit.css';
+import '../../src/browser/style/message-queue.css';
 
 import { ContainerModule } from '@theia/core/shared/inversify';
 import { ChatAgent } from '@theia/ai-chat/lib/common';
@@ -17,6 +18,12 @@ import {
 import { TutorAgent } from './agents/tutor-agent';
 import { ExplainAgent } from './agents/explain-agent';
 import { TeachingReviewAgent } from './agents/review-agent';
+import { DebuggerAgent } from './agents/debugger-agent';
+import { MotivatorAgent } from './agents/motivator-agent';
+import { ProjectBuilderAgent } from './agents/project-agent';
+import { GrowthTrackerAgent } from './agents/growth-agent';
+import { ThinkingDebugAgent } from './agents/thinking-debug-agent';
+import { StrategicPlannerAgent } from './agents/strategic-planner-agent';
 import { ASIBridgeService, ASI_BRIDGE_SERVICE_PATH } from '../common/asi-bridge-protocol';
 import { ProgressTrackingService, PROGRESS_SERVICE_PATH } from '../common/progress-protocol';
 import { TeacherService, TEACHER_SERVICE_PATH } from '../common/teacher-protocol';
@@ -73,6 +80,9 @@ import { TeachableMomentService } from './teachable-moments/teachable-moment-ser
 import { TeachableMomentDetector } from './teachable-moments/teachable-moment-detector';
 import { TeachableMomentExplainerWidget } from './teachable-moments/teachable-moment-widget';
 import { PedagogyLibraryWidget } from './teachable-moments/pedagogy-library-widget';
+import { MessageQueueService } from './agent-queue/message-queue-service';
+import { MessageQueueWidget } from './agent-queue/message-queue-widget';
+import { MessageQueueContribution } from './agent-queue/message-queue-contribution';
 
 export default new ContainerModule(bind => {
     // Tutor Agent
@@ -89,6 +99,36 @@ export default new ContainerModule(bind => {
     bind(TeachingReviewAgent).toSelf().inSingletonScope();
     bind(Agent).toService(TeachingReviewAgent);
     bind(ChatAgent).toService(TeachingReviewAgent);
+
+    // Debugger Agent
+    bind(DebuggerAgent).toSelf().inSingletonScope();
+    bind(Agent).toService(DebuggerAgent);
+    bind(ChatAgent).toService(DebuggerAgent);
+
+    // Motivator Agent
+    bind(MotivatorAgent).toSelf().inSingletonScope();
+    bind(Agent).toService(MotivatorAgent);
+    bind(ChatAgent).toService(MotivatorAgent);
+
+    // Project Builder Agent
+    bind(ProjectBuilderAgent).toSelf().inSingletonScope();
+    bind(Agent).toService(ProjectBuilderAgent);
+    bind(ChatAgent).toService(ProjectBuilderAgent);
+
+    // Growth Tracker Agent
+    bind(GrowthTrackerAgent).toSelf().inSingletonScope();
+    bind(Agent).toService(GrowthTrackerAgent);
+    bind(ChatAgent).toService(GrowthTrackerAgent);
+
+    // Thinking Debug Agent
+    bind(ThinkingDebugAgent).toSelf().inSingletonScope();
+    bind(Agent).toService(ThinkingDebugAgent);
+    bind(ChatAgent).toService(ThinkingDebugAgent);
+
+    // Strategic Planner Agent
+    bind(StrategicPlannerAgent).toSelf().inSingletonScope();
+    bind(Agent).toService(StrategicPlannerAgent);
+    bind(ChatAgent).toService(StrategicPlannerAgent);
 
     // ASI Bridge (frontend proxy to backend service)
     bind(ASIBridgeService).toDynamicValue(ctx => {
@@ -340,4 +380,13 @@ export default new ContainerModule(bind => {
         id: PedagogyLibraryWidget.ID,
         createWidget: () => context.container.get<PedagogyLibraryWidget>(PedagogyLibraryWidget),
     })).inSingletonScope();
+
+    // G6a Message Queue — append context to running agents mid-loop (Cmd+Shift+M)
+    bind(MessageQueueService).toSelf().inSingletonScope();
+    bind(MessageQueueWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: MessageQueueWidget.ID,
+        createWidget: () => context.container.get<MessageQueueWidget>(MessageQueueWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, MessageQueueContribution);
 });
