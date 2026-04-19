@@ -1,22 +1,23 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
+import {
+    CheckpointService,
+    Checkpoint as CheckpointData,
+    CheckpointFileDiff
+} from '../checkpoint/checkpoint-service';
 
 /**
- * Rewind Panel — visual checkpoint management with code/conversation split.
+ * C18 Rewind Panel — visual checkpoint management with turn scrubber.
  *
- * Vertical timeline of checkpoints with three rewind modes:
- * code only, conversation only, or both.
+ * Vertical timeline of checkpoints.  "Create Checkpoint" creates a named
+ * manual checkpoint; clicking "Rewind" restores editor contents from the
+ * selected snapshot.  File diff counts and names shown per checkpoint.
+ * Current position is indicated with a visual marker.
  */
 
-interface CheckpointFileDiff {
-    readonly file: string;
-    readonly linesAdded: number;
-    readonly linesRemoved: number;
-}
-
-interface Checkpoint {
+interface CheckpointView {
     readonly id: string;
     readonly label: string;
     readonly timestamp: number;
@@ -32,7 +33,10 @@ export class RewindPanelWidget extends ReactWidget {
     static readonly ID = 'teacher-rewind-panel';
     static readonly LABEL = nls.localize('theia/teacher/rewindPanel', 'Checkpoints');
 
-    protected checkpoints: Checkpoint[] = [];
+    @inject(CheckpointService)
+    protected readonly checkpointService: CheckpointService;
+
+    protected checkpoints: CheckpointView[] = [];
     protected newCheckpointName: string = '';
     protected hoveredCheckpointId: string | undefined;
 
@@ -45,48 +49,36 @@ export class RewindPanelWidget extends ReactWidget {
         this.title.iconClass = 'codicon codicon-discard';
         this.addClass('teacher-rewind-panel');
 
-        this.loadDemoData();
+        this.refreshCheckpoints();
+
+        this.checkpointService.onDidCreateCheckpoint(() => {
+            this.refreshCheckpoints();
+        });
+        this.checkpointService.onDidRewind(() => {
+            this.refreshCheckpoints();
+        });
     }
 
-    protected loadDemoData(): void {
-        const now = Date.now();
-        this.checkpoints = [
-            { id: 'cp-1', label: 'Current state', timestamp: now, fileCount: 0, kind: 'auto', isCurrent: true, fileDiffs: [] },
-            { id: 'cp-2', label: 'Before auth refactor', timestamp: now - 2 * 60000, fileCount: 4, kind: 'manual', isCurrent: false, fileDiffs: [
-                { file: 'src/auth/service.ts', linesAdded: 42, linesRemoved: 8 },
-                { file: 'src/auth/types.ts', linesAdded: 15, linesRemoved: 0 },
-                { file: 'src/middleware/auth.ts', linesAdded: 28, linesRemoved: 3 },
-                { file: 'src/config.ts', linesAdded: 4, linesRemoved: 1 },
-            ]},
-            { id: 'cp-3', label: 'Login form working', timestamp: now - 8 * 60000, fileCount: 2, kind: 'auto', isCurrent: false, fileDiffs: [
-                { file: 'src/components/Login.tsx', linesAdded: 67, linesRemoved: 0 },
-                { file: 'src/styles/login.css', linesAdded: 34, linesRemoved: 0 },
-            ]},
-            { id: 'cp-4', label: 'Initial scaffold', timestamp: now - 15 * 60000, fileCount: 7, kind: 'auto', isCurrent: false, fileDiffs: [
-                { file: 'package.json', linesAdded: 12, linesRemoved: 2 },
-                { file: 'src/index.ts', linesAdded: 8, linesRemoved: 0 },
-                { file: 'src/app.ts', linesAdded: 24, linesRemoved: 0 },
-                { file: 'src/router/index.ts', linesAdded: 18, linesRemoved: 0 },
-                { file: 'tsconfig.json', linesAdded: 15, linesRemoved: 0 },
-                { file: '.eslintrc.json', linesAdded: 22, linesRemoved: 0 },
-                { file: 'README.md', linesAdded: 10, linesRemoved: 0 },
-            ]},
-            { id: 'cp-5', label: 'Session start', timestamp: now - 22 * 60000, fileCount: 0, kind: 'auto', isCurrent: false, fileDiffs: [] },
-        ];
+    protected refreshCheckpoints(): void {
+        const raw = this.checkpointService.getCheckpoints();
+        const currentId = this.checkpointService.getCurrentId();
+
+        this.checkpoints = raw.map((cp: CheckpointData) => ({
+            id: cp.id,
+            label: cp.label,
+            timestamp: cp.timestamp,
+            fileCount: cp.fileDiffs.length,
+            kind: cp.kind,
+            isCurrent: cp.id === currentId,
+            fileDiffs: cp.fileDiffs,
+        }));
+
+        this.update();
     }
 
     protected handleCreateCheckpoint = (): void => {
-        const label = this.newCheckpointName.trim() || nls.localize('theia/teacher/rewindManualCheckpoint', 'Manual checkpoint');
-        const cp: Checkpoint = {
-            id: `cp-${Date.now()}`,
-            label,
-            timestamp: Date.now(),
-            fileCount: 0,
-            kind: 'manual',
-            isCurrent: false,
-            fileDiffs: [],
-        };
-        this.checkpoints.splice(1, 0, cp);
+        const label = this.newCheckpointName.trim() || undefined;
+        this.checkpointService.createCheckpoint(label ?? nls.localize('theia/teacher/rewindManualCheckpoint', 'Manual checkpoint'));
         this.newCheckpointName = '';
         this.update();
     };
@@ -96,13 +88,25 @@ export class RewindPanelWidget extends ReactWidget {
         this.update();
     };
 
+    protected handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+        if (e.key === 'Enter') {
+            this.handleCreateCheckpoint();
+        }
+    };
+
     protected handleCheckpointHover = (checkpointId: string | undefined): void => {
         this.hoveredCheckpointId = checkpointId;
         this.update();
     };
 
     protected handleRewind = (checkpointId: string, mode: 'code' | 'conversation' | 'both'): void => {
-        console.info(`Rewind ${mode} to checkpoint ${checkpointId}`);
+        if (mode === 'code' || mode === 'both') {
+            this.checkpointService.rewindTo(checkpointId);
+        }
+        // Conversation rewind is future work — log intent for now
+        if (mode === 'conversation') {
+            console.info(`Conversation rewind to checkpoint ${checkpointId} — not yet implemented`);
+        }
     };
 
     protected formatRelativeTime(ts: number): string {
@@ -128,6 +132,7 @@ export class RewindPanelWidget extends ReactWidget {
                             placeholder={nls.localize('theia/teacher/rewindNamePlaceholder', 'Checkpoint name...')}
                             value={this.newCheckpointName}
                             onChange={this.handleNameChange}
+                            onKeyDown={this.handleNameKeyDown}
                         />
                         <button
                             type='button'
@@ -139,14 +144,26 @@ export class RewindPanelWidget extends ReactWidget {
                         </button>
                     </div>
                 </div>
-                <div className='teacher-rewind-timeline'>
-                    {this.checkpoints.map(cp => this.renderCheckpoint(cp))}
-                </div>
+                {this.checkpoints.length === 0
+                    ? this.renderEmptyState()
+                    : <div className='teacher-rewind-timeline'>
+                        {this.checkpoints.map(cp => this.renderCheckpoint(cp))}
+                    </div>
+                }
             </div>
         );
     }
 
-    protected renderCheckpoint(cp: Checkpoint): React.ReactNode {
+    protected renderEmptyState(): React.ReactNode {
+        return (
+            <div className='teacher-rewind-empty'>
+                <i className='codicon codicon-history' />
+                <p>{nls.localize('theia/teacher/rewindEmpty', 'No checkpoints yet. Create one or let the agent work.')}</p>
+            </div>
+        );
+    }
+
+    protected renderCheckpoint(cp: CheckpointView): React.ReactNode {
         return (
             <div
                 key={cp.id}
@@ -178,6 +195,12 @@ export class RewindPanelWidget extends ReactWidget {
                         <span className={`teacher-rewind-kind-badge teacher-rewind-kind-badge--${cp.kind}`}>
                             {cp.kind}
                         </span>
+                        {cp.isCurrent && (
+                            <span className='teacher-rewind-current-badge'>
+                                <i className='codicon codicon-circle-filled' />
+                                {nls.localize('theia/teacher/rewindCurrent', 'current')}
+                            </span>
+                        )}
                     </div>
                     {!cp.isCurrent && (
                         <div className='teacher-rewind-actions'>

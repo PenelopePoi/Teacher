@@ -97,6 +97,8 @@ import { AgentCommunicationService } from '../common/agent-protocol';
 import { DragToAskService } from './components/drag-to-ask-service';
 import { DragToAskCommandContribution } from './commands/drag-to-ask-command';
 import { HelpOverlayContribution } from './help/help-overlay-contribution';
+import { CheckpointService } from './checkpoint/checkpoint-service';
+import { CheckpointCommandContribution } from './checkpoint/checkpoint-commands';
 
 export default new ContainerModule(bind => {
     // Agent Handoff Service — manages inter-agent communication and handoffs
@@ -274,6 +276,12 @@ export default new ContainerModule(bind => {
         createWidget: () => context.container.get<PlanModeWidget>(PlanModeWidget),
     })).inSingletonScope();
     bindViewContribution(bind, PlanModeContribution);
+
+    // C18 Checkpoint/Rewind — time travel for agent work
+    bind(CheckpointService).toSelf().inSingletonScope();
+    bind(CheckpointCommandContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(CheckpointCommandContribution);
+    bind(KeybindingContribution).toService(CheckpointCommandContribution);
 
     // Rewind Panel widget (visual checkpoint management)
     bind(RewindPanelWidget).toSelf();
