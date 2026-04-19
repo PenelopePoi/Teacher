@@ -64,6 +64,14 @@ import { WorkflowBuilderWidget } from './widgets/workflow-builder-widget';
 import { WorkflowBuilderContribution } from './widgets/workflow-builder-contribution';
 import { ImprovementDashboardWidget } from './widgets/improvement-dashboard-widget';
 import { ImprovementDashboardContribution } from './widgets/improvement-dashboard-contribution';
+import { DailyObjectiveWidget } from './widgets/daily-objective-widget';
+import { DailyObjectiveContribution } from './widgets/daily-objective-contribution';
+import { ConceptMapWidget } from './widgets/concept-map-widget';
+import { ConceptMapContribution } from './widgets/concept-map-contribution';
+import { QuickQuizWidget } from './widgets/quick-quiz-widget';
+import { QuickQuizContribution } from './widgets/quick-quiz-contribution';
+import { ProjectTrackerWidget } from './widgets/project-tracker-widget';
+import { ProjectTrackerContribution } from './widgets/project-tracker-contribution';
 import { LessonCommandContribution } from './commands/lesson-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
@@ -386,6 +394,39 @@ export default new ContainerModule(bind => {
         id: PedagogyLibraryWidget.ID,
         createWidget: () => context.container.get<PedagogyLibraryWidget>(PedagogyLibraryWidget),
     })).inSingletonScope();
+
+    // Daily Objective widget (bottom panel, auto-visible)
+    bind(DailyObjectiveWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: DailyObjectiveWidget.ID,
+        createWidget: () => context.container.get<DailyObjectiveWidget>(DailyObjectiveWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, DailyObjectiveContribution);
+    bind(FrontendApplicationContribution).toService(DailyObjectiveContribution);
+
+    // Concept Map widget (right panel)
+    bind(ConceptMapWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: ConceptMapWidget.ID,
+        createWidget: () => context.container.get<ConceptMapWidget>(ConceptMapWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, ConceptMapContribution);
+
+    // Quick Quiz widget (main area)
+    bind(QuickQuizWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: QuickQuizWidget.ID,
+        createWidget: () => context.container.get<QuickQuizWidget>(QuickQuizWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, QuickQuizContribution);
+
+    // Project Tracker widget (right panel)
+    bind(ProjectTrackerWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: ProjectTrackerWidget.ID,
+        createWidget: () => context.container.get<ProjectTrackerWidget>(ProjectTrackerWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, ProjectTrackerContribution);
 
     // G6a Message Queue — append context to running agents mid-loop (Cmd+Shift+M)
     bind(MessageQueueService).toSelf().inSingletonScope();

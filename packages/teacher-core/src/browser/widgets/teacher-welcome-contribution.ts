@@ -7,7 +7,7 @@ import {
     FrontendApplicationContribution
 } from '@theia/core/lib/browser';
 import { FrontendApplicationStateService } from '@theia/core/lib/browser/frontend-application-state';
-import { PreferenceService } from '@theia/core/lib/browser/preferences/preference-service';
+import { PreferenceService } from '@theia/core/lib/common/preferences/preference-service';
 import { TeacherWelcomeWidget } from './teacher-welcome-widget';
 
 export const TeacherWelcomeCommand = {

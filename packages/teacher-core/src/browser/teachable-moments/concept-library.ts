@@ -1564,7 +1564,7 @@ runTests(Stack);`,
         id: 'web-audio-api',
         name: 'Web Audio API',
         category: 'Audio',
-        oneLine: 'Browser-native audio synthesis and processing — oscillators, filters, and effects without plugins.',
+        oneLineExplanation: 'Browser-native audio synthesis and processing — oscillators, filters, and effects without plugins.',
         fullExplanation: `The Web Audio API lets you create, process, and analyze audio directly in the browser. You build an audio graph: sources (oscillators, samples) connect through processing nodes (gain, filter, delay) to the destination (speakers). It's how browser-based DAWs, synths, and visualizers work.`,
         playgroundCode: `// Create a simple synth with the Web Audio API
 const ctx = new AudioContext();
@@ -1592,7 +1592,7 @@ osc.stop(ctx.currentTime + 1);
         id: 'midi',
         name: 'MIDI Protocol',
         category: 'Audio',
-        oneLine: 'Musical Instrument Digital Interface — note numbers, velocity, and control messages between devices.',
+        oneLineExplanation: 'Musical Instrument Digital Interface — note numbers, velocity, and control messages between devices.',
         fullExplanation: `MIDI doesn't carry sound — it carries instructions. Note On (which key, how hard), Note Off, Control Change (knob turns), Program Change (patch select). Note 60 = Middle C, velocity 0-127. The Web MIDI API lets JavaScript talk to hardware controllers, keyboards, and drum pads.`,
         playgroundCode: `// MIDI note number to frequency conversion
 function midiToFreq(note) {
@@ -1617,7 +1617,7 @@ chord.forEach(note => {
         id: 'sample-rate',
         name: 'Sample Rate & Bit Depth',
         category: 'Audio',
-        oneLine: 'How many times per second sound is measured (sample rate) and how precisely (bit depth).',
+        oneLineExplanation: 'How many times per second sound is measured (sample rate) and how precisely (bit depth).',
         fullExplanation: `Digital audio captures sound as a series of measurements. Sample rate = measurements per second (44,100 Hz for CD, 48,000 Hz for video, 96,000 Hz for hi-res). Bit depth = precision per measurement (16-bit = 65,536 levels, 24-bit = 16.7 million levels). Nyquist theorem: you can capture frequencies up to half the sample rate. 44.1kHz captures up to 22.05kHz — the edge of human hearing.`,
         playgroundCode: `// Generate a 440Hz sine wave as raw samples
 const sampleRate = 44100;
@@ -1642,7 +1642,7 @@ console.log(\`Nyquist limit: \${sampleRate / 2} Hz\`);`,
         id: 'bpm-tempo',
         name: 'BPM & Tempo Math',
         category: 'Audio',
-        oneLine: 'Beats per minute — the math that converts time to rhythm and rhythm to time.',
+        oneLineExplanation: 'Beats per minute — the math that converts time to rhythm and rhythm to time.',
         fullExplanation: `BPM (beats per minute) is the clock of music. At 120 BPM: one beat = 500ms, one bar (4 beats) = 2000ms, one 16th note = 125ms. Every sequencer, drum machine, and DAW converts BPM to milliseconds to schedule events. Knowing this math lets you sync visuals to audio, build sequencers, and calculate delay times.`,
         playgroundCode: `// BPM to timing conversion
 function bpmToMs(bpm, subdivision = 1) {
@@ -1670,7 +1670,7 @@ console.log(\`Dotted 1/8 delay: \${delayTime(bpm, 'dotted-1/8').toFixed(1)}ms\`)
         id: 'fft',
         name: 'FFT — Fast Fourier Transform',
         category: 'Audio',
-        oneLine: 'Converts a signal from time domain to frequency domain — how visualizers and EQs see sound.',
+        oneLineExplanation: 'Converts a signal from time domain to frequency domain — how visualizers and EQs see sound.',
         fullExplanation: `Sound is waves over time (time domain). FFT converts that into frequencies and their amplitudes (frequency domain). This is how audio visualizers show spectrum bars, how EQs isolate frequency bands, and how pitch detection works. The Web Audio API's AnalyserNode does FFT in real-time.`,
         playgroundCode: `// Using Web Audio AnalyserNode for FFT
 const ctx = new AudioContext();
@@ -1696,7 +1696,7 @@ console.log(\`Bin for 440Hz: \${Math.round(440 / (ctx.sampleRate / analyser.fftS
         id: 'sidechain',
         name: 'Sidechain Compression',
         category: 'Audio',
-        oneLine: 'One signal controls the volume of another — the pump effect in electronic music.',
+        oneLineExplanation: 'One signal controls the volume of another — the pump effect in electronic music.',
         fullExplanation: `Sidechain compression ducks one signal when another hits. Classic use: the kick drum triggers the compressor on the bass, creating the "pumping" effect in house/EDM. In code: detect the kick's amplitude, use it to scale the bass gain inversely. The envelope (attack/release times) shapes how the duck feels.`,
         playgroundCode: `// Sidechain compression concept in code
 function applySidechain(bassGain, kickAmplitude, threshold, ratio) {
