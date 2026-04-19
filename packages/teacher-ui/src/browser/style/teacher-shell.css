@@ -1,0 +1,428 @@
+/* ================================================================
+   Teacher IDE — Glassmorphic Industrial Shell
+   Complete theme override for the warm industrial charcoal palette
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   Root Variables — Warm Industrial Charcoal
+   ---------------------------------------------------------------- */
+:root {
+    --surface-0: #0B0D10;
+    --surface-1: #12151A;
+    --surface-2: #1A1D22;
+    --surface-3: #24282F;
+    --surface-4: #2A2E35;
+    --border-subtle: #23272E;
+    --text-primary: #F2F4F7;
+    --text-secondary: #B8BEC7;
+    --text-tertiary: #7A828E;
+    --accent-amber: #E8A948;
+    --ai-thinking: #7B9BD1;
+    --ai-suggesting: #E8A948;
+    --ai-confident: #4FB286;
+}
+
+/* ----------------------------------------------------------------
+   Typography Overrides
+   ---------------------------------------------------------------- */
+:root {
+    --theia-ui-font-family: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --theia-ui-font-size1: 14px;
+    --theia-code-font-size: 15px;
+    --theia-code-line-height: 22px;
+}
+
+/* ----------------------------------------------------------------
+   Theia Variable Mapping
+   ---------------------------------------------------------------- */
+:root {
+    /* Activity Bar */
+    --theia-activityBar-background: var(--surface-1);
+    --theia-activityBar-foreground: var(--text-secondary);
+    --theia-activityBar-activeBorder: var(--accent-amber);
+    --theia-activityBar-inactiveForeground: var(--text-tertiary);
+
+    /* Side Bar */
+    --theia-sideBar-background: var(--surface-2);
+    --theia-sideBarTitle-foreground: var(--text-secondary);
+    --theia-sideBarSectionHeader-background: var(--surface-3);
+    --theia-sideBarSectionHeader-foreground: var(--text-secondary);
+
+    /* Editor */
+    --theia-editor-background: var(--surface-1);
+    --theia-editor-foreground: var(--text-primary);
+    --theia-editorLineNumber-foreground: var(--text-tertiary);
+    --theia-editorLineNumber-activeForeground: var(--text-secondary);
+    --theia-editorWidget-background: var(--surface-2);
+    --theia-editorWidget-border: var(--border-subtle);
+    --theia-editorGroupHeader-tabsBackground: var(--surface-2);
+
+    /* Status Bar */
+    --theia-statusBar-background: var(--surface-0);
+    --theia-statusBar-foreground: var(--text-secondary);
+    --theia-statusBar-noFolderBackground: var(--surface-0);
+
+    /* Tabs */
+    --theia-tab-activeBackground: var(--surface-1);
+    --theia-tab-activeForeground: var(--text-primary);
+    --theia-tab-inactiveBackground: var(--surface-2);
+    --theia-tab-inactiveForeground: var(--text-tertiary);
+    --theia-tab-border: transparent;
+    --theia-tab-activeBorderTop: var(--accent-amber);
+    --theia-tab-unfocusedActiveBorderTop: var(--accent-amber);
+
+    /* Focus */
+    --theia-focusBorder: rgba(232, 169, 72, 0.5);
+
+    /* Panel */
+    --theia-panel-background: var(--surface-1);
+    --theia-panel-border: var(--border-subtle);
+    --theia-panelTitle-activeBorder: var(--accent-amber);
+    --theia-panelTitle-activeForeground: var(--text-primary);
+    --theia-panelTitle-inactiveForeground: var(--text-tertiary);
+
+    /* Title Bar */
+    --theia-titleBar-activeBackground: var(--surface-0);
+    --theia-titleBar-activeForeground: var(--text-primary);
+    --theia-titleBar-inactiveBackground: var(--surface-0);
+    --theia-titleBar-inactiveForeground: var(--text-tertiary);
+
+    /* Lists */
+    --theia-list-activeSelectionBackground: var(--surface-3);
+    --theia-list-activeSelectionForeground: var(--text-primary);
+    --theia-list-hoverBackground: var(--surface-3);
+    --theia-list-focusBackground: var(--surface-3);
+
+    /* Input */
+    --theia-input-background: var(--surface-3);
+    --theia-input-foreground: var(--text-primary);
+    --theia-input-border: var(--border-subtle);
+    --theia-inputOption-activeBorder: var(--accent-amber);
+
+    /* Dropdown */
+    --theia-dropdown-background: var(--surface-3);
+    --theia-dropdown-foreground: var(--text-primary);
+    --theia-dropdown-border: var(--border-subtle);
+
+    /* Badge */
+    --theia-badge-background: var(--accent-amber);
+    --theia-badge-foreground: var(--surface-0);
+
+    /* Scrollbar */
+    --theia-scrollbarSlider-background: rgba(255, 255, 255, 0.06);
+    --theia-scrollbarSlider-hoverBackground: rgba(255, 255, 255, 0.12);
+    --theia-scrollbarSlider-activeBackground: rgba(255, 255, 255, 0.18);
+
+    /* Widget */
+    --theia-widget-shadow: rgba(0, 0, 0, 0.4);
+
+    /* Misc */
+    --theia-foreground: var(--text-primary);
+    --theia-descriptionForeground: var(--text-secondary);
+    --theia-icon-foreground: var(--text-secondary);
+    --theia-selection-background: rgba(232, 169, 72, 0.2);
+}
+
+/* ----------------------------------------------------------------
+   Activity Bar — Rounded Pill Icons
+   ---------------------------------------------------------------- */
+.p-TabBar.theia-app-sidebar .p-TabBar-tab {
+    border-radius: 12px;
+    margin: 2px 6px;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.p-TabBar.theia-app-sidebar .p-TabBar-tab:hover {
+    transform: scale(1.05);
+    background-color: var(--surface-3);
+}
+
+.p-TabBar.theia-app-sidebar .p-TabBar-tab.p-mod-current {
+    background-color: var(--surface-3);
+    box-shadow: 0 0 8px rgba(232, 169, 72, 0.15);
+}
+
+/* ----------------------------------------------------------------
+   Tab Bar — Flat, Amber Underline, Hidden Close
+   ---------------------------------------------------------------- */
+.p-TabBar-tab {
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+}
+
+.p-TabBar-tab.p-mod-current {
+    border-bottom-color: var(--accent-amber) !important;
+}
+
+.p-TabBar-tab .p-TabBar-tabCloseIcon {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.p-TabBar-tab:hover .p-TabBar-tabCloseIcon {
+    opacity: 1;
+}
+
+/* ----------------------------------------------------------------
+   Status Bar — Glassmorphic Backdrop
+   ---------------------------------------------------------------- */
+#theia-statusBar {
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
+    background-color: rgba(11, 13, 16, 0.85) !important;
+    border-top: 1px solid var(--border-subtle);
+}
+
+#theia-statusBar .element {
+    border-radius: 10px;
+    padding: 1px 8px;
+    margin: 1px 2px;
+    transition: background-color 0.15s ease;
+}
+
+#theia-statusBar .element:hover {
+    background-color: var(--surface-3);
+}
+
+/* ----------------------------------------------------------------
+   Bottom Panel — Uppercase Tiny Labels
+   ---------------------------------------------------------------- */
+.p-DockPanel-tabBar .p-TabBar-tabLabel,
+#theia-bottom-content-panel .p-TabBar-tabLabel {
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+}
+
+/* ----------------------------------------------------------------
+   Scrollbars — 6px Thin
+   ---------------------------------------------------------------- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--theia-scrollbarSlider-background);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theia-scrollbarSlider-hoverBackground);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: var(--theia-scrollbarSlider-activeBackground);
+}
+
+/* ----------------------------------------------------------------
+   Dialogs — 12px Radius, Glass Effect
+   ---------------------------------------------------------------- */
+.dialogBlock {
+    border-radius: 12px;
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    background-color: rgba(26, 29, 34, 0.92);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ----------------------------------------------------------------
+   Line Numbers — 35% Opacity, 70% on Hover
+   ---------------------------------------------------------------- */
+.monaco-editor .line-numbers {
+    opacity: 0.35;
+    transition: opacity 0.2s ease;
+}
+
+.monaco-editor .margin:hover .line-numbers,
+.monaco-editor .line-numbers.active-line-number {
+    opacity: 0.70;
+}
+
+/* ----------------------------------------------------------------
+   Teacher Pulse Indicator (Status Bar)
+   ---------------------------------------------------------------- */
+.teacher-pulse-dot-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--ai-confident);
+    animation: teacher-breathing-glow 2400ms ease-in-out infinite;
+}
+
+.teacher-pulse-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.teacher-lesson-objective {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+/* ----------------------------------------------------------------
+   Pulse Panel Widget
+   ---------------------------------------------------------------- */
+.teacher-pulse-panel {
+    overflow: hidden;
+}
+
+.teacher-pulse-strip {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--surface-1);
+    border-top: 1px solid var(--border-subtle);
+    font-family: var(--theia-ui-font-family);
+}
+
+.teacher-pulse-indicator-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.teacher-pulse-indicator-dot.teacher-pulse-breathing {
+    animation: teacher-breathing-glow 2400ms ease-in-out infinite;
+}
+
+.teacher-pulse-indicator-dot.teacher-pulse-thinking {
+    animation: teacher-thinking-pulse 800ms ease-in-out infinite;
+}
+
+.teacher-pulse-state-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.teacher-pulse-spacer {
+    flex: 1;
+}
+
+.teacher-pulse-expand-hint {
+    font-size: 10px;
+    color: var(--text-tertiary);
+}
+
+.teacher-pulse-log {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--surface-2);
+    border-top: 1px solid var(--border-subtle);
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: 'Geist Mono', monospace;
+    color: var(--text-secondary);
+}
+
+.teacher-pulse-log-empty {
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.teacher-pulse-log-entry {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(35, 39, 46, 0.5);
+}
+
+/* ----------------------------------------------------------------
+   Keyframes
+   ---------------------------------------------------------------- */
+
+/* Breathing glow — exactly 2,400ms sine wave */
+@keyframes teacher-breathing-glow {
+    0%, 100% {
+        box-shadow: 0 0 4px currentColor;
+        opacity: 0.7;
+    }
+    50% {
+        box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+        opacity: 1;
+    }
+}
+
+/* AI thinking pulse — faster, more urgent */
+@keyframes teacher-thinking-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* ----------------------------------------------------------------
+   Focus Mode — .teacher-focus-mode
+   ---------------------------------------------------------------- */
+.teacher-focus-mode .p-TabBar.theia-app-sidebar {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.teacher-focus-mode .p-TabBar.theia-app-sidebar:hover {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.teacher-focus-mode #theia-statusBar {
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+.teacher-focus-mode #theia-statusBar:hover {
+    opacity: 1;
+}
+
+/* ----------------------------------------------------------------
+   TE-Style Numbered Labels — .teacher-te-label
+   ---------------------------------------------------------------- */
+.teacher-te-label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: 'Geist Mono', monospace;
+    font-weight: 500;
+}
+
+/* ----------------------------------------------------------------
+   Reduced Motion
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .teacher-pulse-dot,
+    .teacher-pulse-indicator-dot,
+    .teacher-pulse-indicator-dot.teacher-pulse-breathing,
+    .teacher-pulse-indicator-dot.teacher-pulse-thinking {
+        animation: none;
+    }
+
+    .p-TabBar.theia-app-sidebar .p-TabBar-tab:hover {
+        transform: none;
+    }
+}
