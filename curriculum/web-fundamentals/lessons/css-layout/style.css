@@ -1,0 +1,82 @@
+/*
+ * Layout with Flexbox
+ *
+ * Turn the volunteer board into a responsive card layout.
+ * Flexbox lets you build layouts that adapt — no floats, no hacks.
+ * Real community boards need to work on phones and desktops alike.
+ *
+ * Complete the TODOs below.
+ */
+
+/* Base reset — this one's free */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+/* TODO: Style .page-header
+   - Use display: flex to center content
+   - Set flex-direction to column
+   - Set align-items to center
+   - Add padding (at least 2em)
+   - Set a background-color
+*/
+
+/* TODO: Style .nav-bar
+   - Use display: flex
+   - Set justify-content to center
+   - Set gap to add spacing between links (try 1em)
+   - Add padding and a background-color
+*/
+
+/* TODO: Style .nav-link
+   - Remove the default underline with text-decoration: none
+   - Set a color and add padding
+*/
+
+/* TODO: Style .card-grid — this is the main layout container
+   - Use display: flex
+   - Set flex-wrap to wrap (so cards flow to next row)
+   - Set justify-content to center
+   - Set gap for spacing between cards (try 1.5em)
+   - Add padding around the grid (at least 2em)
+*/
+
+/* TODO: Style .card
+   - Set a background-color (white works well on the gray page)
+   - Set flex: 0 1 300px (don't grow, can shrink, start at 300px)
+   - Add padding (at least 1.5em)
+   - Add border-radius for rounded corners
+   - Optional: add box-shadow for depth
+*/
+
+/* TODO: Style .card h2
+   - Set a color that stands out
+   - Add margin-bottom for spacing
+*/
+
+/* TODO: Style .category
+   - Make it a small label: set font-size smaller
+   - Set a distinct color
+   - Add text-transform: uppercase and font-weight: bold
+*/
+
+/* TODO: Style .commitment
+   - Make it stand out at the bottom of the card
+   - Set font-weight: bold and a distinct color
+   - Add margin-top for spacing
+*/
+
+/* TODO: Style .page-footer
+   - Use display: flex
+   - Set justify-content to center
+   - Add padding and a dark background with light text
+*/

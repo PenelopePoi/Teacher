@@ -1,0 +1,25 @@
+{
+    "id": "merging",
+    "title": "Merging Branches & Resolving Conflicts",
+    "objectives": [
+        "Merge feature branches back into main with git merge",
+        "Understand fast-forward vs. three-way merges",
+        "Resolve merge conflicts when two branches edit the same file"
+    ],
+    "hints": [
+        "Always switch to the branch you want to merge INTO first (usually main), then run git merge <branch>",
+        "Conflict markers look like <<<<<<< HEAD ... ======= ... >>>>>>> branch-name — keep the code you want and delete the markers",
+        "After resolving conflicts, stage the fixed files and commit to complete the merge"
+    ],
+    "assessmentCriteria": [
+        "Student successfully merges at least one feature branch into main",
+        "Student creates and resolves at least one merge conflict",
+        "Student can explain the difference between fast-forward and three-way merges",
+        "Final git log shows a clean merge history"
+    ],
+    "estimatedMinutes": 30,
+    "prerequisiteSkills": ["branching"],
+    "assessment": {
+        "type": "guided-exercise"
+    }
+}

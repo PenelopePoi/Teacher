@@ -1,0 +1,26 @@
+{
+    "id": "css-layout",
+    "title": "Layout with Flexbox",
+    "objectives": [
+        "Use display: flex to create flexible, responsive layouts",
+        "Control alignment and spacing with justify-content and align-items",
+        "Build a card-based layout that adapts to different screen widths"
+    ],
+    "hints": [
+        "display: flex on a container makes its children flex items — they'll line up in a row by default",
+        "flex-wrap: wrap lets items flow to the next line instead of shrinking to fit",
+        "justify-content controls horizontal spacing, align-items controls vertical alignment"
+    ],
+    "assessmentCriteria": [
+        "At least one container uses display: flex",
+        "Layout uses flex-wrap for responsive behavior",
+        "justify-content and align-items are used for alignment",
+        "A card or grid-like pattern is created with consistent spacing"
+    ],
+    "estimatedMinutes": 30,
+    "prerequisiteSkills": ["css-colors"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "node test.js"
+    }
+}

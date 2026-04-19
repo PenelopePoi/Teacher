@@ -1,0 +1,32 @@
+{
+    "id": "web-fundamentals",
+    "title": "Web Fundamentals: HTML, CSS & JavaScript",
+    "description": "Build real web pages from scratch. Learn the three pillars of the web — HTML for structure, CSS for style, and JavaScript for interactivity. Every lesson produces something you can see in a browser, because code should serve people, not just pass tests.",
+    "creditHours": 3,
+    "modules": [
+        {
+            "id": "html-basics",
+            "title": "HTML Basics",
+            "lessons": [
+                { "id": "html-structure", "title": "Building a Page Structure", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] },
+                { "id": "headings-paragraphs", "title": "Headings, Paragraphs & Lists", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] }
+            ]
+        },
+        {
+            "id": "css-styling",
+            "title": "CSS Styling",
+            "lessons": [
+                { "id": "css-colors", "title": "Colors, Fonts & Visual Identity", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] },
+                { "id": "css-layout", "title": "Layout with Flexbox", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] }
+            ]
+        },
+        {
+            "id": "javascript-intro",
+            "title": "JavaScript Intro",
+            "lessons": [
+                { "id": "js-variables", "title": "Variables & Data Types", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] },
+                { "id": "js-functions", "title": "Functions That Do Real Work", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "id": "html-structure",
+    "title": "Building a Page Structure",
+    "objectives": [
+        "Understand the purpose of HTML as the skeleton of every web page",
+        "Use semantic tags (html, head, body, header, main, footer) to organize content",
+        "Create a valid HTML5 document from scratch"
+    ],
+    "hints": [
+        "Every HTML page starts with <!DOCTYPE html> — this tells the browser which version of HTML you're using",
+        "The <head> contains metadata (title, charset) while <body> contains everything the user sees",
+        "Semantic tags like <header>, <main>, and <footer> tell browsers and screen readers what each section means"
+    ],
+    "assessmentCriteria": [
+        "Page has a valid DOCTYPE declaration",
+        "Document contains html, head, and body elements",
+        "Page uses semantic elements: header, main, and footer",
+        "Head includes a title and charset meta tag"
+    ],
+    "estimatedMinutes": 20,
+    "prerequisiteSkills": [],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "node test.js"
+    }
+}

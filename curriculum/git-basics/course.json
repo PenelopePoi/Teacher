@@ -1,0 +1,24 @@
+{
+    "id": "git-basics",
+    "title": "Git Basics: Version Control from Scratch",
+    "description": "Learn Git the way professional developers use it — tracking changes, collaborating safely, and never losing work again. Every lesson uses real scenarios because version control matters most when the stakes are real.",
+    "creditHours": 2,
+    "modules": [
+        {
+            "id": "getting-started",
+            "title": "Getting Started",
+            "lessons": [
+                { "id": "init-and-commit", "title": "Initialize a Repository & Make Your First Commit", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] },
+                { "id": "staging-and-status", "title": "The Staging Area & Reading Status", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 20, "prerequisiteSkills": [] }
+            ]
+        },
+        {
+            "id": "working-with-branches",
+            "title": "Working with Branches",
+            "lessons": [
+                { "id": "branching", "title": "Creating & Switching Branches", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 25, "prerequisiteSkills": [] },
+                { "id": "merging", "title": "Merging Branches & Resolving Conflicts", "objectives": [], "hints": [], "assessmentCriteria": [], "estimatedMinutes": 30, "prerequisiteSkills": [] }
+            ]
+        }
+    ]
+}

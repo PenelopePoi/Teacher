@@ -1,0 +1,52 @@
+/*
+ * Colors, Fonts & Visual Identity
+ *
+ * Style the Sweet Roots Bakery page. A good brand starts with
+ * consistent colors and readable typography. Make this bakery
+ * look as warm as it smells.
+ *
+ * Complete the TODOs below.
+ */
+
+/* TODO: Style the body
+   - Set a background-color using a hex code (try #FFF8F0 for warm cream)
+   - Set a color for all text (try #2C1810 for dark brown)
+   - Set font-family to a readable sans-serif with fallbacks
+   - Set font-size to 18px
+   - Set line-height to 1.6 for readability
+   - Set margin to 0 and padding to 0
+*/
+
+/* TODO: Style h1
+   - Set font-family to a serif font (like 'Georgia', serif)
+   - Set font-size to at least 2.5em
+   - Set color using an rgb() value (try rgb(139, 69, 19) for warm brown)
+*/
+
+/* TODO: Style h2
+   - Set font-family to match h1
+   - Set color using a named color (try 'sienna' or 'saddlebrown')
+   - Add a border-bottom to create a subtle separator
+*/
+
+/* TODO: Style the .hero class
+   - Set a distinct background-color
+   - Add padding (at least 2em)
+   - Center the text with text-align
+*/
+
+/* TODO: Style the .tagline class
+   - Set font-style to italic
+   - Set a color that complements the heading
+*/
+
+/* TODO: Style the .featured class
+   - Make it stand out: use font-weight bold
+   - Set a unique color to draw attention
+*/
+
+/* TODO: Style the footer
+   - Set a dark background-color
+   - Set a light text color for contrast
+   - Add padding and center the text
+*/

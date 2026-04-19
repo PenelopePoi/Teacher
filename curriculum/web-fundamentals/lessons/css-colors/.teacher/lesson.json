@@ -1,0 +1,26 @@
+{
+    "id": "css-colors",
+    "title": "Colors, Fonts & Visual Identity",
+    "objectives": [
+        "Apply colors using named colors, hex codes, and RGB values",
+        "Set font families, sizes, and weights to establish visual hierarchy",
+        "Understand the cascade — how CSS rules are applied and overridden"
+    ],
+    "hints": [
+        "Colors can be named ('crimson'), hex (#DC143C), or rgb(220, 20, 60) — they all work",
+        "Use font-family with fallbacks: font-family: 'Georgia', 'Times New Roman', serif",
+        "More specific selectors override less specific ones — an ID beats a class beats an element"
+    ],
+    "assessmentCriteria": [
+        "Stylesheet defines a body background color and text color",
+        "At least two different font families are used",
+        "Colors are applied using at least two different formats (hex, rgb, named)",
+        "Headings have distinct styling from body text"
+    ],
+    "estimatedMinutes": 25,
+    "prerequisiteSkills": ["html-structure", "headings-paragraphs"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "node test.js"
+    }
+}

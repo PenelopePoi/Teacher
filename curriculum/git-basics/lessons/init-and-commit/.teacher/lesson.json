@@ -1,0 +1,26 @@
+{
+    "id": "init-and-commit",
+    "title": "Initialize a Repository & Make Your First Commit",
+    "objectives": [
+        "Understand what version control is and why it matters",
+        "Initialize a new Git repository with git init",
+        "Create files, stage them with git add, and commit with git commit"
+    ],
+    "hints": [
+        "git init creates a hidden .git folder — that's where Git stores the entire history of your project",
+        "git add <file> stages a file (marks it for the next commit). git add . stages everything",
+        "git commit -m 'Your message' saves a snapshot. Write messages that explain WHY, not just what"
+    ],
+    "assessmentCriteria": [
+        "Student can explain the difference between a working directory and a repository",
+        "A new Git repository is initialized successfully",
+        "At least one file is created, staged, and committed",
+        "Commit message is descriptive and meaningful"
+    ],
+    "estimatedMinutes": 20,
+    "prerequisiteSkills": [],
+    "assessment": {
+        "type": "guided-exercise",
+        "testCommand": "bash setup.sh && echo 'Practice repo ready'"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "id": "js-variables",
+    "title": "Variables & Data Types",
+    "objectives": [
+        "Declare variables with let and const and understand when to use each",
+        "Work with strings, numbers, booleans, arrays, and objects",
+        "Use template literals to build dynamic strings"
+    ],
+    "hints": [
+        "Use const for values that never change (like a tax rate), let for values that do (like a running total)",
+        "Template literals use backticks and ${} — `Hello, ${name}!` inserts the variable's value",
+        "Arrays hold ordered lists: ['apple', 'banana']. Objects hold named properties: { name: 'Ada', age: 30 }"
+    ],
+    "assessmentCriteria": [
+        "Variables are declared with const and let appropriately (no var)",
+        "At least 3 different data types are used",
+        "Template literals are used for string building",
+        "An array and an object are created with real-world data"
+    ],
+    "estimatedMinutes": 25,
+    "prerequisiteSkills": [],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "node test.js"
+    }
+}

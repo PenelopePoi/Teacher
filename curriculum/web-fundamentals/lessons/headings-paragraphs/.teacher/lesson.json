@@ -1,0 +1,26 @@
+{
+    "id": "headings-paragraphs",
+    "title": "Headings, Paragraphs & Lists",
+    "objectives": [
+        "Use heading tags (h1-h6) to create a content hierarchy",
+        "Write paragraphs and apply emphasis with <strong> and <em>",
+        "Build ordered and unordered lists to organize information"
+    ],
+    "hints": [
+        "Headings go from h1 (most important) to h6 (least) — use them in order, don't skip levels",
+        "<strong> means strong importance (usually bold), <em> means emphasis (usually italic)",
+        "<ul> creates bullet lists, <ol> creates numbered lists — both use <li> for items"
+    ],
+    "assessmentCriteria": [
+        "Page uses h1 through at least h3 in proper hierarchy",
+        "Content includes paragraphs with inline emphasis elements",
+        "Page contains both an ordered and unordered list",
+        "Lists have at least 3 items each"
+    ],
+    "estimatedMinutes": 20,
+    "prerequisiteSkills": ["html-structure"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "node test.js"
+    }
+}

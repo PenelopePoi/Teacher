@@ -1,0 +1,26 @@
+{
+    "id": "js-functions",
+    "title": "Functions That Do Real Work",
+    "objectives": [
+        "Write functions with parameters, default values, and return statements",
+        "Use arrow functions and understand when they're appropriate",
+        "Build utility functions that solve practical problems"
+    ],
+    "hints": [
+        "A function should do one thing well — if you're writing 'and' in the description, consider splitting it",
+        "Arrow functions: const add = (a, b) => a + b; — great for short, simple operations",
+        "Default parameters: function greet(name = 'friend') lets you call greet() without arguments"
+    ],
+    "assessmentCriteria": [
+        "At least one function declaration and one arrow function are used",
+        "Functions use parameters with at least one default value",
+        "All functions return values (no relying on side effects alone)",
+        "Functions solve real calculation or formatting problems"
+    ],
+    "estimatedMinutes": 30,
+    "prerequisiteSkills": ["js-variables"],
+    "assessment": {
+        "type": "code-challenge",
+        "testCommand": "node test.js"
+    }
+}

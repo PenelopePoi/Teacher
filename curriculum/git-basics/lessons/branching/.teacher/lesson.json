@@ -1,0 +1,25 @@
+{
+    "id": "branching",
+    "title": "Creating & Switching Branches",
+    "objectives": [
+        "Understand branches as parallel timelines of development",
+        "Create new branches with git branch and switch with git checkout or git switch",
+        "Work on a feature branch without affecting the main branch"
+    ],
+    "hints": [
+        "git switch -c feature-name creates a new branch AND switches to it in one command",
+        "Branches are cheap in Git — create one for every feature, bug fix, or experiment",
+        "git log --oneline --graph --all shows all branches visually in the terminal"
+    ],
+    "assessmentCriteria": [
+        "Student creates at least two branches besides main",
+        "Student makes commits on a feature branch without affecting main",
+        "Student can switch between branches and observe different file states",
+        "Student uses git log --graph to visualize branch history"
+    ],
+    "estimatedMinutes": 25,
+    "prerequisiteSkills": ["staging-and-status"],
+    "assessment": {
+        "type": "guided-exercise"
+    }
+}

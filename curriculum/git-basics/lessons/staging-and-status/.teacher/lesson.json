@@ -1,0 +1,25 @@
+{
+    "id": "staging-and-status",
+    "title": "The Staging Area & Reading Status",
+    "objectives": [
+        "Understand the three states of a file: untracked, staged, and committed",
+        "Use git status and git diff to inspect changes before committing",
+        "Selectively stage files to create focused, meaningful commits"
+    ],
+    "hints": [
+        "git diff shows unstaged changes. git diff --staged shows what's about to be committed",
+        "You don't have to stage everything at once — stage related changes together for cleaner history",
+        "git restore --staged <file> removes a file from staging without losing your changes"
+    ],
+    "assessmentCriteria": [
+        "Student can read git status output and explain each section",
+        "Student uses git diff to review changes before staging",
+        "Multiple files are committed in separate, logical commits",
+        "Student demonstrates unstaging a file with git restore"
+    ],
+    "estimatedMinutes": 20,
+    "prerequisiteSkills": ["init-and-commit"],
+    "assessment": {
+        "type": "guided-exercise"
+    }
+}
