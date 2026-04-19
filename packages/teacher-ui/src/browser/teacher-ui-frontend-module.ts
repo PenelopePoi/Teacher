@@ -35,6 +35,8 @@ import { AgentSessionManager } from './agent-session-manager';
 import { AgentContextProvider } from './agent-context-provider';
 import { AgentCommandContribution } from './agent-commands';
 import { AgentsMdProvider } from './agents-md-provider';
+import { AutoCapMiddleware } from './auto-cap-middleware';
+import { DestructiveOpGuard } from './destructive-op-guard';
 
 const TeacherUIPreferencesSchema: PreferenceSchema = {
     properties: {
@@ -42,6 +44,12 @@ const TeacherUIPreferencesSchema: PreferenceSchema = {
             type: 'string',
             default: 'Geist Mono',
             description: 'Controls the font family used in the editor.'
+        },
+        'teacher.agent.autoCapThreshold': {
+            type: 'number',
+            default: 20,
+            minimum: 1,
+            description: 'Number of tool calls before an automatic checkpoint is forced. Set to a higher value for experienced users.'
         }
     }
 };
@@ -54,6 +62,12 @@ export default new ContainerModule((bind, _unbind, _isBound, rebind) => {
 
     // AgentSessionManager — actions, checkpoints, plans
     bind(AgentSessionManager).toSelf().inSingletonScope();
+
+    // AutoCapMiddleware — forced checkpoint after N tool calls (G5a)
+    bind(AutoCapMiddleware).toSelf().inSingletonScope();
+
+    // DestructiveOpGuard — labeled confirmation for dangerous operations (G4a)
+    bind(DestructiveOpGuard).toSelf().inSingletonScope();
 
     // AgentContextProvider — IDE state for agent context injection (Flow Awareness)
     bind(AgentContextProvider).toSelf().inSingletonScope();
