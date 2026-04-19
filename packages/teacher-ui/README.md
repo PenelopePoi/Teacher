@@ -1,6 +1,6 @@
 # @theia/teacher-ui
 
-Visual shell overrides for Teacher IDE. Applies the Glassmorphic Industrial design via CSS variables, 8 InversifyJS DI rebinds, and the Pulse Panel widget.
+Visual shell overrides for Teacher IDE. Applies the Glassmorphic Industrial design via CSS variables and 7 InversifyJS DI rebinds. The Pulse Panel widget is owned by `@theia/teacher-core`.
 
 ## DI Rebinds
 
@@ -13,7 +13,6 @@ Visual shell overrides for Teacher IDE. Applies the Glassmorphic Industrial desi
 | 5 | -- | `TeacherQuickInputStyling` | Glass command palette via MutationObserver |
 | 6 | -- | `TeacherFocusModeContribution` | Cmd+Shift+F minimal UI toggle |
 | 7 | `ChatWelcomeMessageProvider` | `TeacherChatWelcomeProvider` | Teacher courses + prompts in chat |
-| 8 | -- | `PulsePanelWidget` | 2400ms breathing AI status strip |
 
 ## Eye UI Design Tokens
 

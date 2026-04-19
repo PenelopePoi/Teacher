@@ -6,8 +6,7 @@ import { CommandContribution, PreferenceContribution } from '@theia/core';
 import {
     FrontendApplicationContribution,
     KeybindingContribution,
-    StatusBar,
-    WidgetFactory
+    StatusBar
 } from '@theia/core/lib/browser';
 import { PreferenceSchema } from '@theia/core/lib/common/preferences/preference-schema';
 import { SidePanelHandler } from '@theia/core/lib/browser/shell/side-panel-handler';
@@ -26,8 +25,6 @@ import { TeacherSidePanelHandler } from './teacher-side-panel-handler';
 import { TeacherMenuBarContribution } from './teacher-menu-bar';
 import { TeacherQuickInputStyling } from './teacher-quick-input';
 import { TeacherFocusModeContribution } from './teacher-focus-mode';
-import { PulsePanelWidget } from './pulse-panel-widget';
-import { PulsePanelContribution } from './pulse-panel-contribution';
 import { ChatWelcomeMessageProvider } from '@theia/ai-chat-ui/lib/browser/chat-tree-view';
 import { TeacherChatWelcomeProvider } from './teacher-chat-welcome';
 import { AgentModeService } from './agent-mode-service';
@@ -151,17 +148,6 @@ export default new ContainerModule((bind, _unbind, _isBound, rebind) => {
     // 7. Chat welcome message → Teacher courses + prompts
     bind(TeacherChatWelcomeProvider).toSelf().inSingletonScope();
     bind(ChatWelcomeMessageProvider).toService(TeacherChatWelcomeProvider);
-
-    // === Widgets ===
-
-    // Pulse Panel
-    bind(PulsePanelWidget).toSelf();
-    bind(WidgetFactory).toDynamicValue(context => ({
-        id: PulsePanelWidget.ID,
-        createWidget: () => context.container.get<PulsePanelWidget>(PulsePanelWidget),
-    })).inSingletonScope();
-    bind(PulsePanelContribution).toSelf().inSingletonScope();
-    bind(FrontendApplicationContribution).toService(PulsePanelContribution);
 
     // === Preferences ===
     bind(PreferenceContribution).toConstantValue({ schema: TeacherUIPreferencesSchema });

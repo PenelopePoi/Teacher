@@ -184,7 +184,7 @@ All agents live in `packages/teacher-core/src/browser/agents/`.
 | `teacher-workflow-builder` | Workflow Builder |
 | `teacher-pulse-panel` | Pulse Panel |
 
-All widgets live in `packages/teacher-core/src/browser/widgets/` (except Pulse Panel, which also exists in `teacher-ui`).
+All widgets live in `packages/teacher-core/src/browser/widgets/`.
 
 ### Skill Engine API
 - Service symbol: `SkillEngineService`
