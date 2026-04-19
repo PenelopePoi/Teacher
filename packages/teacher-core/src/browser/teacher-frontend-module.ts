@@ -37,6 +37,14 @@ import { PulsePanelWidget } from './widgets/pulse-panel-widget';
 import { PulsePanelContribution } from './widgets/pulse-panel-contribution';
 import { TeachableMomentsWidget } from './widgets/teachable-moments-widget';
 import { TeachableMomentsContribution } from './widgets/teachable-moments-contribution';
+import { PlanModeWidget } from './widgets/plan-mode-widget';
+import { PlanModeContribution } from './widgets/plan-mode-contribution';
+import { RewindPanelWidget } from './widgets/rewind-panel-widget';
+import { RewindPanelContribution } from './widgets/rewind-panel-contribution';
+import { PermissionModeWidget } from './widgets/permission-mode-widget';
+import { PermissionModeContribution } from './widgets/permission-mode-contribution';
+import { CanvasReviewWidget } from './widgets/canvas-review-widget';
+import { CanvasReviewContribution } from './widgets/canvas-review-contribution';
 import { LessonCommandContribution } from './commands/lesson-commands';
 import { VoiceInputContribution } from './commands/voice-input-command';
 import { WorkspacePresetContribution } from './commands/workspace-preset-command';
@@ -165,6 +173,38 @@ export default new ContainerModule(bind => {
         createWidget: () => context.container.get<TeachableMomentsWidget>(TeachableMomentsWidget),
     })).inSingletonScope();
     bindViewContribution(bind, TeachableMomentsContribution);
+
+    // Plan Mode widget (read-only plan before code executes)
+    bind(PlanModeWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: PlanModeWidget.ID,
+        createWidget: () => context.container.get<PlanModeWidget>(PlanModeWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, PlanModeContribution);
+
+    // Rewind Panel widget (visual checkpoint management)
+    bind(RewindPanelWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: RewindPanelWidget.ID,
+        createWidget: () => context.container.get<RewindPanelWidget>(RewindPanelWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, RewindPanelContribution);
+
+    // Permission Mode widget (trust level display)
+    bind(PermissionModeWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: PermissionModeWidget.ID,
+        createWidget: () => context.container.get<PermissionModeWidget>(PermissionModeWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, PermissionModeContribution);
+
+    // Canvas Review widget (before/after visual diff)
+    bind(CanvasReviewWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: CanvasReviewWidget.ID,
+        createWidget: () => context.container.get<CanvasReviewWidget>(CanvasReviewWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, CanvasReviewContribution);
 
     // Canvas — service + widget + view contribution (Cursor-inspired)
     bind(CanvasService).toSelf().inSingletonScope();

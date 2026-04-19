@@ -3219,3 +3219,783 @@ body.teacher-status-rebuilt #theia-statusBar {
 .teacher-teachable-moments-got-it .codicon {
     font-size: 10px;
 }
+
+/* ===== Plan Mode Widget ===== */
+
+.teacher-plan-mode {
+    overflow-y: auto;
+}
+
+.teacher-plan-mode-container {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-plan-mode-topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.teacher-plan-mode-badge {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.teacher-plan-mode-badge--drafting {
+    background: rgba(122, 130, 142, 0.15);
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-plan-mode-badge--reviewing {
+    background: rgba(123, 155, 209, 0.15);
+    color: var(--teacher-ai-thinking);
+}
+
+.teacher-plan-mode-badge--approved {
+    background: rgba(79, 178, 134, 0.15);
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-plan-mode-badge--executing {
+    background: rgba(232, 169, 72, 0.15);
+    color: var(--teacher-accent);
+    animation: teacher-breathing-glow var(--teacher-breathing-duration) ease-in-out infinite;
+}
+
+.teacher-plan-mode-plan-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    flex: 1;
+}
+
+.teacher-plan-mode-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.teacher-plan-mode-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--teacher-font-ui);
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 6px;
+    cursor: pointer;
+    background: var(--teacher-surface-3);
+    color: var(--teacher-text-primary);
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios),
+                border-color var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-plan-mode-btn--approve:hover {
+    background: rgba(79, 178, 134, 0.2);
+    border-color: var(--teacher-ai-confident);
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-plan-mode-btn--reject:hover {
+    background: rgba(245, 123, 32, 0.15);
+    border-color: var(--theia-testing-iconFailed);
+    color: var(--theia-testing-iconFailed);
+}
+
+.teacher-plan-mode-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-plan-mode-step {
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--teacher-surface-2);
+    border-radius: 6px;
+    border-left: 3px solid var(--teacher-ai-confident);
+    transition: opacity var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-plan-mode-step--medium {
+    border-left-color: var(--teacher-accent);
+}
+
+.teacher-plan-mode-step--high {
+    border-left-color: var(--theia-testing-iconFailed);
+}
+
+.teacher-plan-mode-step--disabled {
+    opacity: 0.4;
+}
+
+.teacher-plan-mode-step--executing {
+    animation: teacher-breathing-glow var(--teacher-breathing-duration) ease-in-out infinite;
+}
+
+.teacher-plan-mode-step--completed {
+    opacity: 0.7;
+}
+
+.teacher-plan-mode-step-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding-top: 1px;
+}
+
+.teacher-plan-mode-step-checkbox {
+    accent-color: var(--teacher-accent);
+    cursor: pointer;
+}
+
+.teacher-plan-mode-step-number {
+    font-family: var(--teacher-font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teacher-text-tertiary);
+    min-width: 16px;
+    text-align: center;
+}
+
+.teacher-plan-mode-step-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-plan-mode-step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-plan-mode-step-desc {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--teacher-text-primary);
+}
+
+/* Rejected steps get strikethrough */
+.teacher-plan-mode-badge--drafting ~ .teacher-plan-mode-steps .teacher-plan-mode-step-desc {
+    text-decoration: line-through;
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-plan-mode-step-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.teacher-plan-mode-file-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    padding: 1px 6px;
+    background: var(--teacher-surface-3);
+    border-radius: 4px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-plan-mode-risk-badge {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.teacher-plan-mode-risk-badge--low {
+    background: rgba(79, 178, 134, 0.12);
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-plan-mode-risk-badge--medium {
+    background: rgba(232, 169, 72, 0.12);
+    color: var(--teacher-accent);
+}
+
+.teacher-plan-mode-risk-badge--high {
+    background: rgba(245, 123, 32, 0.18);
+    color: var(--theia-testing-iconFailed);
+}
+
+.teacher-plan-mode-status-icon {
+    font-size: 14px;
+}
+
+.teacher-plan-mode-status-icon--completed {
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-plan-mode-status-icon--approved {
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-plan-mode-spinner {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--teacher-surface-4);
+    border-top-color: var(--teacher-accent);
+    animation: teacher-plan-spin 0.8s linear infinite;
+}
+
+@keyframes teacher-plan-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes teacher-breathing-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232, 169, 72, 0); }
+    50% { box-shadow: 0 0 8px 2px rgba(232, 169, 72, 0.15); }
+}
+
+/* ===== Rewind Panel Widget ===== */
+
+.teacher-rewind-panel {
+    overflow-y: auto;
+}
+
+.teacher-rewind-container {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-rewind-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-rewind-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-rewind-create {
+    display: flex;
+    gap: 6px;
+}
+
+.teacher-rewind-name-input {
+    flex: 1;
+    font-size: 12px;
+}
+
+.teacher-rewind-create-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--teacher-font-ui);
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 6px;
+    color: var(--teacher-text-primary);
+    cursor: pointer;
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-rewind-create-btn:hover {
+    background: var(--teacher-accent);
+    color: var(--teacher-surface-0);
+    border-color: var(--teacher-accent);
+}
+
+.teacher-rewind-timeline {
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-rewind-checkpoint {
+    display: flex;
+    gap: 12px;
+}
+
+.teacher-rewind-checkpoint--current {
+    border: 1px solid var(--teacher-accent);
+    border-radius: 6px;
+    padding: 4px;
+    margin-left: -4px;
+}
+
+.teacher-rewind-timeline-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 16px;
+    flex-shrink: 0;
+}
+
+.teacher-rewind-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--teacher-surface-4);
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.teacher-rewind-dot--current {
+    background: var(--teacher-accent);
+}
+
+.teacher-rewind-line {
+    width: 2px;
+    flex: 1;
+    background: var(--teacher-surface-3);
+    min-height: 12px;
+}
+
+.teacher-rewind-checkpoint:last-child .teacher-rewind-line {
+    display: none;
+}
+
+.teacher-rewind-checkpoint-body {
+    flex: 1;
+    padding-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.teacher-rewind-checkpoint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teacher-rewind-checkpoint-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--teacher-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.teacher-rewind-manual-icon {
+    color: var(--teacher-accent);
+    font-size: 10px;
+}
+
+.teacher-rewind-checkpoint-time {
+    font-size: 11px;
+    font-family: var(--teacher-font-mono);
+    color: var(--teacher-text-tertiary);
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-rewind-checkpoint-badges {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.teacher-rewind-file-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    padding: 1px 6px;
+    background: var(--teacher-surface-3);
+    border-radius: 4px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-rewind-kind-badge {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.teacher-rewind-kind-badge--auto {
+    background: rgba(122, 130, 142, 0.12);
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-rewind-kind-badge--manual {
+    background: rgba(232, 169, 72, 0.12);
+    color: var(--teacher-accent);
+}
+
+.teacher-rewind-actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.teacher-rewind-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 24px;
+    font-size: 14px;
+    background: var(--teacher-surface-3);
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 6px;
+    color: var(--teacher-text-secondary);
+    cursor: pointer;
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios),
+                color var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-rewind-action-btn:hover {
+    background: var(--teacher-accent);
+    color: var(--teacher-surface-0);
+    border-color: var(--teacher-accent);
+}
+
+/* ===== Permission Mode Widget ===== */
+
+.teacher-permission-mode {
+    overflow-y: auto;
+}
+
+.teacher-permission-container {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-permission-header {
+    display: flex;
+    align-items: center;
+}
+
+.teacher-permission-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.teacher-permission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.teacher-permission-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 8px;
+    background: var(--teacher-surface-2);
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--teacher-font-ui);
+    text-align: center;
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios),
+                border-color var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-permission-card:hover {
+    border-color: var(--teacher-border-strong);
+}
+
+.teacher-permission-card--active.teacher-permission-card--blue {
+    border-color: var(--teacher-ai-thinking);
+    background: rgba(123, 155, 209, 0.1);
+}
+
+.teacher-permission-card--active.teacher-permission-card--amber {
+    border-color: var(--teacher-accent);
+    background: rgba(232, 169, 72, 0.1);
+}
+
+.teacher-permission-card--active.teacher-permission-card--green {
+    border-color: var(--teacher-ai-confident);
+    background: rgba(79, 178, 134, 0.1);
+}
+
+.teacher-permission-card--active.teacher-permission-card--red {
+    border-color: var(--theia-testing-iconFailed);
+    background: rgba(245, 123, 32, 0.08);
+}
+
+.teacher-permission-card--red {
+    border-color: rgba(245, 123, 32, 0.3);
+}
+
+.teacher-permission-card .codicon {
+    font-size: 20px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-permission-card--active .codicon {
+    color: var(--teacher-text-primary);
+}
+
+.teacher-permission-card-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teacher-text-primary);
+}
+
+.teacher-permission-card-desc {
+    font-size: 10px;
+    color: var(--teacher-text-tertiary);
+    line-height: 1.3;
+}
+
+.teacher-permission-denylist {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-permission-denylist-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teacher-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.teacher-permission-denylist-title .codicon {
+    color: var(--theia-testing-iconFailed);
+    font-size: 12px;
+}
+
+.teacher-permission-denylist-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.teacher-permission-deny-chip {
+    font-family: var(--teacher-font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(245, 123, 32, 0.1);
+    color: var(--theia-testing-iconFailed);
+    border: 1px solid rgba(245, 123, 32, 0.2);
+}
+
+.teacher-permission-shortcut-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--teacher-text-tertiary);
+    font-family: var(--teacher-font-mono);
+    padding-top: 4px;
+    border-top: 1px solid var(--teacher-border-subtle);
+}
+
+/* ===== Canvas Review Widget ===== */
+
+.teacher-canvas-review {
+    overflow: hidden;
+}
+
+.teacher-canvas-review-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.teacher-canvas-review-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--teacher-surface-2);
+    border-bottom: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-canvas-review-label-before,
+.teacher-canvas-review-label-after {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teacher-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--teacher-font-mono);
+}
+
+.teacher-canvas-review-slider-label {
+    color: var(--teacher-text-tertiary);
+}
+
+.teacher-canvas-review-topbar-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+}
+
+.teacher-canvas-review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--teacher-font-ui);
+    border: 1px solid var(--teacher-border-subtle);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios);
+}
+
+.teacher-canvas-review-btn--accept {
+    background: rgba(79, 178, 134, 0.15);
+    color: var(--teacher-ai-confident);
+    border-color: rgba(79, 178, 134, 0.3);
+}
+
+.teacher-canvas-review-btn--accept:hover {
+    background: rgba(79, 178, 134, 0.3);
+}
+
+.teacher-canvas-review-btn--reject {
+    background: rgba(245, 123, 32, 0.1);
+    color: var(--theia-testing-iconFailed);
+    border-color: rgba(245, 123, 32, 0.2);
+}
+
+.teacher-canvas-review-btn--reject:hover {
+    background: rgba(245, 123, 32, 0.2);
+}
+
+.teacher-canvas-review-panels {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.teacher-canvas-review-panel {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.teacher-canvas-review-panel-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--teacher-font-mono);
+    color: var(--teacher-text-tertiary);
+    padding: 6px 12px;
+    background: var(--teacher-surface-1);
+}
+
+.teacher-canvas-review-panel-content {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.teacher-canvas-review-file-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--teacher-font-mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    background: var(--teacher-surface-2);
+    color: var(--teacher-text-secondary);
+    border-top: 1px solid var(--teacher-border-subtle);
+}
+
+.teacher-canvas-review-divider {
+    width: 4px;
+    background: var(--teacher-accent);
+    cursor: col-resize;
+    flex-shrink: 0;
+    transition: background var(--teacher-duration-fast) var(--teacher-ease-ios);
+    z-index: 1;
+}
+
+.teacher-canvas-review-divider:hover {
+    background: var(--teacher-accent-hot);
+}
+
+.teacher-canvas-review-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 12px;
+    background: var(--teacher-surface-2);
+    border-top: 1px solid var(--teacher-border-subtle);
+    font-family: var(--teacher-font-mono);
+    font-size: 12px;
+    color: var(--teacher-text-secondary);
+}
+
+.teacher-canvas-review-stat--added {
+    color: var(--teacher-ai-confident);
+}
+
+.teacher-canvas-review-stat--removed {
+    color: var(--theia-testing-iconFailed);
+}
+
+.teacher-canvas-review-explanation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--teacher-glass-bg);
+    backdrop-filter: blur(var(--teacher-glass-blur)) var(--teacher-glass-saturate);
+    -webkit-backdrop-filter: blur(var(--teacher-glass-blur)) var(--teacher-glass-saturate);
+    border-top: 1px solid var(--teacher-glass-border);
+    font-size: 12px;
+    color: var(--teacher-text-secondary);
+    line-height: 1.4;
+}
+
+.teacher-canvas-review-explanation .codicon-lightbulb {
+    color: var(--teacher-accent);
+    flex-shrink: 0;
+}
