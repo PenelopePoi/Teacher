@@ -24,7 +24,12 @@ import { SkillBrowserWidget } from './widgets/skill-browser-widget';
 import { LearningAnalyticsWidget } from './widgets/learning-analytics-widget';
 import { AIHistorySearchWidget } from './widgets/ai-history-search-widget';
 import { LearningPathWidget } from './widgets/learning-path-widget';
+import { CanvasWidget } from './widgets/canvas-widget';
+import { CanvasContribution } from './widgets/canvas-contribution';
+import { CanvasService } from './canvas-service';
 import { LessonCommandContribution } from './commands/lesson-commands';
+import { VoiceInputContribution } from './commands/voice-input-command';
+import { WorkspacePresetContribution } from './commands/workspace-preset-command';
 import { LessonContextVariableContribution } from './lesson-context-variable';
 
 export default new ContainerModule(bind => {
@@ -115,10 +120,29 @@ export default new ContainerModule(bind => {
         createWidget: () => context.container.get<LearningPathWidget>(LearningPathWidget),
     })).inSingletonScope();
 
+    // Canvas — service + widget + view contribution (Cursor-inspired)
+    bind(CanvasService).toSelf().inSingletonScope();
+    bind(CanvasWidget).toSelf();
+    bind(WidgetFactory).toDynamicValue(context => ({
+        id: CanvasWidget.ID,
+        createWidget: () => context.container.get<CanvasWidget>(CanvasWidget),
+    })).inSingletonScope();
+    bindViewContribution(bind, CanvasContribution);
+
     // Lesson Commands (Start Lesson, Check My Work, Get Hint, Submit for Review)
     bind(LessonCommandContribution).toSelf().inSingletonScope();
     bind(CommandContribution).toService(LessonCommandContribution);
     bind(KeybindingContribution).toService(LessonCommandContribution);
+
+    // Voice Input Command (Ctrl+Alt+M — Cursor-inspired)
+    bind(VoiceInputContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(VoiceInputContribution);
+    bind(KeybindingContribution).toService(VoiceInputContribution);
+
+    // Workspace Preset Command (Ctrl+Alt+T — opens the learning workspace)
+    bind(WorkspacePresetContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(WorkspacePresetContribution);
+    bind(KeybindingContribution).toService(WorkspacePresetContribution);
 
     // Lesson Context Variable (injects lesson objectives into AI agent prompts)
     bind(LessonContextVariableContribution).toSelf().inSingletonScope();

@@ -1305,3 +1305,371 @@
     align-items: center;
     gap: 4px;
 }
+
+/* ===== Canvas Widget — Cursor-inspired artifact panel ===== */
+
+.teacher-canvas-widget {
+    overflow-y: auto;
+    padding: 0;
+}
+
+.teacher-canvas-container {
+    padding: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.teacher-canvas-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--theia-panel-border);
+}
+
+.teacher-canvas-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teacher-canvas-count {
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 10px;
+    background: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+    font-weight: 600;
+}
+
+.teacher-canvas-clear-btn {
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    min-width: auto;
+}
+
+.teacher-canvas-empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-canvas-empty-icon {
+    font-size: 40px;
+    color: var(--theia-descriptionForeground);
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+.teacher-canvas-empty-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0 0 8px 0;
+}
+
+.teacher-canvas-empty-body {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 360px;
+    margin-inline: auto;
+}
+
+.teacher-canvas-artifacts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-canvas-artifact {
+    background: var(--theia-editor-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.teacher-canvas-artifact:hover {
+    border-color: var(--theia-focusBorder);
+}
+
+.teacher-canvas-artifact-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--theia-editorWidget-background);
+    border-bottom: 1px solid var(--theia-panel-border);
+}
+
+.teacher-canvas-artifact-kind {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--theia-textBlockQuote-background);
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-canvas-artifact-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+    margin: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-canvas-artifact-time {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-canvas-artifact-remove {
+    background: transparent;
+    border: none;
+    color: var(--theia-descriptionForeground);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teacher-canvas-artifact-remove:hover {
+    background: var(--theia-list-hoverBackground);
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-canvas-artifact-body {
+    padding: 12px;
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+    overflow-x: auto;
+}
+
+.teacher-canvas-artifact-footer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-top: 1px solid var(--theia-panel-border);
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+    background: var(--theia-editorWidget-background);
+}
+
+/* Table artifact */
+
+.teacher-canvas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.teacher-canvas-table th,
+.teacher-canvas-table td {
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--theia-panel-border);
+}
+
+.teacher-canvas-table th {
+    font-weight: 600;
+    color: var(--theia-descriptionForeground);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    background: var(--theia-editorWidget-background);
+}
+
+.teacher-canvas-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.teacher-canvas-table tbody tr:hover {
+    background: var(--theia-list-hoverBackground);
+}
+
+/* Markdown / code artifacts */
+
+.teacher-canvas-markdown,
+.teacher-canvas-code {
+    margin: 0;
+    padding: 10px 12px;
+    background: var(--theia-editorWidget-background);
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 6px;
+    font-family: var(--theia-ui-font-family), monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+    color: var(--theia-editor-foreground);
+}
+
+.teacher-canvas-code code {
+    font-family: var(--theia-code-font-family, 'Menlo'), monospace;
+}
+
+/* List artifact */
+
+.teacher-canvas-list {
+    margin: 0;
+    padding-left: 24px;
+    line-height: 1.6;
+}
+
+.teacher-canvas-list li {
+    margin-bottom: 4px;
+}
+
+/* Key-value artifact */
+
+.teacher-canvas-keyvalue {
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 16px;
+    row-gap: 6px;
+}
+
+.teacher-canvas-keyvalue-row {
+    display: contents;
+}
+
+.teacher-canvas-keyvalue dt {
+    font-weight: 600;
+    color: var(--theia-descriptionForeground);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.teacher-canvas-keyvalue dd {
+    margin: 0;
+    font-size: 13px;
+    color: var(--theia-editor-foreground);
+}
+
+/* Chart artifact — horizontal bars */
+
+.teacher-canvas-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teacher-canvas-chart-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.teacher-canvas-chart-label {
+    min-width: 140px;
+    color: var(--theia-editor-foreground);
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-canvas-chart-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--theia-editorWidget-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.teacher-canvas-chart-bar-fill {
+    height: 100%;
+    background: var(--theia-progressBar-background);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.teacher-canvas-chart-value {
+    min-width: 52px;
+    text-align: right;
+    color: var(--theia-descriptionForeground);
+    font-weight: 600;
+    font-feature-settings: 'tnum' 1;
+}
+
+/* ===== Voice Input Overlay — Cursor-inspired Ctrl+Alt+M dictation ===== */
+
+.teacher-voice-overlay {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--theia-editorWidget-background);
+    border: 1px solid var(--theia-focusBorder);
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    z-index: 10000;
+    font-size: 12px;
+    color: var(--theia-editor-foreground);
+    max-width: 80vw;
+}
+
+.teacher-voice-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--theia-testing-iconFailed);
+    animation: teacher-voice-pulse 1s infinite ease-in-out;
+}
+
+@keyframes teacher-voice-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(1.3); }
+}
+
+.teacher-voice-overlay-text {
+    flex: 1;
+    font-size: 12px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.teacher-voice-overlay-stop {
+    background: transparent;
+    border: none;
+    color: var(--theia-descriptionForeground);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teacher-voice-overlay-stop:hover {
+    background: var(--theia-list-hoverBackground);
+    color: var(--theia-editor-foreground);
+}
