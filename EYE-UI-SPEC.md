@@ -12,7 +12,7 @@ Signature: 2.4s breathing glow, amber #E8A948, no spinners ever
 - [x] Glass CSS overrides (AI surfaces only, flat chrome elsewhere)
 - [x] Favicon (Teacher mark SVG)
 - [x] Theme registered and set as default
-- [ ] Font injection via @font-face + --theia-ui-font-family
+- [x] Font injection via @font-face + --theia-ui-font-family
 - [ ] Product icon theme (Lucide base + 25 custom)
 
 ### Phase 2 — AI Surface
