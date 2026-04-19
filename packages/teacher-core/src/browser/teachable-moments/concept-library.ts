@@ -1554,6 +1554,168 @@ class Stack {
 runTests(Stack);`,
         keywords: ['TDD', 'test-driven', 'red green refactor', 'test first'],
     },
+
+    // ================================================================
+    // AUDIO & CREATIVE PROGRAMMING — for the music producers and makers
+    // ================================================================
+    {
+        id: 'web-audio-api',
+        name: 'Web Audio API',
+        category: 'Audio',
+        oneLine: 'Browser-native audio synthesis and processing — oscillators, filters, and effects without plugins.',
+        fullExplanation: `The Web Audio API lets you create, process, and analyze audio directly in the browser. You build an audio graph: sources (oscillators, samples) connect through processing nodes (gain, filter, delay) to the destination (speakers). It's how browser-based DAWs, synths, and visualizers work.`,
+        playgroundCode: `// Create a simple synth with the Web Audio API
+const ctx = new AudioContext();
+
+// Oscillator → Gain → Speakers
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+// Configure: A4 note, sine wave, gentle volume
+osc.type = 'sine';
+osc.frequency.value = 440; // A4
+gain.gain.value = 0.3;
+
+// Play for 1 second
+osc.start();
+osc.stop(ctx.currentTime + 1);
+
+// Try: Change osc.type to 'sawtooth', 'square', or 'triangle'
+// Try: Change frequency to 523.25 (C5) or 329.63 (E4)`,
+        keywords: ['AudioContext', 'oscillator', 'Web Audio', 'createOscillator', 'audio graph'],
+    },
+    {
+        id: 'midi',
+        name: 'MIDI Protocol',
+        category: 'Audio',
+        oneLine: 'Musical Instrument Digital Interface — note numbers, velocity, and control messages between devices.',
+        fullExplanation: `MIDI doesn't carry sound — it carries instructions. Note On (which key, how hard), Note Off, Control Change (knob turns), Program Change (patch select). Note 60 = Middle C, velocity 0-127. The Web MIDI API lets JavaScript talk to hardware controllers, keyboards, and drum pads.`,
+        playgroundCode: `// MIDI note number to frequency conversion
+function midiToFreq(note) {
+    return 440 * Math.pow(2, (note - 69) / 12);
+}
+
+// Middle C = MIDI 60
+console.log('C4:', midiToFreq(60).toFixed(2), 'Hz');  // 261.63
+console.log('A4:', midiToFreq(69).toFixed(2), 'Hz');  // 440.00
+console.log('E4:', midiToFreq(64).toFixed(2), 'Hz');  // 329.63
+
+// A chord: C major = C4 + E4 + G4
+const chord = [60, 64, 67];
+chord.forEach(note => {
+    console.log(\`Note \${note}: \${midiToFreq(note).toFixed(2)} Hz\`);
+});
+
+// Try: Build an A minor chord (A3=57, C4=60, E4=64)`,
+        keywords: ['MIDI', 'note number', 'velocity', 'Web MIDI', 'controller'],
+    },
+    {
+        id: 'sample-rate',
+        name: 'Sample Rate & Bit Depth',
+        category: 'Audio',
+        oneLine: 'How many times per second sound is measured (sample rate) and how precisely (bit depth).',
+        fullExplanation: `Digital audio captures sound as a series of measurements. Sample rate = measurements per second (44,100 Hz for CD, 48,000 Hz for video, 96,000 Hz for hi-res). Bit depth = precision per measurement (16-bit = 65,536 levels, 24-bit = 16.7 million levels). Nyquist theorem: you can capture frequencies up to half the sample rate. 44.1kHz captures up to 22.05kHz — the edge of human hearing.`,
+        playgroundCode: `// Generate a 440Hz sine wave as raw samples
+const sampleRate = 44100;
+const frequency = 440;
+const duration = 0.01; // 10ms slice
+const samples = [];
+
+for (let i = 0; i < sampleRate * duration; i++) {
+    const t = i / sampleRate;
+    const sample = Math.sin(2 * Math.PI * frequency * t);
+    samples.push(sample);
+}
+
+console.log(\`Generated \${samples.length} samples at \${sampleRate}Hz\`);
+console.log(\`First 10 values: \${samples.slice(0,10).map(s => s.toFixed(3)).join(', ')}\`);
+
+// Nyquist: max capturable frequency
+console.log(\`Nyquist limit: \${sampleRate / 2} Hz\`);`,
+        keywords: ['sample rate', '44100', '48000', 'bit depth', 'Nyquist', 'PCM'],
+    },
+    {
+        id: 'bpm-tempo',
+        name: 'BPM & Tempo Math',
+        category: 'Audio',
+        oneLine: 'Beats per minute — the math that converts time to rhythm and rhythm to time.',
+        fullExplanation: `BPM (beats per minute) is the clock of music. At 120 BPM: one beat = 500ms, one bar (4 beats) = 2000ms, one 16th note = 125ms. Every sequencer, drum machine, and DAW converts BPM to milliseconds to schedule events. Knowing this math lets you sync visuals to audio, build sequencers, and calculate delay times.`,
+        playgroundCode: `// BPM to timing conversion
+function bpmToMs(bpm, subdivision = 1) {
+    const beatMs = 60000 / bpm;
+    return beatMs / subdivision;
+}
+
+const bpm = 120;
+console.log(\`At \${bpm} BPM:\`);
+console.log(\`  Quarter note: \${bpmToMs(bpm)}ms\`);
+console.log(\`  Eighth note:  \${bpmToMs(bpm, 2)}ms\`);
+console.log(\`  16th note:    \${bpmToMs(bpm, 4)}ms\`);
+console.log(\`  Triplet:      \${bpmToMs(bpm, 3).toFixed(1)}ms\`);
+console.log(\`  One bar:      \${bpmToMs(bpm) * 4}ms\`);
+
+// Delay time calculator (for echo effects)
+function delayTime(bpm, noteValue) {
+    const divisions = { '1/4': 1, '1/8': 2, '1/16': 4, '1/8T': 3, 'dotted-1/8': 1.5 };
+    return bpmToMs(bpm, divisions[noteValue]);
+}
+console.log(\`Dotted 1/8 delay: \${delayTime(bpm, 'dotted-1/8').toFixed(1)}ms\`);`,
+        keywords: ['BPM', 'tempo', 'beats per minute', 'sequencer', 'timing'],
+    },
+    {
+        id: 'fft',
+        name: 'FFT — Fast Fourier Transform',
+        category: 'Audio',
+        oneLine: 'Converts a signal from time domain to frequency domain — how visualizers and EQs see sound.',
+        fullExplanation: `Sound is waves over time (time domain). FFT converts that into frequencies and their amplitudes (frequency domain). This is how audio visualizers show spectrum bars, how EQs isolate frequency bands, and how pitch detection works. The Web Audio API's AnalyserNode does FFT in real-time.`,
+        playgroundCode: `// Using Web Audio AnalyserNode for FFT
+const ctx = new AudioContext();
+const analyser = ctx.createAnalyser();
+analyser.fftSize = 2048; // 1024 frequency bins
+
+// Connect a source → analyser → speakers
+const osc = ctx.createOscillator();
+osc.frequency.value = 440;
+osc.connect(analyser);
+analyser.connect(ctx.destination);
+
+// Read frequency data
+const dataArray = new Uint8Array(analyser.frequencyBinCount);
+analyser.getByteFrequencyData(dataArray);
+
+console.log(\`FFT bins: \${analyser.frequencyBinCount}\`);
+console.log(\`Frequency resolution: \${ctx.sampleRate / analyser.fftSize} Hz per bin\`);
+console.log(\`Bin for 440Hz: \${Math.round(440 / (ctx.sampleRate / analyser.fftSize))}\`);`,
+        keywords: ['FFT', 'Fourier', 'frequency domain', 'spectrum', 'analyser', 'AnalyserNode'],
+    },
+    {
+        id: 'sidechain',
+        name: 'Sidechain Compression',
+        category: 'Audio',
+        oneLine: 'One signal controls the volume of another — the pump effect in electronic music.',
+        fullExplanation: `Sidechain compression ducks one signal when another hits. Classic use: the kick drum triggers the compressor on the bass, creating the "pumping" effect in house/EDM. In code: detect the kick's amplitude, use it to scale the bass gain inversely. The envelope (attack/release times) shapes how the duck feels.`,
+        playgroundCode: `// Sidechain compression concept in code
+function applySidechain(bassGain, kickAmplitude, threshold, ratio) {
+    if (kickAmplitude > threshold) {
+        const reduction = (kickAmplitude - threshold) * (1 - 1/ratio);
+        return Math.max(0, bassGain - reduction);
+    }
+    return bassGain;
+}
+
+// Simulate: kick hits at different strengths
+const threshold = 0.5;
+const ratio = 4; // 4:1 compression
+const bassLevel = 0.8;
+
+[0.3, 0.5, 0.7, 0.9, 1.0].forEach(kick => {
+    const ducked = applySidechain(bassLevel, kick, threshold, ratio);
+    console.log(\`Kick: \${kick.toFixed(1)} → Bass: \${ducked.toFixed(3)} (reduction: \${(bassLevel - ducked).toFixed(3)})\`);
+});`,
+        keywords: ['sidechain', 'compressor', 'duck', 'pumping', 'envelope'],
+    },
 ];
 
 /**
