@@ -12,6 +12,14 @@ import {
 import { PreferenceSchema } from '@theia/core/lib/common/preferences/preference-schema';
 import { SidePanelHandler } from '@theia/core/lib/browser/shell/side-panel-handler';
 import { TabBarRendererFactory } from '@theia/core/lib/browser/shell/tab-bars';
+import { ContextMenuRenderer } from '@theia/core/lib/browser/context-menu-renderer';
+import { TabBarDecoratorService } from '@theia/core/lib/browser/shell/tab-bar-decorator';
+import { IconThemeService } from '@theia/core/lib/browser/icon-theme-service';
+import { SelectionService } from '@theia/core/lib/common/selection-service';
+import { CommandService } from '@theia/core/lib/common/command';
+import { CorePreferences } from '@theia/core/lib/common/core-preferences';
+import { HoverService } from '@theia/core/lib/browser/hover-service';
+import { ContextKeyService } from '@theia/core/lib/browser/context-key-service';
 import { TeacherStatusBar } from './teacher-status-bar';
 import { TeacherTabBarRenderer } from './teacher-tab-bar-renderer';
 import { TeacherSidePanelHandler } from './teacher-side-panel-handler';
@@ -39,10 +47,21 @@ export default new ContainerModule((bind, _unbind, _isBound, rebind) => {
     rebind(StatusBar).toService(TeacherStatusBar);
 
     // 2. TabBarRenderer → TeacherTabBarRenderer (rounded tabs, amber underline, hidden close)
-    bind(TeacherTabBarRenderer).toSelf();
-    rebind(TabBarRendererFactory).toFactory(({ container }) => () =>
-        container.get(TeacherTabBarRenderer)
-    );
+    // Must create NEW instance per call (not singleton) — each tab bar gets its own renderer
+    rebind(TabBarRendererFactory).toFactory(({ container }) => () => {
+        const contextMenuRenderer = container.get(ContextMenuRenderer);
+        const decoratorService = container.get(TabBarDecoratorService);
+        const iconThemeService = container.get(IconThemeService);
+        const selectionService = container.get(SelectionService);
+        const commandService = container.get<CommandService>(CommandService);
+        const corePreferences = container.get<CorePreferences>(CorePreferences);
+        const hoverService = container.get(HoverService);
+        const contextKeyService = container.get<ContextKeyService>(ContextKeyService);
+        return new TeacherTabBarRenderer(
+            contextMenuRenderer, decoratorService, iconThemeService,
+            selectionService, commandService, corePreferences, hoverService, contextKeyService
+        );
+    });
 
     // 3. SidePanelHandler → TeacherSidePanelHandler (rail class, immovable tabs)
     rebind(SidePanelHandler).to(TeacherSidePanelHandler);
