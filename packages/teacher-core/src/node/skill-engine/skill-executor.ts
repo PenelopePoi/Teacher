@@ -62,6 +62,14 @@ export class SkillExecutor {
         // Track metrics
         this.recordExecution(name, defaultScore);
 
+        // Warn if execution took longer than 10 seconds
+        if (duration > 10_000) {
+            console.warn(
+                `[SkillExecutor] SLOW SKILL: "${name}" took ${duration}ms (>${Math.round(duration / 1000)}s). ` +
+                'Consider optimizing this skill or splitting it into smaller steps.'
+            );
+        }
+
         console.info(`[SkillExecutor] Executed "${name}" in ${duration}ms`);
 
         return {

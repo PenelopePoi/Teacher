@@ -1,11 +1,38 @@
-# Contributing to Eclipse Theia
+# Contributing to Teacher IDE
 
-Theia is a young open-source project with a modular architecture. One of the
-goals is to make sure that we can customize and enhance any Theia application
-through extensions.  So while the main Theia repository contains some common
-functionality for IDE-like applications, like a file system or a navigator
-view, most functionality doesn't necessarily need to be put into the core
-repository but can be developed separately.
+Teacher IDE is built on Eclipse Theia. All Teacher-specific code lives in `packages/teacher-core/`, `packages/teacher-ui/`, `curriculum/`, and `teacher-plugins/`. No upstream Theia files are modified.
+
+## Teacher-Specific Contributions
+
+### How to Add a New Widget (5 steps)
+
+1. Create `packages/teacher-core/src/browser/widgets/{name}-widget.tsx` with a class extending `ReactWidget`. Set a `static readonly ID = 'teacher-{name}'`.
+2. Create `packages/teacher-core/src/browser/widgets/{name}-contribution.ts` extending `AbstractViewContribution`.
+3. Register in `packages/teacher-core/src/browser/teacher-frontend-module.ts`: bind the widget, its `WidgetFactory`, and the contribution as `FrontendApplicationContribution`.
+4. Add CSS in `packages/teacher-core/src/browser/style/` using Teacher design tokens (`--surface-*`, `--accent-amber`, `--text-*`).
+5. Update `CLAUDE.md` widget table and `docs/WIDGETS.md`.
+
+### How to Add a New Agent (4 steps)
+
+1. Create `packages/teacher-core/src/browser/agents/{name}-agent.ts`. Export an `AgentId` constant (`teacher-{role}`). Define system prompt constant(s) with beginner/advanced variants.
+2. Extend `AbstractStreamParsingChatAgent` from `@theia/ai-chat`. Set `tags: ['teacher', '{role}', 'education']`.
+3. Register in `teacher-frontend-module.ts`: `bind(ChatAgent).to(YourAgent).inSingletonScope()`.
+4. Update `AGENTS.md` and `docs/AGENTS.md`.
+
+### How to Add a Skill
+
+1. Create a `SKILL.md` file in the skills library (`~/.claude/skills/`).
+2. Include YAML frontmatter: `name`, `description`, `intent`, `domain`, `lifecycle`, `version`.
+3. The skill engine auto-discovers it on the next `scanSkills()` call.
+
+### Coding Guidelines Summary
+
+- 4 spaces, single quotes, `undefined` over `null`
+- PascalCase types, camelCase functions, kebab-case files
+- Property injection over constructor injection, `@postConstruct()` for init
+- JSDoc on all public methods
+- `nls.localize()` for user-facing strings
+- No upstream file modifications
 
 ## How Can I Contribute?
 

@@ -80,7 +80,7 @@ export class TeacherWelcomeWidget extends ReactWidget {
                     {nls.localize('theia/teacher/welcomeTitle', 'Teacher IDE')}
                 </h1>
                 <p className='teacher-welcome-motto'>
-                    {nls.localize('theia/teacher/motto', 'From Pain to Purpose. From Passion to Prophet.')}
+                    {nls.localize('theia/teacher/motto', 'Teacher IDE v1.0 \u2014 From Pain to Purpose')}
                 </p>
                 <div className='teacher-welcome-pulse' aria-label='Teacher Pulse'>
                     <PulseIndicator service={this.pulseService} size={14} showLabel={true} />
@@ -125,16 +125,16 @@ export class TeacherWelcomeWidget extends ReactWidget {
                     {nls.localize('theia/teacher/quickActions', 'Quick Actions')}
                 </h2>
                 <div className='teacher-welcome-action-buttons'>
-                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onAskTutor}>
-                        <i className='codicon codicon-comment-discussion'></i>
+                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onAskTutor} aria-label='Ask Tutor'>
+                        <i className='codicon codicon-comment-discussion' aria-hidden='true'></i>
                         <span>{nls.localize('theia/teacher/askTutor', 'Ask Tutor')}</span>
                     </button>
-                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onStartLesson}>
-                        <i className='codicon codicon-play'></i>
+                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onStartLesson} aria-label='Start Lesson'>
+                        <i className='codicon codicon-play' aria-hidden='true'></i>
                         <span>{nls.localize('theia/teacher/startLesson', 'Start Lesson')}</span>
                     </button>
-                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onViewProgress}>
-                        <i className='codicon codicon-graph'></i>
+                    <button className='theia-button teacher-welcome-action-btn' onClick={this.onViewProgress} aria-label='View Progress'>
+                        <i className='codicon codicon-graph' aria-hidden='true'></i>
                         <span>{nls.localize('theia/teacher/viewProgress', 'View Progress')}</span>
                     </button>
                 </div>

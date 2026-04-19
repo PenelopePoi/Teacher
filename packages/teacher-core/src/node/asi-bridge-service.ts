@@ -165,6 +165,38 @@ export class ASIBridgeServiceImpl implements ASIBridgeService {
         }
     }
 
+    async queryKnowledge(topic: string): Promise<ASIResponse> {
+        const startTime = Date.now();
+        try {
+            const response = await this.withRetry(
+                () => this.httpPost('/query-knowledge', { topic }, 10_000)
+            );
+            const data = JSON.parse(response);
+            this.logConnectionChange(true);
+            return {
+                answer: data.answer || data.result || '',
+                confidence: data.confidence || 0,
+                sources: data.sources || [],
+                researcherCount: data.researcher_count || 1,
+                processingTimeMs: Date.now() - startTime
+            };
+        } catch (error) {
+            this.logConnectionChange(false);
+            const errMsg = error instanceof Error ? error.message : String(error);
+            return {
+                answer: [
+                    `Knowledge query for "${topic}" failed.`,
+                    `Host: ${this.asiHost}`,
+                    `Error: ${errMsg}`,
+                ].join('\n'),
+                confidence: 0,
+                sources: [],
+                researcherCount: 0,
+                processingTimeMs: Date.now() - startTime
+            };
+        }
+    }
+
     // ── Retry logic ──────────────────────────────────────────────
 
     protected async withRetry<T>(fn: () => Promise<T>, retries: number = 1, delayMs: number = 2000): Promise<T> {

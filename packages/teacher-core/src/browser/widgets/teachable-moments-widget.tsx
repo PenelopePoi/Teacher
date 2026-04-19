@@ -52,6 +52,11 @@ export class TeachableMomentsWidget extends ReactWidget {
 
     protected concepts: TeachableConcept[] = DEMO_CONCEPTS.map(c => ({ ...c }));
     protected searchQuery: string = '';
+    protected revisitId: string | undefined;
+    protected quizId: string | undefined;
+    protected quizQuestion: string | undefined;
+    protected quizAnswered: boolean = false;
+    protected quizCorrect: boolean = false;
 
     @postConstruct()
     protected init(): void {
@@ -92,6 +97,36 @@ export class TeachableMomentsWidget extends ReactWidget {
             concept.mastered = true;
             this.update();
         }
+    };
+
+    protected handleRevisit = (id: string): void => {
+        this.revisitId = this.revisitId === id ? undefined : id;
+        this.quizId = undefined;
+        this.quizQuestion = undefined;
+        this.quizAnswered = false;
+        this.update();
+    };
+
+    protected handleQuizMe = (id: string): void => {
+        const concept = this.concepts.find(c => c.id === id);
+        if (!concept) {
+            return;
+        }
+        this.quizId = id;
+        this.revisitId = undefined;
+        this.quizQuestion = nls.localize(
+            'theia/teacher/quizQuestion',
+            'In your own words, what does {0} do and when would you use it?',
+            concept.name,
+        );
+        this.quizAnswered = false;
+        this.update();
+    };
+
+    protected handleQuizAnswer = (correct: boolean): void => {
+        this.quizAnswered = true;
+        this.quizCorrect = correct;
+        this.update();
     };
 
     protected render(): React.ReactNode {
@@ -176,16 +211,79 @@ export class TeachableMomentsWidget extends ReactWidget {
                         <i className='codicon codicon-clock' />
                         {this.formatRelative(concept.firstSeen)}
                     </span>
-                    <button
-                        type='button'
-                        className='teacher-teachable-moments-got-it'
-                        onClick={() => this.handleGotIt(concept.id)}
-                        title={nls.localize('theia/teacher/markMastered', 'Mark as mastered')}
-                    >
-                        <i className='codicon codicon-check' />
-                        {nls.localize('theia/teacher/gotIt', 'Got it')}
-                    </button>
+                    <div className='teacher-teachable-moments-card-actions'>
+                        <button
+                            type='button'
+                            className='teacher-teachable-moments-revisit-btn'
+                            onClick={() => this.handleRevisit(concept.id)}
+                            title={nls.localize('theia/teacher/revisitExplanation', 'Revisit explanation')}
+                        >
+                            <i className='codicon codicon-refresh' />
+                            {nls.localize('theia/teacher/revisit', 'Revisit')}
+                        </button>
+                        <button
+                            type='button'
+                            className='teacher-teachable-moments-quiz-btn'
+                            onClick={() => this.handleQuizMe(concept.id)}
+                            title={nls.localize('theia/teacher/quizMeTitle', 'Test your knowledge')}
+                        >
+                            <i className='codicon codicon-beaker' />
+                            {nls.localize('theia/teacher/quizMe', 'Quiz Me')}
+                        </button>
+                        <button
+                            type='button'
+                            className='teacher-teachable-moments-got-it'
+                            onClick={() => this.handleGotIt(concept.id)}
+                            title={nls.localize('theia/teacher/markMastered', 'Mark as mastered')}
+                        >
+                            <i className='codicon codicon-check' />
+                            {nls.localize('theia/teacher/gotIt', 'Got it')}
+                        </button>
+                    </div>
                 </div>
+                {this.revisitId === concept.id && (
+                    <div className='teacher-teachable-moments-revisit-panel'>
+                        <i className='codicon codicon-info' />
+                        <p>{concept.explanation}</p>
+                    </div>
+                )}
+                {this.quizId === concept.id && this.quizQuestion && (
+                    <div className='teacher-teachable-moments-quiz-panel'>
+                        <p className='teacher-teachable-moments-quiz-question'>
+                            <i className='codicon codicon-question' />
+                            {this.quizQuestion}
+                        </p>
+                        {!this.quizAnswered ? (
+                            <div className='teacher-teachable-moments-quiz-actions'>
+                                <button
+                                    type='button'
+                                    className='teacher-teachable-moments-quiz-answer-btn teacher-teachable-moments-quiz-answer-btn--yes'
+                                    onClick={() => this.handleQuizAnswer(true)}
+                                >
+                                    <i className='codicon codicon-check' />
+                                    {nls.localize('theia/teacher/quizKnewIt', 'I knew it')}
+                                </button>
+                                <button
+                                    type='button'
+                                    className='teacher-teachable-moments-quiz-answer-btn teacher-teachable-moments-quiz-answer-btn--no'
+                                    onClick={() => this.handleQuizAnswer(false)}
+                                >
+                                    <i className='codicon codicon-close' />
+                                    {nls.localize('theia/teacher/quizNeedReview', 'Need review')}
+                                </button>
+                            </div>
+                        ) : (
+                            <div className={`teacher-teachable-moments-quiz-result ${this.quizCorrect ? 'teacher-teachable-moments-quiz-result--correct' : 'teacher-teachable-moments-quiz-result--review'}`}>
+                                <i className={`codicon ${this.quizCorrect ? 'codicon-pass-filled' : 'codicon-book'}`} />
+                                <span>
+                                    {this.quizCorrect
+                                        ? nls.localize('theia/teacher/quizGreat', 'Great job! Keep reinforcing this concept.')
+                                        : nls.localize('theia/teacher/quizReviewSuggestion', 'No worries! Here is the explanation: {0}', concept.explanation)}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         );
     }

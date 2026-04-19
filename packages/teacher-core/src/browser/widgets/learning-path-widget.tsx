@@ -58,6 +58,8 @@ export class LearningPathWidget extends ReactWidget {
     protected render(): React.ReactNode {
         const completed = this.pathNodes.filter(n => n.status === 'completed').length;
         const total = this.pathNodes.length;
+        const totalMinutes = this.pathNodes.reduce((sum, n) => sum + n.estimatedMinutes, 0);
+        const totalHours = (totalMinutes / 60).toFixed(1);
         const remainingMinutes = this.pathNodes
             .filter(n => n.status !== 'completed')
             .reduce((sum, n) => sum + n.estimatedMinutes, 0);
@@ -76,6 +78,12 @@ export class LearningPathWidget extends ReactWidget {
                         <span className='teacher-learning-path-summary-value'>{completed}/{total}</span>
                         <span className='teacher-learning-path-summary-label'>
                             {nls.localize('theia/teacher/stepsComplete', 'steps complete')}
+                        </span>
+                    </div>
+                    <div className='teacher-learning-path-summary-item'>
+                        <span className='teacher-learning-path-summary-value'>{totalHours}h</span>
+                        <span className='teacher-learning-path-summary-label'>
+                            {nls.localize('theia/teacher/totalEstimated', 'total estimated')}
                         </span>
                     </div>
                     <div className='teacher-learning-path-summary-item'>
@@ -128,6 +136,12 @@ export class LearningPathWidget extends ReactWidget {
                             <span key={skill} className='teacher-learning-path-node-skill-tag'>{skill}</span>
                         ))}
                     </div>
+                    {node.status === 'current' && (
+                        <div className='teacher-learning-path-you-are-here'>
+                            <i className='codicon codicon-location'></i>
+                            <span>{nls.localize('theia/teacher/youAreHere', 'You are here')}</span>
+                        </div>
+                    )}
                     {node.status === 'current' && (
                         <button className='theia-button teacher-learning-path-continue-btn' onClick={this.onContinueLesson}>
                             <i className='codicon codicon-play'></i>

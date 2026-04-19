@@ -50,6 +50,34 @@ const TeacherUIPreferencesSchema: PreferenceSchema = {
             default: 20,
             minimum: 1,
             description: 'Number of tool calls before an automatic checkpoint is forced. Set to a higher value for experienced users.'
+        },
+        'teacher.agentMode.defaultMode': {
+            type: 'string',
+            default: 'supervised',
+            enum: ['supervised', 'auto-edit', 'plan-only', 'autonomous'],
+            description: 'Default agent permission mode on startup.'
+        },
+        'teacher.agentMode.autoCheckpointInterval': {
+            type: 'number',
+            default: 5,
+            minimum: 1,
+            maximum: 50,
+            description: 'Number of agent actions between automatic checkpoints.'
+        },
+        'teacher.statusBar.showGitBranch': {
+            type: 'boolean',
+            default: true,
+            description: 'Show current git branch in the status bar.'
+        },
+        'teacher.statusBar.showErrorCounts': {
+            type: 'boolean',
+            default: true,
+            description: 'Show error and warning counts in the status bar.'
+        },
+        'teacher.agentsMd.enabled': {
+            type: 'boolean',
+            default: true,
+            description: 'Enable AGENTS.md workspace context injection.'
         }
     }
 };

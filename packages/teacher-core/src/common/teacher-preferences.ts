@@ -94,6 +94,82 @@ export const TeacherPreferencesSchema: PreferenceSchema = {
             items: { type: 'string' },
             default: ['qwen2.5:7b', 'bonsai-8b'],
             description: 'Default Ollama models for Teacher. First model is primary, rest are fallbacks.'
+        },
+        /**
+         * Default editor font size.
+         * Set larger (14) for beginner-friendly readability.
+         * Used by: Editor configuration defaults.
+         */
+        'editor.fontSize': {
+            type: 'number',
+            default: 14,
+            description: 'Default editor font size. Set larger for beginner-friendly readability.'
+        },
+        /**
+         * When enabled, the Teaching Review agent automatically runs
+         * a code review each time the student saves a file.
+         * Used by: TeachingReviewAgent auto-trigger.
+         */
+        'teacher.learning.autoReview': {
+            type: 'boolean',
+            default: true,
+            description: 'Automatically run a teaching code review on save.'
+        },
+        /**
+         * When enabled, Teacher IDE shows celebration notifications
+         * when the student reaches learning milestones.
+         * Used by: MilestoneService.celebrateMilestone().
+         */
+        'teacher.learning.celebrateMilestones': {
+            type: 'boolean',
+            default: true,
+            description: 'Show celebration notifications when learning milestones are reached.'
+        },
+        /**
+         * The student's self-reported difficulty level.
+         * Controls lesson difficulty, hint specificity, and assessment strictness.
+         * Used by: CurriculumService, AssessmentEngine.
+         */
+        'teacher.learning.difficultyLevel': {
+            type: 'string',
+            enum: ['beginner', 'intermediate', 'advanced'],
+            default: 'beginner',
+            description: 'Difficulty level for lessons and assessments.'
+        },
+        /**
+         * When enabled, Teacher IDE automatically creates progress
+         * checkpoints so the student can revert to a known-good state.
+         * Used by: AgentCheckpointService.
+         */
+        'teacher.agent.autoCheckpoint': {
+            type: 'boolean',
+            default: true,
+            description: 'Automatically create progress checkpoints during agent-assisted work.'
+        },
+        /**
+         * Number of agent actions between automatic checkpoints.
+         * Lower values create more frequent save points.
+         * Used by: AgentCheckpointService.
+         */
+        'teacher.agent.checkpointInterval': {
+            type: 'number',
+            default: 5,
+            minimum: 1,
+            maximum: 50,
+            description: 'Number of agent actions between auto-checkpoints.'
+        },
+        /**
+         * Maximum number of autonomous actions an agent can take
+         * before requiring student confirmation. Safety cap to prevent
+         * runaway agent behavior.
+         * Used by: All teaching agents.
+         */
+        'teacher.agent.maxAutonomousActions': {
+            type: 'number',
+            default: 20,
+            minimum: 1,
+            maximum: 100,
+            description: 'Maximum autonomous agent actions before requiring student confirmation.'
         }
     }
 };

@@ -5,17 +5,23 @@ import { StatusBarViewEntry } from '@theia/core/lib/browser/status-bar/status-ba
 import { nls } from '@theia/core/lib/common/nls';
 import { AgentModeService } from './agent-mode-service';
 import { AgentSessionManager } from './agent-session-manager';
+import { AgentContextProvider } from './agent-context-provider';
 
 /**
  * Enhanced status bar for Teacher IDE — agent-first.
  *
  * Strips encoding, line-ending, and other confetti entries that distract.
- * Adds:
- *   - Agent mode indicator with color dot (click cycles mode)
- *   - Action counter + checkpoint count
- *   - Session timer
+ * Renders:
+ *   [*] SUPERVISED | 12 actions * 3 ckpts | 5 files | 2E 1W | 45m
  *
- * Format: [*] SUPERVISED | 12 actions * 3 ckpts | 45m
+ * Enhancements over v1:
+ *   - Error/warning count indicator with color coding
+ *   - Files touched count
+ *   - Mode lock indicator
+ *   - Git branch display
+ *   - Plan progress indicator (when active)
+ *   - Click-to-cycle mode with tooltip showing permissions
+ *   - Smooth mode transition animation via CSS class cycling
  */
 @injectable()
 export class TeacherStatusBar extends StatusBarImpl {
@@ -25,6 +31,9 @@ export class TeacherStatusBar extends StatusBarImpl {
 
     @inject(AgentSessionManager)
     protected readonly sessionManager: AgentSessionManager;
+
+    @inject(AgentContextProvider)
+    protected readonly contextProvider: AgentContextProvider;
 
     /** IDs of status-bar entries that beginners don't need to see. */
     private static readonly HIDDEN_ENTRY_PATTERNS = [
@@ -54,8 +63,14 @@ export class TeacherStatusBar extends StatusBarImpl {
 
         // Listen for mode changes to re-render
         this.agentModeService.onDidChangeMode(() => this.update());
+        this.agentModeService.onDidChangeLock(() => this.update());
         this.sessionManager.onDidRecordAction(() => this.update());
         this.sessionManager.onDidCreateCheckpoint(() => this.update());
+        this.sessionManager.onDidChangePlan(() => this.update());
+        this.sessionManager.onDidRewind(() => this.update());
+        this.sessionManager.onDidUndo(() => this.update());
+        this.sessionManager.onDidClearSession(() => this.update());
+        this.contextProvider.onDidUpdateContext(() => this.update());
 
         // Update session timer every 30 seconds
         this.sessionTimerHandle = setInterval(() => this.update(), 30_000);
@@ -76,20 +91,33 @@ export class TeacherStatusBar extends StatusBarImpl {
         // --- Agent Mode Indicator ---
         const mode = this.agentModeService.getMode();
         const meta = AgentModeService.MODE_META[mode];
+        const locked = this.agentModeService.isLocked();
+        const perms = this.agentModeService.getPermissions();
+        const permStr = [
+            perms.readFiles ? 'R' : '-',
+            perms.writeFiles ? 'W' : '-',
+            perms.runCommands ? 'X' : '-',
+            perms.networkAccess ? 'N' : '-',
+        ].join('');
+
         leftEntries.push(
             React.createElement('div', {
                 key: 'teacher-agent-mode',
-                className: 'element teacher-agent-mode-indicator',
-                title: nls.localize('theia/teacher/agentMode', 'Agent Mode: {0} (Shift+Tab to cycle)', meta.label),
-                'aria-label': meta.label,
-                onClick: () => this.agentModeService.cycleMode(),
+                className: `element teacher-agent-mode-indicator ${locked ? 'teacher-agent-mode-locked' : ''}`,
+                title: nls.localize(
+                    'theia/teacher/agentModeTooltip',
+                    'Agent Mode: {0}\nPermissions: {1}\n{2}\nShift+Tab to cycle',
+                    meta.label,
+                    permStr,
+                    meta.description
+                ),
+                'aria-label': `${meta.label}${locked ? ' (locked)' : ''}`,
+                onClick: this.handleModeClick,
             },
-                React.createElement('span', {
-                    className: `teacher-agent-mode-dot ${meta.dotClass}`,
-                }),
-                React.createElement('span', {
-                    className: 'teacher-agent-mode-label',
-                }, meta.label)
+                locked
+                    ? React.createElement('span', { className: 'teacher-agent-lock-icon codicon codicon-lock', 'aria-hidden': 'true' })
+                    : React.createElement('span', { className: `teacher-agent-mode-dot ${meta.dotClass}` }),
+                React.createElement('span', { className: 'teacher-agent-mode-label' }, meta.label)
             )
         );
 
@@ -107,6 +135,31 @@ export class TeacherStatusBar extends StatusBarImpl {
             )
         );
 
+        // --- Plan Progress (when active) ---
+        const plan = this.sessionManager.getPlan();
+        if (plan) {
+            const progress = this.sessionManager.getPlanProgress();
+            const risk = this.sessionManager.getPlanRiskLevel();
+            const riskClass = `teacher-plan-risk-${risk}`;
+            leftEntries.push(
+                React.createElement('div', {
+                    key: 'teacher-plan-progress',
+                    className: `element teacher-plan-progress ${riskClass}`,
+                    title: nls.localize('theia/teacher/planProgress', 'Plan: {0} [{1}] {2}%', plan.title, plan.status, progress),
+                },
+                    React.createElement('span', { className: 'teacher-plan-progress-bar-bg' },
+                        React.createElement('span', {
+                            className: 'teacher-plan-progress-bar-fill',
+                            style: { width: `${progress}%` },
+                        })
+                    ),
+                    React.createElement('span', { className: 'teacher-plan-progress-text' },
+                        `${progress}%`
+                    )
+                )
+            );
+        }
+
         // --- Lesson Objective ---
         if (this.lessonObjective) {
             leftEntries.push(
@@ -118,16 +171,61 @@ export class TeacherStatusBar extends StatusBarImpl {
             );
         }
 
+        // --- Git Branch (right side) ---
+        const gitBranch = this.contextProvider.getGitBranch();
+        if (gitBranch) {
+            rightEntries.push(
+                React.createElement('div', {
+                    key: 'teacher-git-branch',
+                    className: 'element teacher-git-branch',
+                    title: nls.localize('theia/teacher/gitBranch', 'Git branch: {0}', gitBranch),
+                },
+                    React.createElement('span', { className: 'codicon codicon-source-control', 'aria-hidden': 'true' }),
+                    ` ${gitBranch}`
+                )
+            );
+        }
+
+        // --- Error/Warning Count (right side) ---
+        const errorCounts = this.contextProvider.getErrorCounts();
+        if (errorCounts.error > 0 || errorCounts.warning > 0) {
+            rightEntries.push(
+                React.createElement('div', {
+                    key: 'teacher-error-count',
+                    className: 'element teacher-error-count',
+                    title: nls.localize('theia/teacher/errorCount', '{0} errors, {1} warnings', errorCounts.error, errorCounts.warning),
+                },
+                    errorCounts.error > 0
+                        ? React.createElement('span', { className: 'teacher-error-count-errors' },
+                            React.createElement('span', { className: 'codicon codicon-error', 'aria-hidden': 'true' }),
+                            ` ${errorCounts.error}`
+                        )
+                        : null,
+                    errorCounts.warning > 0
+                        ? React.createElement('span', { className: 'teacher-error-count-warnings' },
+                            React.createElement('span', { className: 'codicon codicon-warning', 'aria-hidden': 'true' }),
+                            ` ${errorCounts.warning}`
+                        )
+                        : null
+                )
+            );
+        }
+
         // --- Action Counter + Checkpoints (right side) ---
         const actionCount = this.sessionManager.getActionCount();
         const checkpointCount = this.sessionManager.getCheckpoints().length;
+        const filesTouched = this.sessionManager.getFilesTouchedCount();
         rightEntries.push(
             React.createElement('div', {
                 key: 'teacher-action-counter',
                 className: 'element teacher-agent-action-counter',
-                title: nls.localize('theia/teacher/agentActions', '{0} actions, {1} checkpoints', actionCount, checkpointCount),
+                title: nls.localize(
+                    'theia/teacher/agentActionsDetail',
+                    '{0} actions, {1} checkpoints, {2} files touched',
+                    actionCount, checkpointCount, filesTouched
+                ),
             },
-                `${actionCount} actions \u00B7 ${checkpointCount} ckpts`
+                `${actionCount} actions \u00B7 ${checkpointCount} ckpts \u00B7 ${filesTouched} files`
             )
         );
 
@@ -166,6 +264,10 @@ export class TeacherStatusBar extends StatusBarImpl {
             React.createElement('div', { className: 'area right' }, ...rightEntries),
         );
     }
+
+    protected handleModeClick = (): void => {
+        this.agentModeService.cycleMode();
+    };
 
     private isHiddenEntry(viewEntry: StatusBarViewEntry): boolean {
         const id = viewEntry.id.toLowerCase();

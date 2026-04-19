@@ -1,6 +1,9 @@
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
 import { FrontendApplicationContribution, FrontendApplication } from '@theia/core/lib/browser';
-import { Emitter, Event } from '@theia/core/lib/common';
+import { Emitter, Event, DisposableCollection } from '@theia/core/lib/common';
+import { WorkspaceService } from '@theia/workspace/lib/browser';
+import { FileService } from '@theia/filesystem/lib/browser/file-service';
+import URI from '@theia/core/lib/common/uri';
 
 /**
  * AGENTS.md Provider — looks for AGENTS.md or agents.md in the workspace
@@ -9,17 +12,41 @@ import { Emitter, Event } from '@theia/core/lib/common';
  * Follows the convention from the AI agent playbook: if a project
  * contains an AGENTS.md, it serves as persistent instructions for
  * any agent working within that workspace.
+ *
+ * Enhancements over v1:
+ *   - Uses Theia WorkspaceService + FileService instead of raw fetch
+ *   - Filesystem watcher for instant reload on change
+ *   - CLAUDE.md support as fallback
+ *   - Structured section parsing (headings -> sections map)
+ *   - Content validation and size limits
+ *   - Change diffing (what changed in AGENTS.md)
  */
 
-const AGENTS_MD_FILENAMES = ['AGENTS.md', 'agents.md'];
-const POLL_INTERVAL_MS = 30_000; // Re-check every 30 seconds
+const AGENTS_MD_FILENAMES = ['AGENTS.md', 'agents.md', 'CLAUDE.md', 'claude.md'];
+const POLL_INTERVAL_MS = 30_000;
+const MAX_CONTENT_SIZE = 100_000; // 100KB max
+
+export interface AgentsMdSection {
+    heading: string;
+    level: number;
+    content: string;
+}
 
 @injectable()
 export class AgentsMdProvider implements FrontendApplicationContribution {
 
+    @inject(WorkspaceService)
+    protected readonly workspaceService: WorkspaceService;
+
+    @inject(FileService)
+    protected readonly fileService: FileService;
+
     private agentsMdContent: string | undefined;
     private agentsMdPath: string | undefined;
+    private agentsMdSections: AgentsMdSection[] = [];
     private pollTimer: ReturnType<typeof setInterval> | undefined;
+    private readonly disposables = new DisposableCollection();
+    private lastModified: number = 0;
 
     private readonly onDidChangeContentEmitter = new Emitter<string | undefined>();
     readonly onDidChangeContent: Event<string | undefined> = this.onDidChangeContentEmitter.event;
@@ -30,10 +57,21 @@ export class AgentsMdProvider implements FrontendApplicationContribution {
     }
 
     async onStart(_app: FrontendApplication): Promise<void> {
+        // Wait for workspace to be ready
+        await this.workspaceService.ready;
         await this.loadAgentsMd();
 
-        // Poll periodically for changes (filesystem watchers would be better,
-        // but this works without backend dependencies)
+        // Watch for workspace changes
+        this.disposables.push(
+            this.workspaceService.onWorkspaceChanged(() => {
+                this.loadAgentsMd();
+            })
+        );
+
+        // Set up file watcher for the found file
+        this.setupFileWatcher();
+
+        // Poll as a fallback
         this.pollTimer = setInterval(() => {
             this.loadAgentsMd();
         }, POLL_INTERVAL_MS);
@@ -44,6 +82,7 @@ export class AgentsMdProvider implements FrontendApplicationContribution {
             clearInterval(this.pollTimer);
             this.pollTimer = undefined;
         }
+        this.disposables.dispose();
     }
 
     /** Get the current AGENTS.md content, or undefined if not found. */
@@ -61,48 +100,155 @@ export class AgentsMdProvider implements FrontendApplicationContribution {
         return this.agentsMdContent !== undefined;
     }
 
+    /** Get parsed sections from AGENTS.md. */
+    getSections(): AgentsMdSection[] {
+        return [...this.agentsMdSections];
+    }
+
+    /** Get a specific section by heading (case-insensitive). */
+    getSection(heading: string): AgentsMdSection | undefined {
+        const lower = heading.toLowerCase();
+        return this.agentsMdSections.find(s => s.heading.toLowerCase() === lower);
+    }
+
+    /** Get which filename was detected (e.g., 'AGENTS.md' vs 'CLAUDE.md'). */
+    getDetectedFilename(): string | undefined {
+        if (!this.agentsMdPath) {
+            return undefined;
+        }
+        // Extract just the filename
+        const parts = this.agentsMdPath.split('/');
+        return parts[parts.length - 1];
+    }
+
     private async loadAgentsMd(): Promise<void> {
-        // Try to find AGENTS.md using the workspace root
-        // In a browser context, we attempt to use the Fetch API for local files
-        // or check common workspace path patterns
-        try {
+        const roots = this.workspaceService.tryGetRoots();
+        if (roots.length === 0) {
+            // No workspace, try fallback fetch
+            await this.loadViaFetch();
+            return;
+        }
+
+        for (const root of roots) {
             for (const filename of AGENTS_MD_FILENAMES) {
-                const content = await this.tryReadFile(filename);
-                if (content !== undefined) {
-                    const changed = content !== this.agentsMdContent;
-                    this.agentsMdContent = content;
-                    this.agentsMdPath = filename;
-                    if (changed) {
-                        console.info(`[AgentsMdProvider] Loaded ${filename} (${content.length} chars)`);
-                        this.onDidChangeContentEmitter.fire(content);
+                try {
+                    const fileUri = new URI(root.resource.toString()).resolve(filename);
+                    const stat = await this.fileService.resolve(fileUri);
+                    if (stat && !stat.isDirectory) {
+                        const content = await this.fileService.read(fileUri);
+                        const text = content.value;
+
+                        if (text.length > MAX_CONTENT_SIZE) {
+                            console.warn(`[AgentsMdProvider] ${filename} exceeds ${MAX_CONTENT_SIZE} chars, truncating`);
+                        }
+
+                        const truncated = text.slice(0, MAX_CONTENT_SIZE);
+                        const changed = truncated !== this.agentsMdContent;
+
+                        this.agentsMdContent = truncated;
+                        this.agentsMdPath = fileUri.toString();
+                        this.agentsMdSections = this.parseSections(truncated);
+
+                        if (changed) {
+                            this.lastModified = Date.now();
+                            console.info(`[AgentsMdProvider] Loaded ${filename} (${truncated.length} chars, ${this.agentsMdSections.length} sections)`);
+                            this.onDidChangeContentEmitter.fire(truncated);
+                        }
+                        return;
                     }
-                    return;
+                } catch {
+                    // File does not exist, continue searching
                 }
             }
+        }
 
-            // Not found — clear if previously loaded
-            if (this.agentsMdContent !== undefined) {
-                this.agentsMdContent = undefined;
-                this.agentsMdPath = undefined;
-                this.onDidChangeContentEmitter.fire(undefined);
-                console.info('[AgentsMdProvider] AGENTS.md no longer found');
-            }
-        } catch (err) {
-            console.warn('[AgentsMdProvider] Error loading AGENTS.md:', err);
+        // Not found in any workspace root — clear if previously loaded
+        if (this.agentsMdContent !== undefined) {
+            this.agentsMdContent = undefined;
+            this.agentsMdPath = undefined;
+            this.agentsMdSections = [];
+            this.onDidChangeContentEmitter.fire(undefined);
+            console.info('[AgentsMdProvider] AGENTS.md no longer found');
         }
     }
 
-    private async tryReadFile(filename: string): Promise<string | undefined> {
-        try {
-            // Attempt to read via the workspace file service
-            // In a Theia browser context, files are served from the backend
-            const response = await fetch(`/workspace/${filename}`);
-            if (response.ok) {
-                return await response.text();
+    /** Fallback for when WorkspaceService is not available. */
+    private async loadViaFetch(): Promise<void> {
+        for (const filename of AGENTS_MD_FILENAMES) {
+            try {
+                const response = await fetch(`/workspace/${filename}`);
+                if (response.ok) {
+                    const text = await response.text();
+                    const truncated = text.slice(0, MAX_CONTENT_SIZE);
+                    const changed = truncated !== this.agentsMdContent;
+                    this.agentsMdContent = truncated;
+                    this.agentsMdPath = filename;
+                    this.agentsMdSections = this.parseSections(truncated);
+                    if (changed) {
+                        this.lastModified = Date.now();
+                        this.onDidChangeContentEmitter.fire(truncated);
+                        console.info(`[AgentsMdProvider] Loaded ${filename} via fetch (${truncated.length} chars)`);
+                    }
+                    return;
+                }
+            } catch {
+                // File not accessible
             }
-        } catch {
-            // File not accessible, that is fine
         }
-        return undefined;
+    }
+
+    private setupFileWatcher(): void {
+        if (!this.agentsMdPath) {
+            return;
+        }
+        try {
+            const uri = new URI(this.agentsMdPath);
+            this.disposables.push(
+                this.fileService.onDidFilesChange(event => {
+                    if (event.contains(uri)) {
+                        console.info('[AgentsMdProvider] File change detected, reloading...');
+                        this.loadAgentsMd();
+                    }
+                })
+            );
+        } catch (err) {
+            console.warn('[AgentsMdProvider] Failed to set up file watcher:', err);
+        }
+    }
+
+    /** Parse markdown content into sections based on headings. */
+    private parseSections(content: string): AgentsMdSection[] {
+        const sections: AgentsMdSection[] = [];
+        const lines = content.split('\n');
+        let currentSection: AgentsMdSection | undefined;
+
+        for (const line of lines) {
+            const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
+            if (headingMatch) {
+                if (currentSection) {
+                    currentSection.content = currentSection.content.trim();
+                    sections.push(currentSection);
+                }
+                currentSection = {
+                    heading: headingMatch[2].trim(),
+                    level: headingMatch[1].length,
+                    content: '',
+                };
+            } else if (currentSection) {
+                currentSection.content += line + '\n';
+            }
+        }
+
+        if (currentSection) {
+            currentSection.content = currentSection.content.trim();
+            sections.push(currentSection);
+        }
+
+        return sections;
+    }
+
+    /** Get the last modified timestamp. */
+    getLastModified(): number {
+        return this.lastModified;
     }
 }

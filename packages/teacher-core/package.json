@@ -35,6 +35,7 @@
     "lib",
     "src"
   ],
+  "teacher.version": "1.0.0-alpha",
   "scripts": {
     "build": "theiaext build",
     "clean": "theiaext clean",

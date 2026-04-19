@@ -4858,3 +4858,552 @@ body.teacher-status-rebuilt #theia-statusBar {
     min-width: 50px;
     text-align: right;
 }
+
+/* ============================================================
+ * §41 — Smooth scroll-snap on learning path timeline nodes
+ * ============================================================ */
+
+.teacher-learning-path-timeline {
+    scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
+}
+
+.teacher-learning-path-node {
+    scroll-snap-align: start;
+    scroll-margin-top: 8px;
+}
+
+/* ============================================================
+ * §42 — :focus-visible outlines on all interactive Teacher elements (accessibility)
+ * ============================================================ */
+
+.teacher-welcome-action-btn:focus-visible,
+.teacher-curriculum-refresh-btn:focus-visible,
+.teacher-analytics-refresh-btn:focus-visible,
+.teacher-canvas-clear-btn:focus-visible,
+.teacher-canvas-artifact-remove:focus-visible,
+.teacher-voice-overlay-stop:focus-visible,
+.teacher-ai-history-clear-btn:focus-visible,
+.teacher-learning-path-continue-btn:focus-visible,
+.teacher-teachable-dismiss:focus-visible,
+.teacher-teachable-moments-got-it:focus-visible,
+.teacher-plan-mode-btn:focus-visible,
+.teacher-plan-mode-step-checkbox:focus-visible,
+.teacher-rewind-create-btn:focus-visible,
+.teacher-rewind-action-btn:focus-visible,
+.teacher-permission-card:focus-visible,
+.teacher-skill-command-chip:focus-visible,
+.teacher-skill-command-btn:focus-visible,
+.teacher-workflow-builder-new-btn:focus-visible,
+.teacher-workflow-builder-run-btn:focus-visible,
+.teacher-workflow-builder-step-remove:focus-visible,
+.teacher-improvement-improve-btn:focus-visible,
+.teacher-improvement-loop-run-btn:focus-visible,
+.teacher-ghost-clip:focus-visible,
+.teacher-ghost-clip-mute-btn:focus-visible,
+.teacher-drag-to-ask:focus-visible,
+.teacher-pulse-panel-orb-btn:focus-visible,
+.teacher-pulse-clear-btn:focus-visible,
+.teacher-canvas-review-btn:focus-visible,
+.teacher-skill-browser-card:focus-visible,
+.teacher-curriculum-node-header:focus-visible,
+.teacher-ai-history-item-header:focus-visible,
+.teacher-dashboard-suggestion-card:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--teacher-accent, #E8A948);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ============================================================
+ * §44 — Subtle 1% noise texture on surface-1 (Eye UI Glass section)
+ *       Spec: "Textured canvas allowed"
+ * ============================================================ */
+
+.teacher-welcome-widget,
+.teacher-progress-dashboard,
+.teacher-learning-analytics,
+.teacher-learning-path,
+.teacher-canvas-widget,
+.teacher-ghost-timeline-widget,
+.teacher-pulse-panel,
+.teacher-teachable-moments,
+.teacher-plan-mode,
+.teacher-rewind-panel,
+.teacher-permission-mode,
+.teacher-skill-command,
+.teacher-workflow-builder,
+.teacher-improvement-dashboard {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.01'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+}
+
+/* ============================================================
+ * §45 — Transition on all Teacher widget card hover states
+ * ============================================================ */
+
+.teacher-dashboard-card,
+.teacher-welcome-stat,
+.teacher-analytics-streak-card,
+.teacher-analytics-weak-item,
+.teacher-ai-history-item,
+.teacher-canvas-artifact,
+.teacher-teachable-moments-card,
+.teacher-plan-mode-step,
+.teacher-rewind-checkpoint-body,
+.teacher-improvement-skill-row,
+.teacher-improvement-summary-card,
+.teacher-improvement-loop-card,
+.teacher-workflow-builder-card,
+.teacher-skill-command-card {
+    transition: border-color var(--teacher-duration-fast, 0.15s) var(--teacher-ease-ios, cubic-bezier(0.32, 0.72, 0, 1)),
+                background-color var(--teacher-duration-fast, 0.15s) var(--teacher-ease-ios, cubic-bezier(0.32, 0.72, 0, 1)),
+                box-shadow var(--teacher-duration-fast, 0.15s) var(--teacher-ease-ios, cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+/* ============================================================
+ * §48 — scrollbar-gutter: stable on all Teacher scrollable containers
+ * ============================================================ */
+
+.teacher-welcome-widget,
+.teacher-progress-dashboard,
+.teacher-curriculum-browser,
+.teacher-skill-browser,
+.teacher-learning-analytics,
+.teacher-ai-history-search,
+.teacher-learning-path,
+.teacher-canvas-widget,
+.teacher-ghost-timeline-widget,
+.teacher-teachable-moments,
+.teacher-plan-mode,
+.teacher-rewind-panel,
+.teacher-permission-mode,
+.teacher-skill-command,
+.teacher-skill-command-results,
+.teacher-workflow-builder,
+.teacher-workflow-builder-list,
+.teacher-improvement-dashboard,
+.teacher-pulse-panel-log,
+.teacher-canvas-review-panel {
+    scrollbar-gutter: stable;
+}
+
+/* ============================================================
+ * §49 — font-variant-numeric: tabular-nums on all numeric displays
+ * ============================================================ */
+
+.teacher-dashboard-card-value,
+.teacher-welcome-stat-value,
+.teacher-analytics-streak-value,
+.teacher-analytics-course-pct,
+.teacher-analytics-time-value,
+.teacher-learning-path-summary-value,
+.teacher-canvas-count,
+.teacher-canvas-chart-value,
+.teacher-canvas-artifact-time,
+.teacher-canvas-connections-edge-label,
+.teacher-teachable-moments-count,
+.teacher-teachable-moments-card-confidence,
+.teacher-teachable-moments-card-time,
+.teacher-rewind-checkpoint-time,
+.teacher-pulse-panel-log-time,
+.teacher-pulse-panel-model-badge,
+.teacher-agent-action-counter,
+.teacher-agent-session-timer,
+.teacher-improvement-summary-value,
+.teacher-improvement-score-value,
+.teacher-improvement-execution-score,
+.teacher-improvement-execution-time,
+.teacher-plan-mode-step-number,
+.teacher-ghost-ruler {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+ * §51 — Celebration confetti animation
+ *       Plays when a milestone is achieved (800ms, amber+mint particles)
+ * ============================================================ */
+
+@keyframes teacher-confetti-pop {
+    0% {
+        transform: translateY(0) scale(0);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-80px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes teacher-confetti-drift-left {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-40px, -70px) rotate(-180deg) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes teacher-confetti-drift-right {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(40px, -70px) rotate(180deg) scale(1);
+        opacity: 0;
+    }
+}
+
+.teacher-celebration {
+    position: relative;
+}
+
+.teacher-celebration::before,
+.teacher-celebration::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.teacher-celebration::before {
+    background: var(--teacher-accent-amber, #E8A948);
+    animation: teacher-confetti-drift-left 800ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+}
+
+.teacher-celebration::after {
+    background: var(--teacher-ai-confident, #4FB286);
+    animation: teacher-confetti-drift-right 800ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+    animation-delay: 50ms;
+}
+
+.teacher-celebration-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 2px;
+    pointer-events: none;
+    animation: teacher-confetti-pop 800ms var(--teacher-curve-spring, cubic-bezier(0.34, 1.56, 0.64, 1)) forwards;
+}
+
+.teacher-celebration-particle:nth-child(odd) {
+    background: var(--teacher-accent-amber, #E8A948);
+}
+
+.teacher-celebration-particle:nth-child(even) {
+    background: var(--teacher-ai-confident, #4FB286);
+}
+
+/* ============================================================
+ * §52 — Code block styling inside chat responses
+ * ============================================================ */
+
+.teacher-chat-code-block {
+    border-radius: 8px;
+    background: var(--teacher-surface-3, #24282F);
+    padding: 12px 16px;
+    font-family: var(--teacher-font-mono, 'Geist Mono', monospace);
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-x: auto;
+    border: 1px solid var(--teacher-border-subtle, #23272E);
+    color: var(--teacher-text-primary, #F2F4F7);
+    margin: 8px 0;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.teacher-chat-code-block code {
+    font-family: inherit;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* ============================================================
+ * §53 — Inline code in chat
+ * ============================================================ */
+
+.teacher-chat-inline-code {
+    background: var(--teacher-surface-4, #2A2E35);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: var(--teacher-font-mono, 'Geist Mono', monospace);
+    font-size: 0.9em;
+    color: var(--teacher-text-primary, #F2F4F7);
+}
+
+/* ============================================================
+ * §54 — Animated gradient border for AI chat panel when generating
+ * ============================================================ */
+
+@keyframes teacher-generating-border {
+    0% {
+        --teacher-gen-angle: 0deg;
+    }
+    100% {
+        --teacher-gen-angle: 360deg;
+    }
+}
+
+@property --teacher-gen-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.teacher-ai-chat-generating {
+    position: relative;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.teacher-ai-chat-generating::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(
+        from var(--teacher-gen-angle, 0deg),
+        var(--teacher-ai-thinking, #7B9BD1),
+        var(--teacher-accent-amber, #E8A948),
+        var(--teacher-ai-confident, #4FB286),
+        var(--teacher-ai-thinking, #7B9BD1)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: teacher-generating-border 2s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ============================================================
+ * §55 — will-change hints for GPU acceleration on CSS animations
+ * ============================================================ */
+
+.teacher-pulse-panel-orb,
+.teacher-pulse-panel-ring,
+.teacher-pulse-dot,
+.teacher-pulse-indicator-dot,
+.teacher-agent-mode-dot,
+.teacher-voice-dot,
+.teacher-plan-mode-spinner,
+.teacher-ai-presence,
+.teacher-breathing-glow,
+.teacher-celebration-particle,
+.teacher-celebration::before,
+.teacher-celebration::after {
+    will-change: transform, opacity;
+}
+
+.teacher-ai-chat-generating::before {
+    will-change: background;
+}
+
+.theia-notifications-container.open {
+    will-change: transform, opacity;
+}
+
+/* ============================================================
+ * §56 — backdrop-filter fallback for browsers that don't support it
+ * ============================================================ */
+
+@supports not (backdrop-filter: blur(1px)) {
+    .teacher-glass {
+        background: rgba(26, 29, 34, 0.92);
+    }
+
+    .teacher-glass-elevated {
+        background: rgba(26, 29, 34, 0.95);
+    }
+
+    .teacher-ai-surface {
+        background: rgba(26, 29, 34, 0.90);
+    }
+
+    .teacher-elevated-surface {
+        background: rgba(26, 29, 34, 0.95);
+    }
+
+    #theia-statusBar {
+        background-color: rgba(11, 13, 16, 0.95) !important;
+    }
+
+    .dialogBlock {
+        background: rgba(26, 29, 34, 0.97);
+    }
+
+    .quick-input-widget,
+    .monaco-quick-input-widget {
+        background: rgba(26, 29, 34, 0.97) !important;
+    }
+
+    .p-Menu {
+        background: rgba(26, 29, 34, 0.97) !important;
+    }
+
+    .theia-notifications-container {
+        background: rgba(26, 29, 34, 0.97);
+    }
+
+    .teacher-canvas-review-explanation {
+        background: rgba(26, 29, 34, 0.92);
+    }
+
+    .teacher-skill-command-search {
+        background: rgba(26, 29, 34, 0.92);
+    }
+}
+
+/* ============================================================
+ * §57 — High-contrast theme support
+ * ============================================================ */
+
+@media (prefers-contrast: more) {
+    :root {
+        --teacher-border-subtle: #4A4F57;
+        --teacher-border-strong: #6A6F77;
+        --teacher-text-primary: #FFFFFF;
+        --teacher-text-secondary: #D0D4DB;
+        --teacher-text-tertiary: #A0A8B4;
+        --teacher-glass-border: rgba(255, 255, 255, 0.15);
+    }
+
+    .teacher-dashboard-card,
+    .teacher-welcome-stat,
+    .teacher-analytics-streak-card,
+    .teacher-analytics-weak-item,
+    .teacher-ai-history-item,
+    .teacher-canvas-artifact,
+    .teacher-teachable-moments-card,
+    .teacher-plan-mode-step,
+    .teacher-improvement-skill-row,
+    .teacher-improvement-summary-card,
+    .teacher-improvement-loop-card,
+    .teacher-workflow-builder-card,
+    .teacher-skill-command-card,
+    .teacher-rewind-checkpoint,
+    .teacher-permission-card,
+    .teacher-skill-browser-card {
+        border-width: 2px;
+    }
+
+    .p-TabBar .p-TabBar-tab.p-mod-current {
+        border-bottom-width: 3px;
+    }
+
+    .teacher-pulse-panel-orb {
+        box-shadow: 0 0 0 2px var(--teacher-text-primary);
+    }
+}
+
+/* ============================================================
+ * §58 — Dark-mode-specific scrollbar colors
+ * ============================================================ */
+
+::-webkit-scrollbar-thumb {
+    background: rgba(184, 190, 199, 0.18);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(184, 190, 199, 0.30);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background: rgba(232, 169, 72, 0.40);
+}
+
+/* ============================================================
+ * §59 — Responsive breakpoints
+ * ============================================================ */
+
+@media (max-width: 900px) {
+    .theia-app-sidebar-container,
+    .p-TabBar.theia-app-left,
+    .p-TabBar.theia-app-right {
+        width: 48px !important;
+        min-width: 48px !important;
+    }
+
+    .p-TabBar.theia-app-left .p-TabBar-tabLabel,
+    .p-TabBar.theia-app-right .p-TabBar-tabLabel {
+        display: none;
+    }
+
+    #theia-left-side-panel {
+        max-width: 240px;
+    }
+}
+
+@media (max-width: 600px) {
+    #theia-main-content-panel {
+        flex-direction: column !important;
+    }
+
+    .p-DockPanel-tabBar {
+        flex-wrap: wrap;
+    }
+
+    .teacher-dashboard-cards {
+        flex-direction: column;
+    }
+
+    .teacher-welcome-progress-stats {
+        flex-direction: column;
+    }
+
+    .teacher-analytics-streak-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .teacher-learning-path-summary {
+        flex-direction: column;
+    }
+
+    .teacher-permission-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-improvement-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-canvas-review-panels {
+        flex-direction: column;
+    }
+}
+
+/* ============================================================
+ * §60 — Content max-width custom property
+ * ============================================================ */
+
+:root {
+    --teacher-content-max-width: 800px;
+}
+
+.teacher-dashboard-container,
+.teacher-analytics-container,
+.teacher-canvas-container,
+.teacher-learning-path-container,
+.teacher-improvement-dashboard-container {
+    max-width: var(--teacher-content-max-width);
+}

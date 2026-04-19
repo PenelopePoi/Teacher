@@ -3,6 +3,7 @@ import { inject, injectable, postConstruct } from '@theia/core/shared/inversify'
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
 import { PulseService, PulseState } from '../pulse/pulse-service';
+import { ModeCycleContribution, PermissionMode, MODE_DEFINITIONS } from '../commands/mode-cycle-command';
 
 /**
  * §2 — Pulse Panel.
@@ -30,6 +31,10 @@ export class PulsePanelWidget extends ReactWidget {
     @inject(PulseService)
     protected readonly pulseService: PulseService;
 
+    @inject(ModeCycleContribution)
+    protected readonly modeCycle: ModeCycleContribution;
+
+    protected currentAgentMode: PermissionMode = 'assist';
     protected currentState: PulsePanelState = 'idle';
     protected statusText: string = nls.localize('theia/teacher/pulseReady', 'Ready');
     protected modelName: string = 'qwen2.5:7b';
@@ -51,6 +56,13 @@ export class PulsePanelWidget extends ReactWidget {
             this.currentState = this.mapPulseState(change.state);
             this.statusText = change.label ?? this.defaultLabel(this.currentState);
             this.addLogEntry(this.currentState, this.statusText);
+            this.update();
+        }));
+
+        // Connect to mode cycle
+        this.currentAgentMode = this.modeCycle.getMode();
+        this.toDispose.push(this.modeCycle.onDidChangeMode(mode => {
+            this.currentAgentMode = mode;
             this.update();
         }));
 
@@ -146,6 +158,8 @@ export class PulsePanelWidget extends ReactWidget {
                         {this.statusText}
                     </span>
 
+                    {this.renderModeBadge()}
+
                     <span className='teacher-pulse-panel-model-badge'>
                         {this.modelName}
                     </span>
@@ -153,6 +167,19 @@ export class PulsePanelWidget extends ReactWidget {
 
                 {this.expanded && this.renderActivityLog()}
             </div>
+        );
+    }
+
+    protected renderModeBadge(): React.ReactNode {
+        const def = MODE_DEFINITIONS.find(m => m.mode === this.currentAgentMode) ?? MODE_DEFINITIONS[1];
+        return (
+            <span
+                className={`teacher-pulse-panel-mode-badge teacher-pulse-panel-mode-badge--${def.color}`}
+                title={nls.localize('theia/teacher/currentMode', 'Current mode: {0}', def.label)}
+            >
+                <i className={def.icon} />
+                <span>{def.label}</span>
+            </span>
         );
     }
 

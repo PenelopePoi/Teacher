@@ -1,6 +1,6 @@
-import { injectable, inject } from '@theia/core/shared/inversify';
+import { injectable, inject, optional } from '@theia/core/shared/inversify';
 import { Command, CommandContribution, CommandRegistry, nls } from '@theia/core/lib/common';
-import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser';
+import { KeybindingContribution, KeybindingRegistry, QuickInputService } from '@theia/core/lib/browser';
 import { AgentModeService } from './agent-mode-service';
 import { AgentSessionManager } from './agent-session-manager';
 import { AgentContextProvider } from './agent-context-provider';
@@ -9,10 +9,19 @@ import { AgentContextProvider } from './agent-context-provider';
  * Agent Commands — All agent-specific commands and keybindings.
  *
  * Keybindings:
- *   Shift+Tab       → Cycle Agent Mode
- *   Cmd+Shift+C     → Create Checkpoint
- *   Cmd+Shift+Z     → Rewind to Checkpoint (opens picker)
- *   Cmd+Shift+.     → Show Plan (reuses focus mode slot — reassigned)
+ *   Shift+Tab       -> Cycle Agent Mode
+ *   Cmd+Shift+C     -> Create Checkpoint
+ *   Cmd+Shift+Z     -> Rewind to Checkpoint (opens picker)
+ *   Cmd+Shift+/     -> Show Plan
+ *   Cmd+Shift+L     -> Toggle Mode Lock
+ *
+ * Enhancements over v1:
+ *   - QuickInput picker for rewind (choose checkpoint)
+ *   - QuickInput picker for mode selection (jump to any mode)
+ *   - Session export command
+ *   - Undo last action command
+ *   - Toggle mode lock
+ *   - Show session stats
  */
 
 export namespace AgentCommands {
@@ -21,6 +30,12 @@ export namespace AgentCommands {
         id: 'teacher.agent.cycleMode',
         category: 'Teacher',
         label: nls.localize('theia/teacher/agentCycleMode', 'Teacher: Cycle Agent Mode'),
+    };
+
+    export const SELECT_MODE: Command = {
+        id: 'teacher.agent.selectMode',
+        category: 'Teacher',
+        label: nls.localize('theia/teacher/agentSelectMode', 'Teacher: Select Agent Mode'),
     };
 
     export const CREATE_CHECKPOINT: Command = {
@@ -64,6 +79,30 @@ export namespace AgentCommands {
         category: 'Teacher',
         label: nls.localize('theia/teacher/agentClearSession', 'Teacher: Clear Session'),
     };
+
+    export const UNDO_ACTION: Command = {
+        id: 'teacher.agent.undoAction',
+        category: 'Teacher',
+        label: nls.localize('theia/teacher/agentUndoAction', 'Teacher: Undo Last Agent Action'),
+    };
+
+    export const TOGGLE_MODE_LOCK: Command = {
+        id: 'teacher.agent.toggleModeLock',
+        category: 'Teacher',
+        label: nls.localize('theia/teacher/agentToggleLock', 'Teacher: Toggle Mode Lock'),
+    };
+
+    export const EXPORT_SESSION: Command = {
+        id: 'teacher.agent.exportSession',
+        category: 'Teacher',
+        label: nls.localize('theia/teacher/agentExportSession', 'Teacher: Export Session'),
+    };
+
+    export const SESSION_STATS: Command = {
+        id: 'teacher.agent.sessionStats',
+        category: 'Teacher',
+        label: nls.localize('theia/teacher/agentSessionStats', 'Teacher: Show Session Stats'),
+    };
 }
 
 @injectable()
@@ -78,6 +117,9 @@ export class AgentCommandContribution implements CommandContribution, Keybinding
     @inject(AgentContextProvider)
     protected readonly contextProvider: AgentContextProvider;
 
+    @inject(QuickInputService) @optional()
+    protected readonly quickInputService: QuickInputService;
+
     registerCommands(registry: CommandRegistry): void {
         // Cycle Agent Mode
         registry.registerCommand(AgentCommands.CYCLE_MODE, {
@@ -86,25 +128,69 @@ export class AgentCommandContribution implements CommandContribution, Keybinding
             },
         });
 
+        // Select Agent Mode (via picker)
+        registry.registerCommand(AgentCommands.SELECT_MODE, {
+            execute: async () => {
+                const currentMode = this.modeService.getMode();
+                const items = AgentModeService.MODE_ORDER.map(mode => {
+                    const meta = AgentModeService.MODE_META[mode];
+                    return {
+                        label: `${mode === currentMode ? '$(check) ' : '     '}${meta.label}`,
+                        description: meta.description,
+                        value: mode,
+                    };
+                });
+
+                const selected = await this.quickInputService?.showQuickPick(items, {
+                    title: nls.localize('theia/teacher/selectMode', 'Select Agent Mode'),
+                    placeholder: nls.localize('theia/teacher/selectModePlaceholder', 'Choose agent permission level...'),
+                });
+
+                if (selected) {
+                    this.modeService.setMode((selected as { value: string }).value as any);
+                }
+            },
+        });
+
         // Create Checkpoint
         registry.registerCommand(AgentCommands.CREATE_CHECKPOINT, {
-            execute: () => {
-                const id = this.sessionManager.createCheckpoint();
+            execute: async () => {
+                const label = await this.quickInputService?.input({
+                    title: nls.localize('theia/teacher/checkpointLabel', 'Checkpoint Label'),
+                    placeHolder: nls.localize('theia/teacher/checkpointPlaceholder', 'Enter a label for this checkpoint (optional)'),
+                });
+                const id = this.sessionManager.createCheckpoint(label || undefined);
                 console.info('[AgentCommands] Manual checkpoint created:', id);
             },
         });
 
-        // Rewind to Checkpoint
+        // Rewind to Checkpoint (with picker)
         registry.registerCommand(AgentCommands.REWIND, {
-            execute: () => {
+            execute: async () => {
                 const checkpoints = this.sessionManager.getCheckpoints();
                 if (checkpoints.length === 0) {
                     console.info('[AgentCommands] No checkpoints to rewind to');
                     return;
                 }
-                // Rewind to the most recent checkpoint (a picker would be ideal, but for now last checkpoint)
-                const latest = checkpoints[checkpoints.length - 1];
-                this.sessionManager.rewindTo(latest.id, 'both');
+
+                const items = checkpoints.map((ckpt, _idx) => {
+                    const time = new Date(ckpt.timestamp);
+                    const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+                    return {
+                        label: `${ckpt.auto ? '$(sync) ' : '$(bookmark) '}${ckpt.label}`,
+                        description: `${timeStr} | ${ckpt.actionIndex} actions | ${ckpt.fileSnapshot.length} files`,
+                        value: ckpt.id,
+                    };
+                }).reverse(); // Most recent first
+
+                const selected = await this.quickInputService?.showQuickPick(items, {
+                    title: nls.localize('theia/teacher/rewindTitle', 'Rewind to Checkpoint'),
+                    placeholder: nls.localize('theia/teacher/rewindPlaceholder', 'Select a checkpoint to rewind to...'),
+                });
+
+                if (selected) {
+                    this.sessionManager.rewindTo((selected as { value: string }).value, 'both');
+                }
             },
         });
 
@@ -113,7 +199,10 @@ export class AgentCommandContribution implements CommandContribution, Keybinding
             execute: () => {
                 const plan = this.sessionManager.getPlan();
                 if (plan) {
-                    console.info('[AgentCommands] Current plan:', JSON.stringify(plan, undefined, 2));
+                    const progress = this.sessionManager.getPlanProgress();
+                    const risk = this.sessionManager.getPlanRiskLevel();
+                    console.info(`[AgentCommands] Plan: "${plan.title}" [${plan.status}] ${progress}% complete, risk: ${risk}`);
+                    console.info('[AgentCommands] Steps:', JSON.stringify(plan.steps, undefined, 2));
                 } else {
                     console.info('[AgentCommands] No active plan');
                 }
@@ -142,11 +231,11 @@ export class AgentCommandContribution implements CommandContribution, Keybinding
             },
         });
 
-        // Show Context — logs the full agent context
+        // Show Context — logs the full serialized agent context
         registry.registerCommand(AgentCommands.SHOW_CONTEXT, {
             execute: () => {
-                const context = this.contextProvider.getContext();
-                console.info('[AgentCommands] Agent context:', JSON.stringify(context, undefined, 2));
+                const serialized = this.contextProvider.serializeForPrompt();
+                console.info('[AgentCommands] Agent context:\n' + serialized);
             },
         });
 
@@ -157,31 +246,100 @@ export class AgentCommandContribution implements CommandContribution, Keybinding
                 console.info('[AgentCommands] Session cleared');
             },
         });
+
+        // Undo Last Action
+        registry.registerCommand(AgentCommands.UNDO_ACTION, {
+            execute: () => {
+                const undone = this.sessionManager.undoLastAction();
+                if (undone) {
+                    console.info('[AgentCommands] Undone:', undone.description);
+                } else {
+                    console.info('[AgentCommands] Nothing to undo');
+                }
+            },
+        });
+
+        // Toggle Mode Lock
+        registry.registerCommand(AgentCommands.TOGGLE_MODE_LOCK, {
+            execute: () => {
+                this.modeService.toggleLock();
+            },
+        });
+
+        // Export Session
+        registry.registerCommand(AgentCommands.EXPORT_SESSION, {
+            execute: () => {
+                const snapshot = this.sessionManager.exportSession();
+                const json = JSON.stringify(snapshot, undefined, 2);
+                console.info('[AgentCommands] Session export:\n' + json);
+                // Copy to clipboard if available
+                try {
+                    navigator.clipboard.writeText(json).then(
+                        () => console.info('[AgentCommands] Session exported to clipboard'),
+                        () => console.warn('[AgentCommands] Failed to copy to clipboard')
+                    );
+                } catch {
+                    // clipboard not available
+                }
+            },
+        });
+
+        // Session Stats
+        registry.registerCommand(AgentCommands.SESSION_STATS, {
+            execute: () => {
+                const duration = this.sessionManager.getSessionDuration();
+                const actions = this.sessionManager.getActionCount();
+                const checkpoints = this.sessionManager.getCheckpoints().length;
+                const files = this.sessionManager.getFilesTouchedCount();
+                const plan = this.sessionManager.getPlan();
+                const mode = this.modeService.getMode();
+                const locked = this.modeService.isLocked();
+                const errors = this.contextProvider.getErrorCounts();
+
+                const minutes = Math.floor(duration / 60_000);
+                console.info([
+                    '[AgentCommands] Session Stats:',
+                    `  Mode: ${mode}${locked ? ' (LOCKED)' : ''}`,
+                    `  Duration: ${minutes}m`,
+                    `  Actions: ${actions}`,
+                    `  Checkpoints: ${checkpoints}`,
+                    `  Files touched: ${files}`,
+                    `  Errors: ${errors.error}E / ${errors.warning}W / ${errors.info}I`,
+                    plan ? `  Plan: "${plan.title}" [${plan.status}] ${this.sessionManager.getPlanProgress()}%` : '  Plan: none',
+                ].join('\n'));
+            },
+        });
     }
 
     registerKeybindings(registry: KeybindingRegistry): void {
-        // Shift+Tab → Cycle Agent Mode
+        // Shift+Tab -> Cycle Agent Mode
         registry.registerKeybinding({
             command: AgentCommands.CYCLE_MODE.id,
             keybinding: 'shift+tab',
         });
 
-        // Cmd+Shift+C → Create Checkpoint
+        // Cmd+Shift+C -> Create Checkpoint
         registry.registerKeybinding({
             command: AgentCommands.CREATE_CHECKPOINT.id,
             keybinding: 'ctrlcmd+shift+c',
         });
 
-        // Cmd+Shift+Z → Rewind to Checkpoint
+        // Cmd+Shift+Z -> Rewind to Checkpoint (picker)
         registry.registerKeybinding({
             command: AgentCommands.REWIND.id,
             keybinding: 'ctrlcmd+shift+z',
         });
 
-        // Cmd+Shift+/ → Show Plan
+        // Cmd+Shift+/ -> Show Plan
         registry.registerKeybinding({
             command: AgentCommands.SHOW_PLAN.id,
             keybinding: 'ctrlcmd+shift+/',
+        });
+
+        // Cmd+Shift+L -> Toggle Mode Lock
+        registry.registerKeybinding({
+            command: AgentCommands.TOGGLE_MODE_LOCK.id,
+            keybinding: 'ctrlcmd+shift+l',
         });
     }
 }

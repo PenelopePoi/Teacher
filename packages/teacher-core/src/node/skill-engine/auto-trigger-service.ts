@@ -15,6 +15,9 @@ const AUTO_TRIGGERS: Record<string, string[]> = {
     'new-concept': ['learning-teaching-suite'],
     'security-scan': ['web-vuln-audit', 'supply-chain-audit'],
     'deploy': ['xela-brand-checker'],
+    'milestone-reached': ['learning-teaching-suite'],
+    'concept-new': ['learning-teaching-suite'],
+    'streak-broken': ['energy-state-reader', 'best-timeline-aligner'],
 };
 
 /**

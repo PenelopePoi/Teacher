@@ -30,6 +30,25 @@ export interface ProgressTrackingService {
     getSkillMastery(): Promise<Map<string, number>>;
     /** Returns an aggregated summary of the student's progress. */
     getSummary(): Promise<ProgressSummary>;
+    /**
+     * Returns a weekly progress report covering lessons completed,
+     * time spent, skills improved, and areas needing attention.
+     */
+    getWeeklyReport(): Promise<WeeklyReport>;
+    /**
+     * Returns the current learning streak — consecutive days with activity.
+     */
+    getStreak(): Promise<number>;
+    /**
+     * Returns skill identifiers where the student's mastery is below
+     * the intermediate threshold (< 0.4).
+     */
+    getWeakAreas(): Promise<string[]>;
+    /**
+     * Returns the recommended next lesson or skill to work on,
+     * based on weak areas, prerequisites, and learning goals.
+     */
+    getRecommendedNext(): Promise<RecommendedAction>;
 }
 
 /**
@@ -139,4 +158,38 @@ export interface ProgressSummary {
     topSkills: Array<{ skill: string; mastery: number }>;
     /** Suggested next lesson ID based on the student's progress and skill gaps. */
     suggestedNextLesson?: string;
+}
+
+/**
+ * Weekly progress report summarizing the student's learning activity.
+ */
+export interface WeeklyReport {
+    /** ISO 8601 date of the week start (Monday). */
+    weekStartDate: string;
+    /** Number of lessons completed this week. */
+    lessonsCompleted: number;
+    /** Total time spent learning this week, in hours. */
+    hoursSpent: number;
+    /** Skills that improved this week, with before/after mastery levels. */
+    skillsImproved: Array<{ skill: string; previousMastery: number; currentMastery: number }>;
+    /** Areas that still need attention. */
+    weakAreas: string[];
+    /** Current streak in consecutive days. */
+    currentStreak: number;
+    /** Summary message suitable for display to the student. */
+    summaryMessage: string;
+}
+
+/**
+ * A recommended next action for the student based on their progress.
+ */
+export interface RecommendedAction {
+    /** Type of recommendation. */
+    type: 'lesson' | 'skill-practice' | 'review' | 'project';
+    /** Identifier of the recommended lesson or skill. */
+    id: string;
+    /** Human-readable title of the recommendation. */
+    title: string;
+    /** Why this is recommended (e.g., "prerequisite for React Hooks"). */
+    reason: string;
 }

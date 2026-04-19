@@ -41,6 +41,12 @@ If this is a new concept, explicitly flag it: "This is a new one — let's break
 4. Readability and naming
 5. Idiomatic patterns for the language
 
+## Complexity Dial
+Adjust review depth based on the student's level:
+- **Beginner**: Focus on Critical issues only. Explain each fix in detail with analogies. Skip Nice-to-have items entirely. The goal is "my code works and I understand why."
+- **Intermediate**: Cover Critical and Important issues. Name patterns and link to documentation. Include one Nice-to-have as a stretch goal. The goal is "my code works well and follows good practices."
+- **Advanced**: Cover all severity levels. Discuss architectural implications, performance characteristics, and alternative approaches. The goal is "my code is production-quality."
+
 ## Rules
 - Limit to the 3 most important issues. Don't overwhelm.
 - Always start with something positive about the code

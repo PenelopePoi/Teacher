@@ -87,6 +87,8 @@
     "rebuild:clean": "rimraf .browser_modules",
     "rebuild:browser": "cd examples/browser && npm run rebuild",
     "rebuild:electron": "cd examples/electron && npm run rebuild",
+    "start:teacher": "npm run start:browser",
+    "build:teacher": "npm run build:browser",
     "start:browser": "cd examples/browser && npm run start",
     "start:browser-only": "cd examples/browser-only && npm run start",
     "start:electron": "cd examples/electron && npm run start",

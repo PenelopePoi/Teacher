@@ -18,6 +18,8 @@ interface PlanStep {
     readonly description: string;
     readonly files: string[];
     readonly risk: RiskLevel;
+    readonly estimatedMinutes: number;
+    readonly dependsOn: number[];
     enabled: boolean;
     status: 'pending' | 'approved' | 'executing' | 'completed';
 }
@@ -46,12 +48,12 @@ export class PlanModeWidget extends ReactWidget {
 
     protected loadDemoData(): void {
         this.steps = [
-            { id: 1, description: 'Create auth service', files: ['src/auth/service.ts'], risk: 'low', enabled: true, status: 'completed' },
-            { id: 2, description: 'Add login component', files: ['src/components/Login.tsx'], risk: 'low', enabled: true, status: 'approved' },
-            { id: 3, description: 'Set up JWT middleware', files: ['src/middleware/auth.ts'], risk: 'medium', enabled: true, status: 'executing' },
-            { id: 4, description: 'Update database schema', files: ['migrations/004_users.sql'], risk: 'high', enabled: true, status: 'pending' },
-            { id: 5, description: 'Add route guards', files: ['src/router/guards.ts'], risk: 'low', enabled: true, status: 'pending' },
-            { id: 6, description: 'Write integration tests', files: ['tests/auth.spec.ts'], risk: 'low', enabled: true, status: 'pending' },
+            { id: 1, description: 'Create auth service', files: ['src/auth/service.ts'], risk: 'low', estimatedMinutes: 5, dependsOn: [], enabled: true, status: 'completed' },
+            { id: 2, description: 'Add login component', files: ['src/components/Login.tsx'], risk: 'low', estimatedMinutes: 8, dependsOn: [1], enabled: true, status: 'approved' },
+            { id: 3, description: 'Set up JWT middleware', files: ['src/middleware/auth.ts'], risk: 'medium', estimatedMinutes: 12, dependsOn: [1], enabled: true, status: 'executing' },
+            { id: 4, description: 'Update database schema', files: ['migrations/004_users.sql'], risk: 'high', estimatedMinutes: 15, dependsOn: [1, 3], enabled: true, status: 'pending' },
+            { id: 5, description: 'Add route guards', files: ['src/router/guards.ts'], risk: 'low', estimatedMinutes: 6, dependsOn: [3], enabled: true, status: 'pending' },
+            { id: 6, description: 'Write integration tests', files: ['tests/auth.spec.ts'], risk: 'low', estimatedMinutes: 10, dependsOn: [2, 3, 4, 5], enabled: true, status: 'pending' },
         ];
         this.executingIndex = 2;
         this.planState = 'executing';
@@ -168,7 +170,24 @@ export class PlanModeWidget extends ReactWidget {
                             {step.risk === 'high' && <i className='codicon codicon-warning' />}
                             {step.risk.toUpperCase()}
                         </span>
+                        <span className='teacher-plan-mode-time-badge'>
+                            <i className='codicon codicon-clock' />
+                            {nls.localize('theia/teacher/planEstMinutes', '~{0}m', step.estimatedMinutes)}
+                        </span>
                     </div>
+                    {step.dependsOn.length > 0 && (
+                        <div className='teacher-plan-mode-dependencies'>
+                            <i className='codicon codicon-git-merge' />
+                            <span className='teacher-plan-mode-dep-label'>
+                                {nls.localize('theia/teacher/planDependsOn', 'Depends on:')}
+                            </span>
+                            {step.dependsOn.map(depId => (
+                                <span key={depId} className='teacher-plan-mode-dep-badge'>
+                                    {nls.localize('theia/teacher/planStep', 'Step {0}', depId)}
+                                </span>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         );

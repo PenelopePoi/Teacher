@@ -538,12 +538,13 @@
     height: 100%;
     padding: 0 16px;
     font-family: 'Geist', var(--theia-ui-font-family);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--accent-amber);
     cursor: pointer;
     user-select: none;
+    -webkit-user-select: none;
     transition: opacity 0.15s ease;
 }
 
@@ -582,12 +583,34 @@
     cursor: pointer;
     padding: 1px 10px;
     border-radius: 10px;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, box-shadow 0.2s ease;
     user-select: none;
 }
 
 .teacher-agent-mode-indicator:hover {
     background-color: var(--surface-3);
+    box-shadow: 0 0 6px rgba(232, 169, 72, 0.1);
+}
+
+.teacher-agent-mode-indicator:active {
+    transform: scale(0.97);
+}
+
+/* Mode locked state */
+.teacher-agent-mode-locked {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.teacher-agent-mode-locked:hover {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.teacher-agent-lock-icon {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    margin-right: 2px;
 }
 
 .teacher-agent-mode-dot {
@@ -596,6 +619,7 @@
     border-radius: 50%;
     flex-shrink: 0;
     animation: teacher-breathing-glow 2400ms ease-in-out infinite;
+    transition: background-color 0.4s ease;
 }
 
 /* Supervised = blue */
@@ -629,6 +653,7 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-secondary);
+    transition: color 0.3s ease;
 }
 
 /* ----------------------------------------------------------------
@@ -653,10 +678,180 @@
 }
 
 /* ----------------------------------------------------------------
+   Agent Plan Progress (Status Bar)
+   ---------------------------------------------------------------- */
+.teacher-plan-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 1px 8px;
+}
+
+.teacher-plan-progress-bar-bg {
+    width: 48px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--surface-4);
+    overflow: hidden;
+}
+
+.teacher-plan-progress-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background-color: var(--ai-confident);
+    transition: width 0.5s ease;
+}
+
+.teacher-plan-risk-medium .teacher-plan-progress-bar-fill {
+    background-color: var(--accent-amber);
+}
+
+.teacher-plan-risk-high .teacher-plan-progress-bar-fill {
+    background-color: #EF4444;
+}
+
+.teacher-plan-progress-text {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-tertiary);
+}
+
+/* ----------------------------------------------------------------
+   Git Branch (Status Bar)
+   ---------------------------------------------------------------- */
+.teacher-git-branch {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.teacher-git-branch .codicon {
+    font-size: 12px;
+}
+
+/* ----------------------------------------------------------------
+   Error/Warning Count (Status Bar)
+   ---------------------------------------------------------------- */
+.teacher-error-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.teacher-error-count-errors {
+    color: #EF4444;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.teacher-error-count-warnings {
+    color: #E8A948;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.teacher-error-count .codicon {
+    font-size: 12px;
+}
+
+/* ----------------------------------------------------------------
+   Agent Rail — Enhanced sidebar indicator
+   ---------------------------------------------------------------- */
+.teacher-agent-rail .p-TabBar-tab.p-mod-current::before,
+.teacher-agent-rail .lm-TabBar-tab.lm-mod-current::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 25%;
+    bottom: 25%;
+    width: 2px;
+    background-color: var(--accent-amber);
+    border-radius: 0 2px 2px 0;
+    animation: teacher-rail-glow 2400ms ease-in-out infinite;
+}
+
+@keyframes teacher-rail-glow {
+    0%, 100% {
+        opacity: 0.6;
+        box-shadow: none;
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 8px var(--accent-amber);
+    }
+}
+
+/* ----------------------------------------------------------------
+   Side Panel Minimum Width
+   ---------------------------------------------------------------- */
+.p-SplitPanel > .p-Widget.theia-sidepanel-toolbar ~ .p-Widget {
+    min-width: var(--teacher-side-panel-min-width, 240px);
+}
+
+/* ----------------------------------------------------------------
    Reduced Motion — Agent Mode
    ---------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
     .teacher-agent-mode-dot {
         animation: none;
+    }
+
+    .teacher-agent-rail .p-TabBar-tab.p-mod-current::before,
+    .teacher-agent-rail .lm-TabBar-tab.lm-mod-current::before {
+        animation: none;
+    }
+
+    .teacher-plan-progress-bar-fill {
+        transition: none;
+    }
+
+    .teacher-agent-mode-indicator:active {
+        transform: none;
+    }
+}
+
+/* ================================================================
+   §46 — Print stylesheet: hide chrome, show only editor content
+   ================================================================ */
+
+@media print {
+    .theia-app-sidebar-container,
+    .p-TabBar.theia-app-left,
+    .p-TabBar.theia-app-right,
+    #theia-left-side-panel,
+    #theia-right-side-panel,
+    #theia-statusBar,
+    .p-TabBar.theia-app-sidebar,
+    #theia-bottom-content-panel,
+    .teacher-pulse-panel,
+    .teacher-drag-to-ask,
+    .teacher-voice-overlay,
+    .teacher-agent-mode-indicator {
+        display: none !important;
+    }
+
+    #theia-main-content-panel {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .monaco-editor {
+        overflow: visible !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
     }
 }

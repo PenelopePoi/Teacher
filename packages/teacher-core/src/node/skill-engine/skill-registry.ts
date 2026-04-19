@@ -126,6 +126,22 @@ export class SkillRegistry {
     }
 
     /**
+     * Return all skills that have a matching tag in their description or triggers.
+     * Tags are matched case-insensitively.
+     */
+    getSkillsByTag(tag: string): SkillDefinition[] {
+        const t = tag.toLowerCase();
+        const results: SkillDefinition[] = [];
+        for (const skill of this.byName.values()) {
+            const searchable = `${skill.description} ${skill.triggers.join(' ')}`.toLowerCase();
+            if (searchable.includes(t)) {
+                results.push(skill);
+            }
+        }
+        return results;
+    }
+
+    /**
      * Recursively find all SKILL.md files under a directory.
      */
     protected findSkillFiles(dir: string): string[] {

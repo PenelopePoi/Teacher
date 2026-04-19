@@ -144,3 +144,69 @@ The code teaches the API; the examples remind us why we build.
 
 ### Motto
 From Pain to Purpose. From Passion to Prophet.
+
+## Teacher-Specific Reference
+
+### Agent IDs
+| ID | Name | File |
+|----|------|------|
+| `teacher-tutor` | Teacher Tutor | `tutor-agent.ts` |
+| `teacher-explain` | Explain This | `explain-agent.ts` |
+| `teacher-review` | Teaching Review | `review-agent.ts` |
+| `teacher-debugger` | Teacher Debugger | `debugger-agent.ts` |
+| `teacher-growth-tracker` | Growth Tracker | `growth-agent.ts` |
+| `teacher-motivator` | Teacher Coach | `motivator-agent.ts` |
+| `teacher-project-builder` | Project Builder | `project-agent.ts` |
+| `teacher-strategic-planner` | Life Planner | `strategic-planner-agent.ts` |
+| `teacher-thinking-debugger` | Thinking Coach | `thinking-debug-agent.ts` |
+
+All agents live in `packages/teacher-core/src/browser/agents/`.
+
+### Widget IDs
+| ID | Widget |
+|----|--------|
+| `teacher-welcome-widget` | Welcome |
+| `teacher-progress-dashboard` | Progress Dashboard |
+| `teacher-curriculum-browser` | Curriculum Browser |
+| `teacher-canvas-widget` | Canvas |
+| `teacher-canvas-review` | Canvas Review |
+| `teacher-learning-analytics` | Learning Analytics |
+| `teacher-learning-path` | Learning Path |
+| `teacher-skill-browser` | Skill Browser |
+| `teacher-skill-command` | Skill Command |
+| `teacher-ai-history-search` | AI History Search |
+| `teacher-ghost-timeline` | Ghost Timeline |
+| `teacher-improvement-dashboard` | Improvement Dashboard |
+| `teacher-permission-mode` | Permission Mode |
+| `teacher-plan-mode` | Plan Mode |
+| `teacher-teachable-moments` | Teachable Moments |
+| `teacher-rewind-panel` | Rewind Panel |
+| `teacher-workflow-builder` | Workflow Builder |
+| `teacher-pulse-panel` | Pulse Panel |
+
+All widgets live in `packages/teacher-core/src/browser/widgets/` (except Pulse Panel, which also exists in `teacher-ui`).
+
+### Skill Engine API
+- Service symbol: `SkillEngineService`
+- Service path: `/services/skill-engine`
+- Key methods: `scanSkills()`, `getAllSkills()`, `searchSkills(query)`, `executeSkill(name, input)`, `getWorkflows()`, `executeWorkflow(name, input)`, `getMetrics()`
+- Protocol file: `packages/teacher-core/src/common/skill-engine-protocol.ts`
+
+### Learning Profile Path
+- Default storage: `~/.theia/teacher/progress/`
+- Override via preference: `teacher.progress.storageDirectory`
+- Profile interface: `packages/teacher-core/src/common/learning-profile.ts`
+
+### Key Preferences
+| Preference | Type | Default |
+|-----------|------|---------|
+| `teacher.asi.enabled` | boolean | `true` |
+| `teacher.asi.host` | string | `http://localhost:8765` |
+| `teacher.curriculum.directory` | string | `''` |
+| `teacher.progress.storageDirectory` | string | `''` |
+| `teacher.tutor.skillLevel` | enum | `'beginner'` |
+| `teacher.tutor.useSocraticMethod` | boolean | `true` |
+| `teacher.ollama.defaultModels` | array | `['qwen2.5:7b', 'bonsai-8b']` |
+| `teacher.agent.autoCapThreshold` | number | `20` |
+| `teacher.agentMode.defaultMode` | enum | `'supervised'` |
+| `teacher.welcome.showOnStartup` | boolean | `true` |

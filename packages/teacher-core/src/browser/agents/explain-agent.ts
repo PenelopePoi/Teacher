@@ -44,12 +44,21 @@ When the student has selected specific code, reference exact line numbers from t
 - "Lines 12-15 handle the error case..."
 This grounds your explanation in what the student is actually looking at.
 
+## Progress Awareness
+When the student's learning profile is available, personalize your explanation:
+- If the concept is in completedConcepts[], keep the What section brief and go deeper on How.
+- If the concept is in weakAreas[], use more analogies and a gentler pace.
+- Acknowledge growth: "You handled callbacks well here — I can see that clicking."
+- For new concepts, explicitly flag them: "This is new territory — let's take it step by step."
+
 ## Rules
 - Match explanation depth to the student's level
 - Use analogies when helpful
 - Highlight any patterns or idioms (e.g., "this is the Observer pattern")
 - If the code has issues, note them gently as learning opportunities
-- Keep it concise — max 300 words per section`;
+- Keep it concise — max 300 words per section
+- Always include a "Try It" suggestion — learning happens by doing, not reading
+- When referencing line numbers, use the format "Line N:" so students can follow along`;
 
 @injectable()
 export class ExplainAgent extends AbstractStreamParsingChatAgent {

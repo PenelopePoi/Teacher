@@ -64,6 +64,21 @@ export class GhostTimelineWidget extends ReactWidget {
         }
     };
 
+    protected handleUndoAllSince = (e: React.MouseEvent, clipId: string): void => {
+        e.stopPropagation();
+        const clips = this.timelineService.getClips();
+        const idx = clips.findIndex(c => c.id === clipId);
+        if (idx < 0) {
+            return;
+        }
+        // Mute all clips after this point
+        for (let i = idx + 1; i < clips.length; i++) {
+            if (!clips[i].muted) {
+                this.timelineService.muteClip(clips[i].id);
+            }
+        }
+    };
+
     protected handleToggleExpand = (): void => {
         this.expanded = !this.expanded;
         this.update();
@@ -198,8 +213,19 @@ export class GhostTimelineWidget extends ReactWidget {
                         title={clip.muted
                             ? nls.localize('theia/teacher/timelineUnmute', 'Restore')
                             : nls.localize('theia/teacher/timelineMute', 'Revert')}
+                        aria-label={clip.muted
+                            ? nls.localize('theia/teacher/timelineUnmute', 'Restore')
+                            : nls.localize('theia/teacher/timelineMute', 'Revert')}
                     >
-                        <i className={`codicon ${clip.muted ? 'codicon-unmute' : 'codicon-mute'}`} />
+                        <i className={`codicon ${clip.muted ? 'codicon-unmute' : 'codicon-mute'}`} aria-hidden='true' />
+                    </button>
+                    <button
+                        type='button'
+                        className='teacher-ghost-clip-undo-since-btn'
+                        onClick={e => this.handleUndoAllSince(e, clip.id)}
+                        title={nls.localize('theia/teacher/timelineUndoAllSince', 'Undo all since this point')}
+                    >
+                        <i className='codicon codicon-discard' />
                     </button>
                 </div>
                 <span className={`teacher-ghost-clip-title ${clip.muted ? 'teacher-ghost-clip-title--struck' : ''}`}>

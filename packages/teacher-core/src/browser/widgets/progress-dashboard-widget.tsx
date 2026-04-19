@@ -15,6 +15,8 @@ export class ProgressDashboardWidget extends ReactWidget {
 
     protected summary: ProgressSummary | undefined;
     protected skillMastery: Map<string, number> = new Map();
+    protected streakDays: number = 12;
+    protected streakHistory: boolean[] = [true, true, true, false, true, true, true, true, true, true, true, true, true, true];
 
     @postConstruct()
     protected init(): void {
@@ -48,9 +50,35 @@ export class ProgressDashboardWidget extends ReactWidget {
                     <i className='codicon codicon-graph'></i>
                     {nls.localize('theia/teacher/dashboardTitle', 'Learning Progress Dashboard')}
                 </h1>
+                {this.renderStreakCounter()}
                 {this.renderOverviewCards()}
                 {this.renderSkillMastery()}
                 {this.renderSuggestedNextLesson()}
+            </div>
+        );
+    }
+
+    protected renderStreakCounter(): React.ReactNode {
+        return (
+            <div className='teacher-dashboard-streak'>
+                <div className='teacher-dashboard-streak-header'>
+                    <i className='codicon codicon-flame teacher-dashboard-streak-flame'></i>
+                    <span className='teacher-dashboard-streak-count'>{this.streakDays}</span>
+                    <span className='teacher-dashboard-streak-label'>
+                        {nls.localize('theia/teacher/dayStreak', 'day streak')}
+                    </span>
+                </div>
+                <div className='teacher-dashboard-streak-dots'>
+                    {this.streakHistory.slice(-14).map((active, i) => (
+                        <span
+                            key={i}
+                            className={`teacher-dashboard-streak-dot ${active ? 'teacher-dashboard-streak-dot--active' : ''}`}
+                            title={active
+                                ? nls.localize('theia/teacher/streakActive', 'Active')
+                                : nls.localize('theia/teacher/streakMissed', 'Missed')}
+                        ></span>
+                    ))}
+                </div>
             </div>
         );
     }

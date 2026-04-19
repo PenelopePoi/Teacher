@@ -52,8 +52,9 @@ export class CanvasWidget extends ReactWidget {
                         className="theia-button secondary teacher-canvas-clear-btn"
                         onClick={this.clearAll}
                         title={nls.localize('theia/teacher/canvasClear', 'Clear all artifacts')}
+                        aria-label={nls.localize('theia/teacher/canvasClear', 'Clear all artifacts')}
                     >
-                        <i className="codicon codicon-clear-all" />
+                        <i className="codicon codicon-clear-all" aria-hidden="true" />
                         {nls.localize('theia/teacher/canvasClearLabel', 'Clear')}
                     </button>
                 </div>
@@ -67,7 +68,7 @@ export class CanvasWidget extends ReactWidget {
     protected renderEmpty(): React.ReactNode {
         return (
             <div className="teacher-canvas-empty">
-                <i className="codicon codicon-preview teacher-canvas-empty-icon" />
+                <i className="codicon codicon-preview teacher-canvas-empty-icon" aria-hidden="true" />
                 <p className="teacher-canvas-empty-title">
                     {nls.localize('theia/teacher/canvasEmptyTitle', 'Canvas is empty')}
                 </p>
@@ -92,9 +93,10 @@ export class CanvasWidget extends ReactWidget {
                         type="button"
                         className="teacher-canvas-artifact-remove"
                         title={nls.localize('theia/teacher/canvasRemove', 'Remove artifact')}
+                        aria-label={nls.localize('theia/teacher/canvasRemove', 'Remove artifact')}
                         onClick={() => this.canvasService.remove(artifact.id)}
                     >
-                        <i className="codicon codicon-close" />
+                        <i className="codicon codicon-close" aria-hidden="true" />
                     </button>
                 </header>
                 <div className="teacher-canvas-artifact-body">

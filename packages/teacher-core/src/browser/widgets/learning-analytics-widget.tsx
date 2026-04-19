@@ -22,6 +22,17 @@ export class LearningAnalyticsWidget extends ReactWidget {
     protected skillMastery: Map<string, number> = new Map();
     protected streakDays: number = 7;
 
+    protected velocityData: Array<{ week: string; concepts: number }> = [
+        { week: 'W1', concepts: 3 },
+        { week: 'W2', concepts: 5 },
+        { week: 'W3', concepts: 4 },
+        { week: 'W4', concepts: 7 },
+        { week: 'W5', concepts: 6 },
+        { week: 'W6', concepts: 9 },
+        { week: 'W7', concepts: 8 },
+        { week: 'W8', concepts: 11 },
+    ];
+
     protected demoTimeData: SkillTimeEntry[] = [
         { skill: 'Variables & Types', minutes: 45 },
         { skill: 'Control Flow', minutes: 62 },
@@ -71,6 +82,7 @@ export class LearningAnalyticsWidget extends ReactWidget {
                     </button>
                 </div>
                 {this.renderStreakCard()}
+                {this.renderLearningVelocity()}
                 {this.renderCourseBreakdown()}
                 {this.renderTimeDistribution()}
                 {this.renderSkillHeatmap()}
@@ -95,6 +107,37 @@ export class LearningAnalyticsWidget extends ReactWidget {
                             key={i}
                             className={`teacher-analytics-streak-dot ${i < this.streakDays ? 'teacher-analytics-streak-dot-active' : ''}`}
                         ></span>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    protected renderLearningVelocity(): React.ReactNode {
+        const maxConcepts = Math.max(...this.velocityData.map(d => d.concepts), 1);
+
+        return (
+            <div className='teacher-analytics-section'>
+                <h2 className='teacher-analytics-section-title'>
+                    <i className='codicon codicon-graph-line'></i>
+                    {nls.localize('theia/teacher/learningVelocity', 'Learning Velocity')}
+                </h2>
+                <p className='teacher-analytics-velocity-subtitle'>
+                    {nls.localize('theia/teacher/velocitySubtitle', 'Concepts learned per week')}
+                </p>
+                <div className='teacher-analytics-velocity-chart'>
+                    {this.velocityData.map(entry => (
+                        <div key={entry.week} className='teacher-analytics-velocity-bar-group'>
+                            <div className='teacher-analytics-velocity-bar-wrapper'>
+                                <div
+                                    className='teacher-analytics-velocity-bar'
+                                    style={{ height: `${(entry.concepts / maxConcepts) * 100}%` }}
+                                >
+                                    <span className='teacher-analytics-velocity-value'>{entry.concepts}</span>
+                                </div>
+                            </div>
+                            <span className='teacher-analytics-velocity-label'>{entry.week}</span>
+                        </div>
                     ))}
                 </div>
             </div>

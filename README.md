@@ -31,6 +31,17 @@ Teacher is a fork of Eclipse Theia with a custom visual identity (Glassmorphic I
 
 ## Features
 
+| Category | Items |
+|----------|-------|
+| **Widgets** (18) | Welcome, Progress Dashboard, Curriculum Browser, Canvas, Canvas Review, Learning Analytics, Learning Path, Skill Browser, Skill Command, AI History Search, Ghost Timeline, Improvement Dashboard, Permission Mode, Plan Mode, Teachable Moments, Rewind Panel, Workflow Builder, Pulse Panel |
+| **AI Agents** (9) | Tutor, Explain, Review, Debugger, Growth Tracker, Motivator, Project Builder, Strategic Planner, Thinking Coach |
+| **Skill Engine** | 306 SKILL.md files, fuzzy search, execution metrics, multi-step workflows, auto-triggers |
+| **Eye UI Theme** | Glassmorphic Industrial design, warm charcoal palette, amber accent, 2400ms breathing glow, 8 DI rebinds |
+| **Curriculum** | 3 courses (Python, Web, Git), 15 lessons, assessment engine, workspace templates |
+| **Progress** | Skill mastery tracking, weekly reports, streak counter, weak area detection, recommendations |
+| **Local AI** | Ollama integration, 5-agent ASI research swarm, zero cloud dependency |
+| **Platform** | VS Code extension compatibility, browser + Electron, multi-language support |
+
 ### Visual Identity
 - **Teacher Dark theme** — warm industrial charcoal palette with amber accent, periwinkle functions, teal strings, violet keywords
 - **Glassmorphic surfaces** — frosted glass on command palette, dialogs, AI panels; flat chrome on editor viewport

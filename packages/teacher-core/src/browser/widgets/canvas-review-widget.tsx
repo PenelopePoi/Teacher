@@ -41,6 +41,8 @@ export class CanvasReviewWidget extends ReactWidget {
 
     protected splitPercent: number = 50;
     protected isDragging: boolean = false;
+    protected viewMode: 'split' | 'slider' = 'split';
+    protected sliderPercent: number = 50;
 
     @postConstruct()
     protected init(): void {
@@ -58,6 +60,16 @@ export class CanvasReviewWidget extends ReactWidget {
 
     protected handleReject = (): void => {
         console.info('Canvas review: rejected');
+    };
+
+    protected handleToggleViewMode = (): void => {
+        this.viewMode = this.viewMode === 'split' ? 'slider' : 'split';
+        this.update();
+    };
+
+    protected handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.sliderPercent = Number(e.target.value);
+        this.update();
     };
 
     protected handleMouseDown = (e: React.MouseEvent): void => {
@@ -88,34 +100,78 @@ export class CanvasReviewWidget extends ReactWidget {
         return (
             <div className='teacher-canvas-review-container'>
                 {this.renderTopBar()}
-                <div className='teacher-canvas-review-panels'>
-                    <div className='teacher-canvas-review-panel teacher-canvas-review-panel--before' style={{ width: `${this.splitPercent}%` }}>
-                        <div className='teacher-canvas-review-panel-label'>
-                            {nls.localize('theia/teacher/canvasBefore', 'Before')}
-                        </div>
-                        <div className='teacher-canvas-review-panel-content' dangerouslySetInnerHTML={{ __html: BEFORE_HTML }} />
-                        <span className='teacher-canvas-review-file-badge'>
-                            <i className='codicon codicon-file' />
-                            src/components/ProfileCard.tsx
-                        </span>
-                    </div>
-                    <div
-                        className='teacher-canvas-review-divider'
-                        onMouseDown={this.handleMouseDown}
-                    />
-                    <div className='teacher-canvas-review-panel teacher-canvas-review-panel--after' style={{ width: `${100 - this.splitPercent}%` }}>
-                        <div className='teacher-canvas-review-panel-label'>
-                            {nls.localize('theia/teacher/canvasAfter', 'After')}
-                        </div>
-                        <div className='teacher-canvas-review-panel-content' dangerouslySetInnerHTML={{ __html: AFTER_HTML }} />
-                        <span className='teacher-canvas-review-file-badge'>
-                            <i className='codicon codicon-file' />
-                            src/components/ProfileCard.tsx
-                        </span>
-                    </div>
-                </div>
+                {this.viewMode === 'split' ? this.renderSplitView() : this.renderSliderView()}
                 {this.renderSummary()}
                 {this.renderExplanation()}
+            </div>
+        );
+    }
+
+    protected renderSplitView(): React.ReactNode {
+        return (
+            <div className='teacher-canvas-review-panels'>
+                <div className='teacher-canvas-review-panel teacher-canvas-review-panel--before' style={{ width: `${this.splitPercent}%` }}>
+                    <div className='teacher-canvas-review-panel-label'>
+                        {nls.localize('theia/teacher/canvasBefore', 'Before')}
+                    </div>
+                    <div className='teacher-canvas-review-panel-content' dangerouslySetInnerHTML={{ __html: BEFORE_HTML }} />
+                    <span className='teacher-canvas-review-file-badge'>
+                        <i className='codicon codicon-file' />
+                        src/components/ProfileCard.tsx
+                    </span>
+                </div>
+                <div
+                    className='teacher-canvas-review-divider'
+                    onMouseDown={this.handleMouseDown}
+                />
+                <div className='teacher-canvas-review-panel teacher-canvas-review-panel--after' style={{ width: `${100 - this.splitPercent}%` }}>
+                    <div className='teacher-canvas-review-panel-label'>
+                        {nls.localize('theia/teacher/canvasAfter', 'After')}
+                    </div>
+                    <div className='teacher-canvas-review-panel-content' dangerouslySetInnerHTML={{ __html: AFTER_HTML }} />
+                    <span className='teacher-canvas-review-file-badge'>
+                        <i className='codicon codicon-file' />
+                        src/components/ProfileCard.tsx
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    protected renderSliderView(): React.ReactNode {
+        return (
+            <div className='teacher-canvas-review-slider-container'>
+                <div className='teacher-canvas-review-slider-stack'>
+                    <div className='teacher-canvas-review-slider-layer teacher-canvas-review-slider-layer--after'>
+                        <div className='teacher-canvas-review-panel-content' dangerouslySetInnerHTML={{ __html: AFTER_HTML }} />
+                    </div>
+                    <div
+                        className='teacher-canvas-review-slider-layer teacher-canvas-review-slider-layer--before'
+                        style={{ clipPath: `inset(0 ${100 - this.sliderPercent}% 0 0)` }}
+                    >
+                        <div className='teacher-canvas-review-panel-content' dangerouslySetInnerHTML={{ __html: BEFORE_HTML }} />
+                    </div>
+                    <div
+                        className='teacher-canvas-review-slider-line'
+                        style={{ left: `${this.sliderPercent}%` }}
+                    />
+                </div>
+                <div className='teacher-canvas-review-slider-controls'>
+                    <span className='teacher-canvas-review-slider-label-left'>
+                        {nls.localize('theia/teacher/canvasBefore', 'Before')}
+                    </span>
+                    <input
+                        type='range'
+                        className='teacher-canvas-review-slider-input'
+                        min={0}
+                        max={100}
+                        value={this.sliderPercent}
+                        onChange={this.handleSliderChange}
+                    />
+                    <span className='teacher-canvas-review-slider-label-right'>
+                        {nls.localize('theia/teacher/canvasAfter', 'After')}
+                    </span>
+                </div>
             </div>
         );
     }
@@ -133,6 +189,15 @@ export class CanvasReviewWidget extends ReactWidget {
                     {nls.localize('theia/teacher/canvasAfter', 'After')}
                 </span>
                 <div className='teacher-canvas-review-topbar-actions'>
+                    <button
+                        type='button'
+                        className={`teacher-canvas-review-btn teacher-canvas-review-btn--mode ${this.viewMode === 'slider' ? 'teacher-canvas-review-btn--active' : ''}`}
+                        onClick={this.handleToggleViewMode}
+                        title={nls.localize('theia/teacher/canvasToggleSlider', 'Toggle slider mode')}
+                    >
+                        <i className='codicon codicon-screen-full' />
+                        {nls.localize('theia/teacher/canvasSlider', 'Slider')}
+                    </button>
                     <button
                         type='button'
                         className='teacher-canvas-review-btn teacher-canvas-review-btn--accept'

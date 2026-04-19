@@ -83,8 +83,14 @@ import { PedagogyLibraryWidget } from './teachable-moments/pedagogy-library-widg
 import { MessageQueueService } from './agent-queue/message-queue-service';
 import { MessageQueueWidget } from './agent-queue/message-queue-widget';
 import { MessageQueueContribution } from './agent-queue/message-queue-contribution';
+import { AgentHandoffService } from './agents/agent-handoff-service';
+import { AgentCommunicationService } from '../common/agent-protocol';
 
 export default new ContainerModule(bind => {
+    // Agent Handoff Service — manages inter-agent communication and handoffs
+    bind(AgentHandoffService).toSelf().inSingletonScope();
+    bind(AgentCommunicationService).toService(AgentHandoffService);
+
     // Tutor Agent
     bind(TutorAgent).toSelf().inSingletonScope();
     bind(Agent).toService(TutorAgent);

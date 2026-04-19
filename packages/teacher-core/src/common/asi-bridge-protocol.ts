@@ -52,6 +52,14 @@ export interface ASIBridgeService {
      * contradictions, or low-quality entries.
      */
     detectAnomalies(): Promise<AnomalyScanResult>;
+
+    /**
+     * Searches the ASI knowledge graph for entries related to a topic.
+     * Returns matching knowledge entries with relevance scores.
+     * @param topic The topic or concept to search for in the knowledge graph.
+     * @returns A response containing relevant knowledge entries and their sources.
+     */
+    queryKnowledge(topic: string): Promise<ASIResponse>;
 }
 
 /**

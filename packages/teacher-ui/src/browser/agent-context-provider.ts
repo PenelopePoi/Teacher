@@ -2,6 +2,7 @@ import { injectable, inject, postConstruct } from '@theia/core/shared/inversify'
 import { Emitter, Event, DisposableCollection } from '@theia/core/lib/common';
 import { AgentModeService, AgentMode } from './agent-mode-service';
 import { AgentSessionManager, Plan } from './agent-session-manager';
+import { AgentsMdProvider } from './agents-md-provider';
 
 /**
  * Agent Context Provider — collects IDE state for agent context injection.
@@ -9,6 +10,15 @@ import { AgentSessionManager, Plan } from './agent-session-manager';
  * Provides Windsurf-style "Flow Awareness": recent files, errors,
  * terminal output, and active editor info bundled into a single
  * AgentContext object agents can consume.
+ *
+ * Enhancements over v1:
+ *   - AGENTS.md integration (workspace-level agent instructions)
+ *   - Git branch awareness (current branch name)
+ *   - Workspace root tracking
+ *   - Context serialization for prompt injection
+ *   - Configurable context window size
+ *   - Error deduplication and ranking
+ *   - Terminal command+output pairing
  */
 
 export interface DiagnosticInfo {
@@ -17,6 +27,7 @@ export interface DiagnosticInfo {
     severity: 'error' | 'warning' | 'info';
     message: string;
     timestamp: number;
+    source?: string;
 }
 
 export interface ActiveEditorInfo {
@@ -24,6 +35,15 @@ export interface ActiveEditorInfo {
     language: string;
     selection?: string;
     cursorLine: number;
+    lineCount?: number;
+    isDirty?: boolean;
+}
+
+export interface TerminalEntry {
+    command: string;
+    output: string;
+    exitCode?: number;
+    timestamp: number;
 }
 
 export interface AgentContext {
@@ -36,11 +56,16 @@ export interface AgentContext {
     sessionDuration: number;
     actionCount: number;
     currentPlan: Plan | undefined;
+    agentsMd: string | undefined;
+    gitBranch: string | undefined;
+    workspaceRoot: string | undefined;
+    filesTouchedCount: number;
 }
 
 const MAX_RECENT_FILES = 20;
 const MAX_RECENT_ERRORS = 50;
 const MAX_TERMINAL_LINES = 100;
+const MAX_TERMINAL_COMMANDS = 20;
 
 @injectable()
 export class AgentContextProvider {
@@ -51,14 +76,20 @@ export class AgentContextProvider {
     @inject(AgentSessionManager)
     protected readonly sessionManager: AgentSessionManager;
 
+    @inject(AgentsMdProvider)
+    protected readonly agentsMdProvider: AgentsMdProvider;
+
     private readonly disposables = new DisposableCollection();
 
     private recentFiles: string[] = [];
     private recentErrors: DiagnosticInfo[] = [];
     private terminalBuffer: string[] = [];
+    private terminalCommands: TerminalEntry[] = [];
     private activeFile: string | undefined;
     private openFiles: string[] = [];
     private activeEditorInfo: ActiveEditorInfo | undefined;
+    private gitBranch: string | undefined;
+    private workspaceRoot: string | undefined;
 
     private readonly onDidUpdateContextEmitter = new Emitter<AgentContext>();
     readonly onDidUpdateContext: Event<AgentContext> = this.onDidUpdateContextEmitter.event;
@@ -82,6 +113,24 @@ export class AgentContextProvider {
             })
         );
 
+        // Listen for AGENTS.md changes
+        this.disposables.push(
+            this.agentsMdProvider.onDidChangeContent(() => {
+                this.fireContextUpdate();
+            })
+        );
+
+        // Listen for session clear
+        this.disposables.push(
+            this.sessionManager.onDidClearSession(() => {
+                this.recentFiles = [];
+                this.recentErrors = [];
+                this.terminalBuffer = [];
+                this.terminalCommands = [];
+                this.fireContextUpdate();
+            })
+        );
+
         console.info('[AgentContextProvider] Initialized');
     }
 
@@ -97,7 +146,58 @@ export class AgentContextProvider {
             sessionDuration: this.sessionManager.getSessionDuration(),
             actionCount: this.sessionManager.getActionCount(),
             currentPlan: this.sessionManager.getPlan(),
+            agentsMd: this.agentsMdProvider.getAgentsMdContent(),
+            gitBranch: this.gitBranch,
+            workspaceRoot: this.workspaceRoot,
+            filesTouchedCount: this.sessionManager.getFilesTouchedCount(),
         };
+    }
+
+    /**
+     * Serialize context as a structured text block suitable for prompt injection.
+     * This is the primary interface for feeding context to AI agents.
+     */
+    serializeForPrompt(): string {
+        const ctx = this.getContext();
+        const lines: string[] = [];
+
+        lines.push('--- Agent Context ---');
+        lines.push(`Mode: ${ctx.mode}`);
+        lines.push(`Session: ${this.formatDuration(ctx.sessionDuration)} | ${ctx.actionCount} actions | ${ctx.filesTouchedCount} files touched`);
+
+        if (ctx.gitBranch) {
+            lines.push(`Branch: ${ctx.gitBranch}`);
+        }
+        if (ctx.workspaceRoot) {
+            lines.push(`Workspace: ${ctx.workspaceRoot}`);
+        }
+        if (ctx.activeFile) {
+            lines.push(`Active file: ${ctx.activeFile}`);
+        }
+        if (ctx.openFiles.length > 0) {
+            lines.push(`Open files: ${ctx.openFiles.join(', ')}`);
+        }
+        if (ctx.recentFiles.length > 0) {
+            lines.push(`Recent files: ${ctx.recentFiles.slice(0, 5).join(', ')}`);
+        }
+        if (ctx.recentErrors.length > 0) {
+            lines.push('Recent errors:');
+            for (const err of ctx.recentErrors.slice(0, 5)) {
+                lines.push(`  ${err}`);
+            }
+        }
+        if (ctx.currentPlan) {
+            const progress = this.sessionManager.getPlanProgress();
+            lines.push(`Plan: "${ctx.currentPlan.title}" [${ctx.currentPlan.status}] ${progress}% complete`);
+        }
+        if (ctx.agentsMd) {
+            lines.push('');
+            lines.push('--- AGENTS.md ---');
+            lines.push(ctx.agentsMd);
+        }
+
+        lines.push('--- End Context ---');
+        return lines.join('\n');
     }
 
     /** Track a file as recently accessed. */
@@ -117,8 +217,12 @@ export class AgentContextProvider {
         return this.recentFiles.slice(0, limit);
     }
 
-    /** Record a diagnostic error. */
+    /** Record a diagnostic error with deduplication. */
     recordError(error: DiagnosticInfo): void {
+        // Deduplicate: remove existing errors with same file+line+message
+        this.recentErrors = this.recentErrors.filter(
+            e => !(e.file === error.file && e.line === error.line && e.message === error.message)
+        );
         this.recentErrors.unshift(error);
         if (this.recentErrors.length > MAX_RECENT_ERRORS) {
             this.recentErrors = this.recentErrors.slice(0, MAX_RECENT_ERRORS);
@@ -126,9 +230,30 @@ export class AgentContextProvider {
         this.fireContextUpdate();
     }
 
-    /** Get recent errors. */
-    getRecentErrors(): DiagnosticInfo[] {
+    /** Clear errors for a specific file (e.g., when the file is saved and errors resolve). */
+    clearErrorsForFile(file: string): void {
+        const before = this.recentErrors.length;
+        this.recentErrors = this.recentErrors.filter(e => e.file !== file);
+        if (this.recentErrors.length !== before) {
+            this.fireContextUpdate();
+        }
+    }
+
+    /** Get recent errors, optionally filtered by severity. */
+    getRecentErrors(severity?: DiagnosticInfo['severity']): DiagnosticInfo[] {
+        if (severity) {
+            return this.recentErrors.filter(e => e.severity === severity);
+        }
         return [...this.recentErrors];
+    }
+
+    /** Get error count by severity. */
+    getErrorCounts(): Record<DiagnosticInfo['severity'], number> {
+        const counts: Record<DiagnosticInfo['severity'], number> = { error: 0, warning: 0, info: 0 };
+        for (const e of this.recentErrors) {
+            counts[e.severity]++;
+        }
+        return counts;
     }
 
     /** Append terminal output to the buffer. */
@@ -137,6 +262,25 @@ export class AgentContextProvider {
         if (this.terminalBuffer.length > MAX_TERMINAL_LINES * 2) {
             this.terminalBuffer = this.terminalBuffer.slice(-MAX_TERMINAL_LINES);
         }
+    }
+
+    /** Record a terminal command + output pair. */
+    recordTerminalCommand(entry: TerminalEntry): void {
+        this.terminalCommands.unshift(entry);
+        if (this.terminalCommands.length > MAX_TERMINAL_COMMANDS) {
+            this.terminalCommands = this.terminalCommands.slice(0, MAX_TERMINAL_COMMANDS);
+        }
+        this.appendTerminalOutput(`$ ${entry.command}`);
+        if (entry.output) {
+            for (const line of entry.output.split('\n').slice(0, 20)) {
+                this.appendTerminalOutput(line);
+            }
+        }
+    }
+
+    /** Get recent terminal commands. */
+    getRecentTerminalCommands(limit: number = MAX_TERMINAL_COMMANDS): TerminalEntry[] {
+        return this.terminalCommands.slice(0, limit);
     }
 
     /** Get recent terminal output. */
@@ -167,8 +311,39 @@ export class AgentContextProvider {
         return [...this.openFiles];
     }
 
+    /** Set the current git branch. */
+    setGitBranch(branch: string | undefined): void {
+        this.gitBranch = branch;
+        this.fireContextUpdate();
+    }
+
+    /** Get the current git branch. */
+    getGitBranch(): string | undefined {
+        return this.gitBranch;
+    }
+
+    /** Set the workspace root path. */
+    setWorkspaceRoot(root: string | undefined): void {
+        this.workspaceRoot = root;
+    }
+
+    /** Get the workspace root path. */
+    getWorkspaceRoot(): string | undefined {
+        return this.workspaceRoot;
+    }
+
     private fireContextUpdate(): void {
         this.onDidUpdateContextEmitter.fire(this.getContext());
+    }
+
+    private formatDuration(ms: number): string {
+        const totalMinutes = Math.floor(ms / 60_000);
+        if (totalMinutes < 60) {
+            return `${totalMinutes}m`;
+        }
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return `${hours}h ${minutes}m`;
     }
 
     dispose(): void {

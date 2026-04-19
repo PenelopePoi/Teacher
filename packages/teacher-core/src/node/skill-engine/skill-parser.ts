@@ -32,6 +32,11 @@ export class SkillParser {
         const name = fields['name'] || this.nameFromPath(filePath);
         const description = fields['description'] || '';
 
+        // Parse allowed-tools from frontmatter — supports both
+        // comma-separated string and YAML list syntax
+        const allowedToolsRaw = fields['allowed-tools'] || fields['allowedTools'];
+        const allowedTools = this.parseAllowedTools(allowedToolsRaw, body);
+
         return {
             name,
             description,
@@ -42,7 +47,7 @@ export class SkillParser {
             bloomLevel: fields['bloom_level'] || fields['bloomLevel'],
             type: fields['type'] || 'skill',
             argumentHint: fields['argument-hint'] || fields['argumentHint'],
-            allowedTools: this.parseList(fields['allowed-tools'] || fields['allowedTools']),
+            allowedTools,
             filePath,
             content: body,
             triggers: this.extractTriggers(description),
@@ -123,6 +128,28 @@ export class SkillParser {
             .map(s => s.trim().toLowerCase())
             .filter(s => s.length > 2 && s.length < 120);
         return parts;
+    }
+
+    /**
+     * Parse the allowed-tools field from frontmatter.
+     * Supports comma-separated values in frontmatter and also scans
+     * the body for an `allowed-tools:` line (some SKILL.md files
+     * put it outside the YAML block).
+     */
+    private parseAllowedTools(frontmatterValue: string | undefined, body: string): string[] | undefined {
+        // First try the frontmatter value
+        const fromFrontmatter = this.parseList(frontmatterValue);
+        if (fromFrontmatter && fromFrontmatter.length > 0) {
+            return fromFrontmatter;
+        }
+
+        // Fallback: scan body for an allowed-tools line
+        const bodyMatch = body.match(/^allowed[_-]tools\s*:\s*(.+)$/mi);
+        if (bodyMatch) {
+            return this.parseList(bodyMatch[1]);
+        }
+
+        return undefined;
     }
 
     /**

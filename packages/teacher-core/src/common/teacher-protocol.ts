@@ -59,6 +59,9 @@ export interface CurriculumModule {
     lessons: LessonManifest[];
 }
 
+/** Mastery level for a concept, from 0.0 (no exposure) to 1.0 (full mastery). */
+export type MasteryLevel = number;
+
 /** Symbol for dependency injection of the TeacherService. */
 export const TeacherService = Symbol('TeacherService');
 
@@ -83,6 +86,22 @@ export interface TeacherService {
      * @param hintLevel 0 = gentlest nudge, higher = more specific. Clamped to available hints.
      */
     getHint(lessonId: string, hintLevel: number): Promise<string>;
+    /**
+     * Returns the current student's learning profile.
+     * Creates a default profile if none exists.
+     */
+    getLearningProfile(): Promise<import('./learning-profile').LearningProfile>;
+    /**
+     * Updates the student's learning profile.
+     * Merges the provided fields with the existing profile.
+     */
+    updateLearningProfile(profile: Partial<import('./learning-profile').LearningProfile>): Promise<void>;
+    /**
+     * Records mastery of a specific concept at the given level.
+     * @param concept Concept identifier (e.g., 'js-closures').
+     * @param level Mastery level from 0.0 to 1.0.
+     */
+    recordConceptMastery(concept: string, level: MasteryLevel): Promise<void>;
 }
 
 /**

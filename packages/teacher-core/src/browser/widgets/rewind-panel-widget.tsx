@@ -10,6 +10,12 @@ import * as React from '@theia/core/shared/react';
  * code only, conversation only, or both.
  */
 
+interface CheckpointFileDiff {
+    readonly file: string;
+    readonly linesAdded: number;
+    readonly linesRemoved: number;
+}
+
 interface Checkpoint {
     readonly id: string;
     readonly label: string;
@@ -17,6 +23,7 @@ interface Checkpoint {
     readonly fileCount: number;
     readonly kind: 'auto' | 'manual';
     readonly isCurrent: boolean;
+    readonly fileDiffs: CheckpointFileDiff[];
 }
 
 @injectable()
@@ -27,6 +34,7 @@ export class RewindPanelWidget extends ReactWidget {
 
     protected checkpoints: Checkpoint[] = [];
     protected newCheckpointName: string = '';
+    protected hoveredCheckpointId: string | undefined;
 
     @postConstruct()
     protected init(): void {
@@ -43,11 +51,27 @@ export class RewindPanelWidget extends ReactWidget {
     protected loadDemoData(): void {
         const now = Date.now();
         this.checkpoints = [
-            { id: 'cp-1', label: 'Current state', timestamp: now, fileCount: 0, kind: 'auto', isCurrent: true },
-            { id: 'cp-2', label: 'Before auth refactor', timestamp: now - 2 * 60000, fileCount: 4, kind: 'manual', isCurrent: false },
-            { id: 'cp-3', label: 'Login form working', timestamp: now - 8 * 60000, fileCount: 2, kind: 'auto', isCurrent: false },
-            { id: 'cp-4', label: 'Initial scaffold', timestamp: now - 15 * 60000, fileCount: 7, kind: 'auto', isCurrent: false },
-            { id: 'cp-5', label: 'Session start', timestamp: now - 22 * 60000, fileCount: 0, kind: 'auto', isCurrent: false },
+            { id: 'cp-1', label: 'Current state', timestamp: now, fileCount: 0, kind: 'auto', isCurrent: true, fileDiffs: [] },
+            { id: 'cp-2', label: 'Before auth refactor', timestamp: now - 2 * 60000, fileCount: 4, kind: 'manual', isCurrent: false, fileDiffs: [
+                { file: 'src/auth/service.ts', linesAdded: 42, linesRemoved: 8 },
+                { file: 'src/auth/types.ts', linesAdded: 15, linesRemoved: 0 },
+                { file: 'src/middleware/auth.ts', linesAdded: 28, linesRemoved: 3 },
+                { file: 'src/config.ts', linesAdded: 4, linesRemoved: 1 },
+            ]},
+            { id: 'cp-3', label: 'Login form working', timestamp: now - 8 * 60000, fileCount: 2, kind: 'auto', isCurrent: false, fileDiffs: [
+                { file: 'src/components/Login.tsx', linesAdded: 67, linesRemoved: 0 },
+                { file: 'src/styles/login.css', linesAdded: 34, linesRemoved: 0 },
+            ]},
+            { id: 'cp-4', label: 'Initial scaffold', timestamp: now - 15 * 60000, fileCount: 7, kind: 'auto', isCurrent: false, fileDiffs: [
+                { file: 'package.json', linesAdded: 12, linesRemoved: 2 },
+                { file: 'src/index.ts', linesAdded: 8, linesRemoved: 0 },
+                { file: 'src/app.ts', linesAdded: 24, linesRemoved: 0 },
+                { file: 'src/router/index.ts', linesAdded: 18, linesRemoved: 0 },
+                { file: 'tsconfig.json', linesAdded: 15, linesRemoved: 0 },
+                { file: '.eslintrc.json', linesAdded: 22, linesRemoved: 0 },
+                { file: 'README.md', linesAdded: 10, linesRemoved: 0 },
+            ]},
+            { id: 'cp-5', label: 'Session start', timestamp: now - 22 * 60000, fileCount: 0, kind: 'auto', isCurrent: false, fileDiffs: [] },
         ];
     }
 
@@ -68,6 +92,11 @@ export class RewindPanelWidget extends ReactWidget {
 
     protected handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.newCheckpointName = e.target.value;
+        this.update();
+    };
+
+    protected handleCheckpointHover = (checkpointId: string | undefined): void => {
+        this.hoveredCheckpointId = checkpointId;
         this.update();
     };
 
@@ -121,6 +150,8 @@ export class RewindPanelWidget extends ReactWidget {
             <div
                 key={cp.id}
                 className={`teacher-rewind-checkpoint ${cp.isCurrent ? 'teacher-rewind-checkpoint--current' : ''}`}
+                onMouseEnter={() => this.handleCheckpointHover(cp.id)}
+                onMouseLeave={() => this.handleCheckpointHover(undefined)}
             >
                 <div className='teacher-rewind-timeline-track'>
                     <span className={`teacher-rewind-dot ${cp.isCurrent ? 'teacher-rewind-dot--current' : ''}`} />
@@ -153,26 +184,49 @@ export class RewindPanelWidget extends ReactWidget {
                                 type='button'
                                 className='teacher-rewind-action-btn'
                                 title={nls.localize('theia/teacher/rewindCodeOnly', 'Rewind Code Only')}
+                                aria-label={nls.localize('theia/teacher/rewindCodeOnly', 'Rewind Code Only')}
                                 onClick={() => this.handleRewind(cp.id, 'code')}
                             >
-                                <i className='codicon codicon-code' />
+                                <i className='codicon codicon-code' aria-hidden='true' />
                             </button>
                             <button
                                 type='button'
                                 className='teacher-rewind-action-btn'
                                 title={nls.localize('theia/teacher/rewindConversationOnly', 'Rewind Conversation Only')}
+                                aria-label={nls.localize('theia/teacher/rewindConversationOnly', 'Rewind Conversation Only')}
                                 onClick={() => this.handleRewind(cp.id, 'conversation')}
                             >
-                                <i className='codicon codicon-comment-discussion' />
+                                <i className='codicon codicon-comment-discussion' aria-hidden='true' />
                             </button>
                             <button
                                 type='button'
                                 className='teacher-rewind-action-btn'
                                 title={nls.localize('theia/teacher/rewindBoth', 'Rewind Both')}
+                                aria-label={nls.localize('theia/teacher/rewindBoth', 'Rewind Both')}
                                 onClick={() => this.handleRewind(cp.id, 'both')}
                             >
-                                <i className='codicon codicon-history' />
+                                <i className='codicon codicon-history' aria-hidden='true' />
                             </button>
+                        </div>
+                    )}
+                    {this.hoveredCheckpointId === cp.id && cp.fileDiffs.length > 0 && (
+                        <div className='teacher-rewind-diff-preview'>
+                            <div className='teacher-rewind-diff-preview-title'>
+                                <i className='codicon codicon-diff' />
+                                {nls.localize('theia/teacher/rewindFilesChanged', 'Files changed')}
+                            </div>
+                            {cp.fileDiffs.map(diff => (
+                                <div key={diff.file} className='teacher-rewind-diff-row'>
+                                    <span className='teacher-rewind-diff-file'>
+                                        <i className='codicon codicon-file' />
+                                        {diff.file}
+                                    </span>
+                                    <span className='teacher-rewind-diff-stats'>
+                                        <span className='teacher-rewind-diff-added'>+{diff.linesAdded}</span>
+                                        <span className='teacher-rewind-diff-removed'>-{diff.linesRemoved}</span>
+                                    </span>
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>

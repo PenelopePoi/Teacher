@@ -43,6 +43,14 @@ export class SkillBrowserWidget extends ReactWidget {
     protected selectedCategory: string = '';
     protected skills: SkillEntry[] = DEMO_SKILLS;
 
+    protected recentlyUsed: SkillEntry[] = [
+        DEMO_SKILLS[5],  // Promises & Async/Await
+        DEMO_SKILLS[11], // React Components
+        DEMO_SKILLS[3],  // Array Methods
+        DEMO_SKILLS[14], // CSS Grid
+        DEMO_SKILLS[0],  // Variables & Types
+    ];
+
     @postConstruct()
     protected init(): void {
         this.id = SkillBrowserWidget.ID;
@@ -97,6 +105,7 @@ export class SkillBrowserWidget extends ReactWidget {
                         ))}
                     </select>
                 </div>
+                {!this.searchQuery && !this.selectedCategory && this.renderRecentlyUsed()}
                 <div className='teacher-skill-browser-list'>
                     {filtered.length === 0 ? (
                         <div className='teacher-skill-browser-empty'>
@@ -123,6 +132,28 @@ export class SkillBrowserWidget extends ReactWidget {
                     <i className='codicon codicon-tag'></i>
                     {skill.category}
                 </span>
+            </div>
+        );
+    }
+
+    protected renderRecentlyUsed(): React.ReactNode {
+        return (
+            <div className='teacher-skill-browser-recent'>
+                <h3 className='teacher-skill-browser-recent-title'>
+                    <i className='codicon codicon-history'></i>
+                    {nls.localize('theia/teacher/recentlyUsed', 'Recently Used')}
+                </h3>
+                <div className='teacher-skill-browser-recent-list'>
+                    {this.recentlyUsed.map(skill => (
+                        <div key={skill.name} className='teacher-skill-browser-recent-chip'>
+                            <span className='teacher-skill-browser-recent-chip-name'>{skill.name}</span>
+                            <span className='teacher-skill-browser-recent-chip-category'>
+                                <i className='codicon codicon-tag'></i>
+                                {skill.category}
+                            </span>
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }

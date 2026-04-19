@@ -63,6 +63,42 @@ const BUILT_IN_WORKFLOWS: WorkflowDefinition[] = [
         ],
         autoTrigger: 'session-start',
     },
+    {
+        name: 'morning-learning',
+        description: 'Morning learning flow: read energy → set daily objective → structured learning',
+        steps: [
+            { skillName: 'energy-state-reader' },
+            { skillName: 'best-timeline-aligner' },
+            { skillName: 'learning-teaching-suite' },
+        ],
+    },
+    {
+        name: 'project-kickoff',
+        description: 'New project setup: interview for requirements → design constraints → scaffold',
+        steps: [
+            { skillName: 'ask-interview' },
+            { skillName: 'constraint-designer' },
+            { skillName: 'firebase-ops' },
+        ],
+    },
+    {
+        name: 'music-production',
+        description: 'Music production pipeline: craft prompts → generate brand audio → master for release',
+        steps: [
+            { skillName: 'music-prompt-engineer' },
+            { skillName: 'suno-brand-audio' },
+            { skillName: 'album-mastering' },
+        ],
+    },
+    {
+        name: 'grant-application',
+        description: 'Grant writing pipeline: draft application → remove AI language → generate proposal',
+        steps: [
+            { skillName: 'grant-writing' },
+            { skillName: 'anti-ai-language' },
+            { skillName: 'proposal-generator' },
+        ],
+    },
 ];
 
 /**

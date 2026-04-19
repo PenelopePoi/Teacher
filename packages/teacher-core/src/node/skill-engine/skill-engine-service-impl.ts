@@ -13,8 +13,39 @@ import { WorkflowRunner } from './workflow-runner';
 import { AutoTriggerService } from './auto-trigger-service';
 
 /**
+ * Structured error returned from RPC handlers when an operation fails.
+ */
+interface RpcError {
+    code: string;
+    message: string;
+    detail?: string;
+}
+
+/**
+ * Wraps an async function in a try/catch that returns structured errors
+ * instead of throwing uncaught exceptions across the RPC boundary.
+ */
+async function withErrorBoundary<T>(
+    operation: string,
+    fn: () => Promise<T>
+): Promise<T> {
+    try {
+        return await fn();
+    } catch (err) {
+        const error: RpcError = {
+            code: 'SKILL_ENGINE_ERROR',
+            message: `Operation "${operation}" failed`,
+            detail: err instanceof Error ? err.message : String(err),
+        };
+        console.error(`[SkillEngine] ${error.message}: ${error.detail}`);
+        throw error;
+    }
+}
+
+/**
  * Facade implementation of SkillEngineService that delegates to
  * the registry, executor, workflow runner, and auto-trigger service.
+ * All RPC handlers are wrapped in error boundaries that return structured errors.
  */
 @injectable()
 export class SkillEngineServiceImpl implements SkillEngineService {
@@ -44,62 +75,86 @@ export class SkillEngineServiceImpl implements SkillEngineService {
     // ── Registry ──────────────────────────────────────────────
 
     async scanSkills(): Promise<number> {
-        return this.registry.scanSkills();
+        return withErrorBoundary('scanSkills', () => this.registry.scanSkills());
     }
 
     async getAllSkills(): Promise<SkillDefinition[]> {
-        return this.registry.getAllSkills();
+        return withErrorBoundary('getAllSkills', () =>
+            Promise.resolve(this.registry.getAllSkills())
+        );
     }
 
     async getSkill(name: string): Promise<SkillDefinition | undefined> {
-        return this.registry.getSkill(name);
+        return withErrorBoundary('getSkill', () =>
+            Promise.resolve(this.registry.getSkill(name))
+        );
     }
 
     async searchSkills(query: string): Promise<SkillMatch[]> {
-        return this.registry.searchSkills(query);
+        return withErrorBoundary('searchSkills', () =>
+            Promise.resolve(this.registry.searchSkills(query))
+        );
     }
 
     async getSkillsByDomain(domain: string): Promise<SkillDefinition[]> {
-        return this.registry.getSkillsByDomain(domain);
+        return withErrorBoundary('getSkillsByDomain', () =>
+            Promise.resolve(this.registry.getSkillsByDomain(domain))
+        );
     }
 
     async getSkillsByIntent(intent: string): Promise<SkillDefinition[]> {
-        return this.registry.getSkillsByIntent(intent);
+        return withErrorBoundary('getSkillsByIntent', () =>
+            Promise.resolve(this.registry.getSkillsByIntent(intent))
+        );
     }
 
     // ── Execution ─────────────────────────────────────────────
 
     async executeSkill(name: string, input: string): Promise<SkillExecutionResult> {
-        return this.executor.executeSkill(name, input);
+        return withErrorBoundary('executeSkill', () =>
+            this.executor.executeSkill(name, input)
+        );
     }
 
     // ── Workflows ─────────────────────────────────────────────
 
     async getWorkflows(): Promise<WorkflowDefinition[]> {
-        return this.workflowRunner.getWorkflows();
+        return withErrorBoundary('getWorkflows', () =>
+            Promise.resolve(this.workflowRunner.getWorkflows())
+        );
     }
 
     async executeWorkflow(name: string, input: string): Promise<SkillExecutionResult[]> {
-        return this.workflowRunner.executeWorkflow(name, input);
+        return withErrorBoundary('executeWorkflow', () =>
+            this.workflowRunner.executeWorkflow(name, input)
+        );
     }
 
     // ── Metrics ───────────────────────────────────────────────
 
     async getMetrics(): Promise<SkillMetrics[]> {
-        return this.executor.getMetrics();
+        return withErrorBoundary('getMetrics', () =>
+            this.executor.getMetrics()
+        );
     }
 
     async getTopSkills(limit: number): Promise<SkillMetrics[]> {
-        return this.executor.getTopSkills(limit);
+        return withErrorBoundary('getTopSkills', () =>
+            this.executor.getTopSkills(limit)
+        );
     }
 
     async getLowPerformers(threshold: number): Promise<SkillMetrics[]> {
-        return this.executor.getLowPerformers(threshold);
+        return withErrorBoundary('getLowPerformers', () =>
+            this.executor.getLowPerformers(threshold)
+        );
     }
 
     // ── Auto-trigger ──────────────────────────────────────────
 
     async getAutoTriggers(): Promise<Record<string, string[]>> {
-        return this.autoTriggerService.getAutoTriggers();
+        return withErrorBoundary('getAutoTriggers', () =>
+            Promise.resolve(this.autoTriggerService.getAutoTriggers())
+        );
     }
 }
