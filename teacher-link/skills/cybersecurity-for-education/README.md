@@ -19,13 +19,18 @@ for skill in phishing-spotter password-hygiene safe-browsing social-engineering-
   ln -snf "$SKILLS_SRC/$skill" "$SKILLS_DST/$skill"
 done
 
-# Educator / IT track (14)
+# Educator / IT track (24)
 for skill in edr-basics-for-schools incident-triage-checklist ai-command-triage \
              phishing-defense-program ransomware-readiness fight-fraud-mapping \
              student-data-protection vulnerability-disclosure-handling \
              mid-incident-edr-install mythos-class-risk-roadmap \
              secrets-rotation-after-vendor-breach model-tier-by-task \
-             secure-by-default-vs-by-config pqc-readiness-for-schools; do
+             secure-by-default-vs-by-config pqc-readiness-for-schools \
+             mfa-rollout-for-schools bec-gift-card-scam-defense \
+             email-authentication-for-schools backup-restore-drill \
+             tabletop-exercise-design chromebook-fleet-security \
+             ai-use-inventory ferpa-data-breach-notification \
+             vendor-dpa-review identity-provider-hardening; do
   ln -snf "$SKILLS_SRC/$skill" "$SKILLS_DST/$skill"
 done
 ```
@@ -36,7 +41,7 @@ After symlinking, restart the Theia backend so `SkillRegistry.scanSkills()` re-r
 
 1. `npm run start:browser` and open `http://localhost:3000`.
 2. Open the Skill Launcher (`Ctrl+Shift+S`).
-3. Filter by `security` — 14 educator/IT skills should appear.
+3. Filter by `security` — 24 educator/IT skills should appear.
 4. Filter by `education` — 8 student skills should appear (alongside any other education-domain skills).
 5. Expand any skill and click **Execute** — the rendered `SKILL.md` body shows in the result panel with a score and duration.
 
@@ -51,7 +56,12 @@ for name in cybersecurity-for-education phishing-spotter password-hygiene safe-b
             vulnerability-disclosure-handling mid-incident-edr-install \
             mythos-class-risk-roadmap secrets-rotation-after-vendor-breach \
             model-tier-by-task secure-by-default-vs-by-config \
-            pqc-readiness-for-schools; do
+            pqc-readiness-for-schools mfa-rollout-for-schools \
+            bec-gift-card-scam-defense email-authentication-for-schools \
+            backup-restore-drill tabletop-exercise-design \
+            chromebook-fleet-security ai-use-inventory \
+            ferpa-data-breach-notification vendor-dpa-review \
+            identity-provider-hardening; do
   rm -f "$HOME/.claude/skills/$name"
 done
 ```
