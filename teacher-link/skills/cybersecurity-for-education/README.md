@@ -19,11 +19,12 @@ for skill in phishing-spotter password-hygiene safe-browsing social-engineering-
   ln -snf "$SKILLS_SRC/$skill" "$SKILLS_DST/$skill"
 done
 
-# Educator / IT track (9)
+# Educator / IT track (11)
 for skill in edr-basics-for-schools incident-triage-checklist ai-command-triage \
              phishing-defense-program ransomware-readiness fight-fraud-mapping \
              student-data-protection vulnerability-disclosure-handling \
-             mid-incident-edr-install; do
+             mid-incident-edr-install mythos-class-risk-roadmap \
+             secrets-rotation-after-vendor-breach; do
   ln -snf "$SKILLS_SRC/$skill" "$SKILLS_DST/$skill"
 done
 ```
@@ -34,7 +35,7 @@ After symlinking, restart the Theia backend so `SkillRegistry.scanSkills()` re-r
 
 1. `npm run start:browser` and open `http://localhost:3000`.
 2. Open the Skill Launcher (`Ctrl+Shift+S`).
-3. Filter by `security` — 9 educator/IT skills should appear.
+3. Filter by `security` — 11 educator/IT skills should appear.
 4. Filter by `education` — 8 student skills should appear (alongside any other education-domain skills).
 5. Expand any skill and click **Execute** — the rendered `SKILL.md` body shows in the result panel with a score and duration.
 
@@ -46,7 +47,8 @@ for name in cybersecurity-for-education phishing-spotter password-hygiene safe-b
             device-hygiene report-suspicious-activity edr-basics-for-schools \
             incident-triage-checklist ai-command-triage phishing-defense-program \
             ransomware-readiness fight-fraud-mapping student-data-protection \
-            vulnerability-disclosure-handling mid-incident-edr-install; do
+            vulnerability-disclosure-handling mid-incident-edr-install \
+            mythos-class-risk-roadmap secrets-rotation-after-vendor-breach; do
   rm -f "$HOME/.claude/skills/$name"
 done
 ```
