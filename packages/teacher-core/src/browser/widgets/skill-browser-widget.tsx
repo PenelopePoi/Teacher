@@ -1,7 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import * as React from '@theia/core/shared/react';
+import { SkillEngineService } from '../../common/skill-engine-protocol';
 
 interface SkillEntry {
     name: string;
@@ -59,6 +60,9 @@ export class SkillBrowserWidget extends ReactWidget {
     static readonly ID = 'teacher-skill-browser';
     static readonly LABEL = nls.localize('theia/teacher/skillBrowser', 'Skill Library');
 
+    @inject(SkillEngineService)
+    protected readonly skillEngine: SkillEngineService;
+
     protected searchQuery: string = '';
     protected selectedCategory: string = '';
     protected skills: SkillEntry[] = DEMO_SKILLS;
@@ -79,7 +83,25 @@ export class SkillBrowserWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-library';
         this.addClass('teacher-skill-browser');
+        this.loadRealSkills();
         this.update();
+    }
+
+    protected async loadRealSkills(): Promise<void> {
+        try {
+            const defs = await this.skillEngine.getAllSkills();
+            if (defs && defs.length > 0) {
+                this.skills = defs.map(d => ({
+                    name: d.name,
+                    description: d.description || '',
+                    category: d.domain || 'general',
+                    type: d.type || d.intent || 'skill',
+                }));
+                this.update();
+            }
+        } catch (err) {
+            console.warn('[SkillBrowserWidget] Falling back to demo skills:', err);
+        }
     }
 
     protected render(): React.ReactNode {
