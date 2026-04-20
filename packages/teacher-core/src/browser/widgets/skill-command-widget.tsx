@@ -1,7 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
+import { SkillEngineService, SkillExecutionResult } from '../../common/skill-engine-protocol';
 
 /**
  * Skill Command Panel — command-palette-style skill launcher.
@@ -15,8 +16,8 @@ type SkillIntent = 'analyze' | 'generate' | 'audit' | 'transform' | 'teach' | 'g
 
 interface SkillEntry {
     readonly name: string;
-    readonly domain: SkillDomain;
-    readonly intent: SkillIntent;
+    readonly domain: SkillDomain | string;
+    readonly intent: SkillIntent | string;
     readonly description: string;
     readonly content: string;
 }
@@ -52,10 +53,18 @@ export class SkillCommandWidget extends ReactWidget {
     static readonly ID = 'teacher-skill-command';
     static readonly LABEL = nls.localize('theia/teacher/skillCommand', 'Skill Launcher');
 
+    @inject(SkillEngineService)
+    protected readonly skillEngine: SkillEngineService;
+
     protected searchQuery: string = '';
     protected activeFilter: FilterCategory = 'all';
     protected selectedIndex: number = 0;
     protected expandedSkill: string | null = null;
+    protected skills: SkillEntry[] = DEMO_SKILLS;
+    protected isLoading: boolean = true;
+    protected lastExecution: SkillExecutionResult | undefined;
+    protected executionError: string | undefined;
+    protected executingSkill: string | undefined;
 
     @postConstruct()
     protected init(): void {
@@ -65,10 +74,31 @@ export class SkillCommandWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-rocket';
         this.addClass('teacher-skill-command');
+        this.loadSkills();
+    }
+
+    protected async loadSkills(): Promise<void> {
+        try {
+            const defs = await this.skillEngine.getAllSkills();
+            if (defs && defs.length > 0) {
+                this.skills = defs.map(d => ({
+                    name: d.name,
+                    domain: d.domain ?? 'meta',
+                    intent: d.intent ?? 'analyze',
+                    description: d.description || '',
+                    content: d.content || '',
+                }));
+            }
+        } catch (err) {
+            console.warn('[SkillCommandWidget] Falling back to demo skills:', err);
+        } finally {
+            this.isLoading = false;
+            this.update();
+        }
     }
 
     protected getFilteredSkills = (): SkillEntry[] => {
-        let skills = DEMO_SKILLS;
+        let skills = this.skills;
         if (this.activeFilter !== 'all') {
             skills = skills.filter(s => s.domain === this.activeFilter);
         }
@@ -100,8 +130,19 @@ export class SkillCommandWidget extends ReactWidget {
         this.update();
     };
 
-    protected handleExecute = (skill: SkillEntry): void => {
-        console.log(`[Skill Engine] Executing skill: ${skill.name} (${skill.domain}/${skill.intent})`);
+    protected handleExecute = async (skill: SkillEntry): Promise<void> => {
+        this.executingSkill = skill.name;
+        this.executionError = undefined;
+        this.update();
+        try {
+            this.lastExecution = await this.skillEngine.executeSkill(skill.name, this.searchQuery);
+        } catch (err) {
+            this.lastExecution = undefined;
+            this.executionError = err instanceof Error ? err.message : String(err);
+        } finally {
+            this.executingSkill = undefined;
+            this.update();
+        }
     };
 
     protected handleAddToWorkflow = (skill: SkillEntry): void => {
@@ -150,11 +191,34 @@ export class SkillCommandWidget extends ReactWidget {
                     <input
                         type='text'
                         className='teacher-skill-command-search-input'
-                        placeholder={nls.localize('theia/teacher/skillSearchPlaceholder', 'Search 343 skills...')}
+                        placeholder={this.isLoading
+                            ? nls.localize('theia/teacher/skillSearchLoading', 'Loading skills...')
+                            : nls.localize('theia/teacher/skillSearchPlaceholder', 'Search {0} skills...', this.skills.length)}
                         value={this.searchQuery}
                         onChange={this.handleSearchChange}
                     />
                 </div>
+
+                {(this.lastExecution || this.executionError) && (
+                    <div className='teacher-skill-command-execution'>
+                        {this.executionError ? (
+                            <div className='teacher-skill-command-execution-error'>
+                                <i className='codicon codicon-error' /> {this.executionError}
+                            </div>
+                        ) : this.lastExecution && (
+                            <div className='teacher-skill-command-execution-result'>
+                                <div className='teacher-skill-command-execution-header'>
+                                    <i className='codicon codicon-check' />
+                                    <span>{nls.localize('theia/teacher/skillExecuted', 'Executed {0}', this.lastExecution.skillName)}</span>
+                                    <span className='teacher-skill-command-execution-meta'>
+                                        {this.lastExecution.duration}ms · score {this.lastExecution.score.toFixed(1)}
+                                    </span>
+                                </div>
+                                <pre className='teacher-skill-command-execution-output'>{this.lastExecution.output}</pre>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <div className='teacher-skill-command-filters'>
                     {filters.map(f => (
@@ -197,9 +261,12 @@ export class SkillCommandWidget extends ReactWidget {
                                             type='button'
                                             className='teacher-skill-command-btn teacher-skill-command-btn--execute'
                                             onClick={() => this.handleExecute(skill)}
+                                            disabled={this.executingSkill === skill.name}
                                         >
-                                            <i className='codicon codicon-play' />
-                                            {nls.localize('theia/teacher/skillExecute', 'Execute')}
+                                            <i className={`codicon ${this.executingSkill === skill.name ? 'codicon-loading codicon-modifier-spin' : 'codicon-play'}`} />
+                                            {this.executingSkill === skill.name
+                                                ? nls.localize('theia/teacher/skillExecuting', 'Executing...')
+                                                : nls.localize('theia/teacher/skillExecute', 'Execute')}
                                         </button>
                                         <button
                                             type='button'
