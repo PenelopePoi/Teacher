@@ -1,12 +1,12 @@
 ---
 name: cybersecurity-for-education
-description: Bundle of 21 cybersecurity skills for schools — 8 student fundamentals (phishing, passwords, ransomware, devices) and 13 educator/IT operational skills (EDR, IR triage, AI-command triage, fraud-framework mapping, FERPA-aware data protection, Mythos-class AI risk roadmap, vendor-breach secret rotation, model-tier-by-task, secure-by-default-vs-by-config)
+description: Bundle of 22 cybersecurity skills for schools — 8 student fundamentals (phishing, passwords, ransomware, devices) and 14 educator/IT operational skills (EDR, IR triage, AI-command triage, fraud-framework mapping, FERPA-aware data protection, Mythos-class AI risk roadmap, vendor-breach secret rotation, model-tier-by-task, secure-by-default-vs-by-config, PQC readiness)
 domain: security
 intent: analyze
 lifecycle: stable
-version: 0.4.0
+version: 0.5.0
 type: bundle
-argumentHint: skill name to look up, or "list" to see all 21
+argumentHint: skill name to look up, or "list" to see all 22
 ---
 
 # cybersecurity-for-education — Bundle
@@ -47,6 +47,7 @@ Operational guidance for educators and school IT. Bloom's level *Apply* / *Analy
 | `secrets-rotation-after-vendor-breach` | Rotate, scope, switch when a vendor discloses a breach |
 | `model-tier-by-task` | Pick cheap+scaffolded vs. frontier per task shape |
 | `secure-by-default-vs-by-config` | Evaluate a protocol/SDK by what it does out of the box |
+| `pqc-readiness-for-schools` | Inventory crypto, map data-secrecy lifetimes, plan PQC migration |
 
 ## When to use this bundle
 
@@ -67,4 +68,4 @@ Operational guidance for educators and school IT. Bloom's level *Apply* / *Analy
 
 ## Provenance
 
-Skill topics are informed by public materials cited inline in each skill: the Huntress 2025 education-sector threat report, the *Codex Red* mid-incident case study (informs `ai-command-triage` and `mid-incident-edr-install`), the Fight Fraud Framework Matrix (informs `fight-fraud-mapping`), the Nightmare-Eclipse and Chaotic Eclipse PoC drops (inform `vulnerability-disclosure-handling`), the AI Security 6-Step Approach / *Mitigating Mythos-Class Risk* discussion (informs `mythos-class-risk-roadmap`), the April 2026 Vercel / Context.ai supply-chain incident write-ups (inform `secrets-rotation-after-vendor-breach`), Stanislav Fort / AISLE's coverage-vs-brilliance vulnerability-detection results (inform `model-tier-by-task`), and the OX Security MCP-server arbitrary-command-execution disclosure (informs `secure-by-default-vs-by-config`).
+Skill topics are informed by public materials cited inline in each skill: the Huntress 2025 education-sector threat report, the *Codex Red* mid-incident case study (informs `ai-command-triage` and `mid-incident-edr-install`), the Fight Fraud Framework Matrix (informs `fight-fraud-mapping`), the Nightmare-Eclipse and Chaotic Eclipse PoC drops (inform `vulnerability-disclosure-handling`), the AI Security 6-Step Approach / *Mitigating Mythos-Class Risk* discussion (informs `mythos-class-risk-roadmap`), the April 2026 Vercel / Context.ai supply-chain incident write-ups (inform `secrets-rotation-after-vendor-breach`), Stanislav Fort / AISLE's coverage-vs-brilliance vulnerability-detection results (inform `model-tier-by-task`), the OX Security MCP-server arbitrary-command-execution disclosure (informs `secure-by-default-vs-by-config`), and NIST's post-quantum cryptography standards (FIPS 203/204/205) plus joint CISA / NSA / NIST quantum-readiness guidance (inform `pqc-readiness-for-schools`).
