@@ -1,12 +1,12 @@
 ---
 name: cybersecurity-for-education
-description: Bundle of 19 cybersecurity skills for schools — 8 student fundamentals (phishing, passwords, ransomware, devices) and 11 educator/IT operational skills (EDR, IR triage, AI-command triage, fraud-framework mapping, FERPA-aware data protection, Mythos-class AI risk roadmap, vendor-breach secret rotation)
+description: Bundle of 20 cybersecurity skills for schools — 8 student fundamentals (phishing, passwords, ransomware, devices) and 12 educator/IT operational skills (EDR, IR triage, AI-command triage, fraud-framework mapping, FERPA-aware data protection, Mythos-class AI risk roadmap, vendor-breach secret rotation, model-tier-by-task)
 domain: security
 intent: analyze
 lifecycle: stable
-version: 0.2.0
+version: 0.3.0
 type: bundle
-argumentHint: skill name to look up, or "list" to see all 19
+argumentHint: skill name to look up, or "list" to see all 20
 ---
 
 # cybersecurity-for-education — Bundle
@@ -45,6 +45,7 @@ Operational guidance for educators and school IT. Bloom's level *Apply* / *Analy
 | `mid-incident-edr-install` | What to do when EDR goes in mid-compromise |
 | `mythos-class-risk-roadmap` | Six-step risk-based roadmap for AI-amplified loss |
 | `secrets-rotation-after-vendor-breach` | Rotate, scope, switch when a vendor discloses a breach |
+| `model-tier-by-task` | Pick cheap+scaffolded vs. frontier per task shape |
 
 ## When to use this bundle
 
@@ -65,4 +66,4 @@ Operational guidance for educators and school IT. Bloom's level *Apply* / *Analy
 
 ## Provenance
 
-Skill topics are informed by public materials cited inline in each skill: the Huntress 2025 education-sector threat report, the *Codex Red* mid-incident case study (informs `ai-command-triage` and `mid-incident-edr-install`), the Fight Fraud Framework Matrix (informs `fight-fraud-mapping`), the Nightmare-Eclipse and Chaotic Eclipse PoC drops (inform `vulnerability-disclosure-handling`), the AI Security 6-Step Approach / *Mitigating Mythos-Class Risk* discussion (informs `mythos-class-risk-roadmap`), and the April 2026 Vercel / Context.ai supply-chain incident write-ups (inform `secrets-rotation-after-vendor-breach`).
+Skill topics are informed by public materials cited inline in each skill: the Huntress 2025 education-sector threat report, the *Codex Red* mid-incident case study (informs `ai-command-triage` and `mid-incident-edr-install`), the Fight Fraud Framework Matrix (informs `fight-fraud-mapping`), the Nightmare-Eclipse and Chaotic Eclipse PoC drops (inform `vulnerability-disclosure-handling`), the AI Security 6-Step Approach / *Mitigating Mythos-Class Risk* discussion (informs `mythos-class-risk-roadmap`), the April 2026 Vercel / Context.ai supply-chain incident write-ups (inform `secrets-rotation-after-vendor-breach`), and Stanislav Fort / AISLE's coverage-vs-brilliance vulnerability-detection results (inform `model-tier-by-task`).
