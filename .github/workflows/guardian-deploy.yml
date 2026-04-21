@@ -1,0 +1,126 @@
+name: Guardian Deploy
+
+on:
+  pull_request:
+    paths:
+      - 'guardian/**'
+      - '.github/workflows/guardian-deploy.yml'
+  push:
+    branches:
+      - master
+    paths:
+      - 'guardian/**'
+      - '.github/workflows/guardian-deploy.yml'
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: 'Pulumi stack (dev|prod)'
+        required: true
+        default: dev
+
+concurrency:
+  group: guardian-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+# OIDC federation only — no long-lived AWS keys in repo secrets.
+# The AWS-side role trust policy MUST allow this repo + branch; see
+# guardian/README.md for the one-time bootstrap. Absence of the trust
+# policy causes the aws-actions/configure-aws-credentials step to fail,
+# which is the intended fail-closed behaviour for a stack with real-world
+# side effects.
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview-or-up:
+    name: ${{ github.event_name == 'push' && 'pulumi up' || 'pulumi preview' }}
+    runs-on: ubuntu-22.04
+    # Skip when AWS OIDC is not configured yet (detected by missing
+    # repository variable GUARDIAN_AWS_DEPLOY_ROLE_ARN).
+    if: vars.GUARDIAN_AWS_DEPLOY_ROLE_ARN != ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            guardian/core/package-lock.json
+            guardian/lambda/package-lock.json
+            guardian/infra/package-lock.json
+
+      - name: Build core
+        working-directory: guardian/core
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: Bundle lambda
+        working-directory: guardian/lambda
+        run: |
+          npm ci --no-audit --no-fund
+          npm run bundle
+
+      - name: Install infra
+        working-directory: guardian/infra
+        run: npm ci --no-audit --no-fund
+
+      - name: Configure AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: ${{ vars.GUARDIAN_AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.GUARDIAN_AWS_REGION || 'us-east-1' }}
+          role-session-name: guardian-deploy-${{ github.run_id }}
+
+      - name: Setup Pulumi
+        uses: pulumi/actions@13b8b7177d6fb2766e148a92d4071cd7f0a2d3bd # v6.1.0
+        with:
+          command: preview
+          stack-name: ${{ github.event.inputs.stack || 'dev' }}
+          work-dir: guardian/infra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+
+      - name: Deploy (push to master only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: pulumi/actions@13b8b7177d6fb2766e148a92d4071cd7f0a2d3bd # v6.1.0
+        with:
+          command: up
+          stack-name: ${{ github.event.inputs.stack || 'dev' }}
+          work-dir: guardian/infra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  smoke:
+    name: post-deploy smoke
+    needs: preview-or-up
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.GUARDIAN_AWS_DEPLOY_ROLE_ARN != ''
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: 20
+
+      - name: Configure AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: ${{ vars.GUARDIAN_AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.GUARDIAN_AWS_REGION || 'us-east-1' }}
+          role-session-name: guardian-smoke-${{ github.run_id }}
+
+      - name: Hit /validate with a fixture action
+        working-directory: guardian/infra
+        run: |
+          # A real smoke test would retrieve `apiUrl` from Pulumi outputs.
+          # Leaving this as a placeholder pending first successful deploy.
+          echo "smoke placeholder — run once AWS OIDC is configured"
