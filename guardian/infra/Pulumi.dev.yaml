@@ -1,0 +1,10 @@
+config:
+  aws:region: us-east-1
+  guardian:alphaMode: uncalibrated
+  guardian:stopabilityMin: "0.5"
+  guardian:authorshipMin: "0.5"
+  guardian:withdrawalCostMax: "0.5"
+  guardian:driftMax: "0.2"
+  guardian:consentMaxAgeSeconds: "60"
+  guardian:logRetentionDays: "90"
+  # guardian:consentSigningKey must be set via `pulumi config set --secret`.

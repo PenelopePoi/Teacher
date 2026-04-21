@@ -1,0 +1,13 @@
+config:
+  aws:region: us-east-1
+  # alphaMode MUST be 'calibrated' in prod, with a supplied alpha.
+  # Deploy will fail fast at handler-config-load time if the Lambda env is inconsistent.
+  guardian:alphaMode: uncalibrated
+  guardian:stopabilityMin: "0.6"
+  guardian:authorshipMin: "0.6"
+  guardian:withdrawalCostMax: "0.4"
+  guardian:driftMax: "0.15"
+  guardian:consentMaxAgeSeconds: "60"
+  guardian:logRetentionDays: "365"
+  # guardian:consentSigningKey must be set via `pulumi config set --secret`.
+  # guardian:alpha must be set once calibrated.
