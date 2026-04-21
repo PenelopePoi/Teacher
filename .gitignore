@@ -64,3 +64,15 @@ secrets/
 .pulumi/
 guardian/**/dist/
 guardian/**/node_modules/
+
+# Forgetful Agent — raw/scrubbed/quarantine working directories.
+# These should never live inside the repo tree, but if a user clones into a
+# workspace that happens to contain these, the ignore prevents accidents.
+CellAI/
+CellAI-raw/
+CellAI-scrubbed/
+CellAI-quarantine/
+scrub-quarantine/
+scrub-manifest*.json
+*.dcm
+*.dicom
