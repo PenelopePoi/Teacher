@@ -1,0 +1,28 @@
+{
+    "name": "@guardian/forgetful",
+    "version": "0.1.0",
+    "description": "CLI for the Forgetful Agent. Scrubs PII/PHI from a source directory, writes redacted output and a signed manifest.",
+    "private": true,
+    "main": "dist/cli.js",
+    "bin": {
+        "forgetful": "bin/forgetful"
+    },
+    "files": [
+        "dist/**/*",
+        "bin/**/*"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "dependencies": {
+        "@guardian/forgetful-core": "file:../core"
+    },
+    "devDependencies": {
+        "@types/node": "20.11.24",
+        "typescript": "5.4.5"
+    },
+    "engines": {
+        "node": ">=20"
+    }
+}
