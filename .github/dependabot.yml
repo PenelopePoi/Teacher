@@ -1,0 +1,64 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - npm
+    groups:
+      patch-updates:
+        update-types:
+          - patch
+      minor-dev-dependencies:
+        dependency-type: development
+        update-types:
+          - minor
+
+  - package-ecosystem: npm
+    directory: "/guardian/core"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - guardian
+      - npm
+
+  - package-ecosystem: npm
+    directory: "/guardian/lambda"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - guardian
+      - npm
+
+  - package-ecosystem: npm
+    directory: "/guardian/infra"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - guardian
+      - npm
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - github-actions
+
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - docker

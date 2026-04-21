@@ -38,3 +38,29 @@ allure-results
 license-check-summary.txt*
 .playwright-mcp/*
 /.theia/chatSessions
+
+# Secrets and credentials — never commit
+.env
+.env.local
+.env.*.local
+.env.*
+*.pem
+*.p12
+*.pfx
+*.key
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+id_ecdsa
+id_ecdsa.pub
+id_dsa
+credentials.json
+serviceAccountKey*.json
+secrets/
+.aws/credentials
+
+# Pulumi stack state and secrets
+.pulumi/
+guardian/**/dist/
+guardian/**/node_modules/
