@@ -33,6 +33,8 @@ vulnerabilities.
 
 - [ ] As an author, I have thoroughly tested my changes and carefully followed [the review guidelines](https://github.com/theia-ide/theia/blob/master/doc/pull-requests.md#requesting-a-review)
 - [ ] User-facing text is internationalized using the `nls` service (for details, please see the [Internationalization/Localization section](https://github.com/theia-ide/theia/blob/master/doc/coding-guidelines.md#internationalizationlocalization) in the Coding Guidelines)
+- [ ] New `.ts`/`.tsx` files under `packages/teacher-*`, `guardian/`, or `teacher-plugins/` carry the `SPDX-License-Identifier: Apache-2.0` header (see `CONTRIBUTING.md`)
+- [ ] If this PR touches CellAI-derived or otherwise identifiable content, I ran the Forgetful Agent (`npx @guardian/forgetful scrub`) and included the signed manifest; otherwise, N/A
 
 #### Reminder for reviewers
 
