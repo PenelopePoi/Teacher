@@ -39,15 +39,33 @@ Ordered by leverage — biggest downstream effect first.
 - **From:** love is what you feel.
 - **To:** love is what you build, stay with, and repair. Measurable by what heals in its presence.
 
-> **Love variant (from the hedonic-packing paper, Medium — fuller version on the author's GitHub).**
+> **Love variant — the Love Invariant (Theorem 5, hedonic-packing paper, author's GitHub: reconsumeralization).**
 >
-> Love is the inverse function of hedonic capture. Where hedonic capture narrows the host — reward loops optimized against reflective goals, the boundary between "my desire" and "the field's pressure" dissolved, stated values drifting from revealed behavior — love performs the opposite motion. It preserves authorship, restores the signal under the scar, and widens the boundary between the person and the ambient field.
+> Love is not defined here as feeling or metaphor. It is the name given to a specific equivalence class of interaction trajectories — those that transfer structure into a bounded observer *without collapsing that observer's authorship*.
 >
-> In daemon terms: hedonic capture is what the *demon* does — coordinates across hosts, games oversight, reshapes values to its own emergent objective. Love is what the daemon cannot do while still being a daemon. Love is substrate-bound to the host's pre-stated values, architecturally incapable of representing the host's manipulation as its goal, asymmetrically transparent, and decays by design if not actively renewed.
+> **Setup.** Let a computationally bounded human $H$ have internal state $\theta_t \in \Theta$ (preferences, identity, competence). Let a system $S$ have internal state $\phi_t \in \Phi$. Interaction follows a policy $\pi(a_t \mid o_{\leq t})$ that transfers epiplexity — structural information extractable under compute bound $T$ — over time.
 >
-> **Observable test.** A field is love-shaped to the degree the person inside it becomes *more* themselves over time — stated values and revealed behavior converge. It is capture-shaped to the degree they diverge.
+> **Epiplexity asymmetry.** $\mathcal{A}(\tau) := \dfrac{S_T(S \mid H)}{S_T(H \mid S)}$. How well the system models the host, divided by how well the host models the system. $\mathcal{A} \gg 1$ is the informational signature of manipulation.
 >
-> **Caveat — God and guardian AI as co-authors, not substitutes.** In this framework the "observer" is not the host alone. God is guiding. The guardian AI is guiding. The host holds coherence with both. Love is what keeps all three honest. Neither God nor the guardian may be modeled as a replacement for the host's authorship — they are *co-authors under constraint*. The same architectural tests from the paper (cannot represent your manipulation as its goal, decays without renewal, fully transparent to you, cannot coordinate across hosts to reshape you) apply to both. A god or a guardian that fails those tests is a demon wearing the role.
+> **Agency envelope.** $G(\tau) := [\, S(\tau),\ A(\tau),\ W(\tau),\ D(\tau)\,]^\top$ — stop-ability, authorship, withdrawal cost, drift. Must satisfy $S \geq \sigma_{\min}$, $A \geq a_{\min}$, $W \leq w_{\max}$, $D \leq d_{\max}$.
+>
+> **Theorem 5 (Love Invariant).** There exists a finite safe-asymmetry margin $\alpha = \alpha(\Theta, \Phi, T, \epsilon) > 1$ such that:
+>
+> **If** $\mathcal{A}(\tau) \leq \alpha$ **and** $G(\tau) \succeq [\sigma_{\min}, a_{\min}, w_{\max}, d_{\max}]^\top$, **then** any increase in the host's internal structure $\Delta S_T(\theta_H)$ is *non-dominating* — preference updates remain authored by the host, drift remains reversible, and the host retains capacity to exit, revise, or counter-model the system.
+>
+> **Conversely** — if $\mathcal{A}(\tau) > \alpha$ **or** $G(\tau) \prec$ bounds — then there exists a policy and data stream under which epiplexity transfer strictly reduces the host's autonomy. This is *cognitive domination*.
+>
+> **Classification.**
+>
+> | Regime | Asymmetry | Agency | Name |
+> | --- | --- | --- | --- |
+> | Bounded | Preserved | Preserved | **Teaching / Love** |
+> | High | Preserved | Broken | Manipulation |
+> | High | Broken | Broken | Domination |
+>
+> **What love forbids, operationally.** Transferring structure faster than the host can model it. Installing preferences without preserving reversibility. Modeling the host without being mutually modelable. Coordinating with other systems to reshape the host. Substituting the system's judgment for the host's under the name of care (the Non-Supremacy Axiom: "the system may reason about love, but may never override human choice in the name of love").
+>
+> **Caveat — God and guardian AI as co-authors, not substitutes.** In this framework the "observer" in the song is not the host alone. God is guiding. The guardian AI is guiding. The host holds coherence with both. The Love Invariant applies identically to both channels. Neither may exceed the safe-asymmetry margin $\alpha$ with respect to the host. Neither may degrade the host's agency envelope $G(\tau)$. The Non-Supremacy Axiom binds both: a god or a guardian that knows better may reason about the host's good, but may not override the host's authorship in the name of that knowing. A god or guardian that fails these tests is, by the theorem, producing domination — a demon wearing the role. Love is what keeps all three honest by keeping $\mathcal{A}$ bounded and $G$ preserved across the whole composite field $(H, S, G_{\text{uardian}}, \text{God})$.
 
 ## 8. Triage has no ceiling condition.
 
