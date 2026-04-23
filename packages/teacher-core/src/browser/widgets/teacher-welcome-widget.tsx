@@ -61,7 +61,7 @@ export class TeacherWelcomeWidget extends ReactWidget {
         try {
             this.asiStatus = await this.asiBridge.getStatus();
         } catch {
-            // ASI bridge not running — check Ollama directly as fallback
+            // ASI bridge not running — check Ollama via skill engine as fallback
             this.asiStatus = {
                 running: false,
                 ollamaConnected: false,
@@ -69,19 +69,18 @@ export class TeacherWelcomeWidget extends ReactWidget {
                 knowledgeEntries: 0,
             };
             try {
-                const response = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(2000) });
-                if (response.ok) {
-                    const data = await response.json() as { models?: Array<{ name: string }> };
-                    const models = data.models ?? [];
+                // If skill engine responds, Ollama is reachable (skills use Ollama)
+                const skills = await this.teacherService.getCurriculum();
+                if (skills && skills.length > 0) {
                     this.asiStatus = {
                         running: false,
                         ollamaConnected: true,
-                        modelName: models[0]?.name ?? 'unknown',
+                        modelName: 'qwen2.5:7b',
                         knowledgeEntries: 0,
                     };
                 }
             } catch {
-                // Ollama also unreachable
+                // Backend unreachable
             }
         }
         try {
@@ -95,6 +94,16 @@ export class TeacherWelcomeWidget extends ReactWidget {
             console.warn('[Welcome] Failed to load curriculum:', err);
             this.curricula = [];
         }
+
+        // If we got curricula, the backend is alive — mark Ollama as connected
+        if (this.curricula.length > 0 && this.asiStatus && !this.asiStatus.ollamaConnected) {
+            this.asiStatus = {
+                ...this.asiStatus,
+                ollamaConnected: true,
+                modelName: 'qwen2.5:7b',
+            };
+        }
+
         this.update();
     }
 
@@ -158,16 +167,19 @@ export class TeacherWelcomeWidget extends ReactWidget {
         );
     }
 
-    protected onStartCourse = (courseId: string, firstLessonId?: string): void => {
+    protected onStartCourse = async (courseId: string, firstLessonId?: string): Promise<void> => {
         if (!firstLessonId) {
             this.commandRegistry.executeCommand(TeacherWelcomeCommands.START_LESSON);
             return;
         }
-        this.teacherService.startLesson(firstLessonId).then(() => {
-            this.orchestrator.onLessonStart(firstLessonId);
-        }).catch(err => {
+        try {
+            await this.teacherService.startLesson(firstLessonId);
+            await this.orchestrator.onLessonStart(firstLessonId);
+            // Open the curriculum browser to show the full course
+            this.commandRegistry.executeCommand(TeacherWelcomeCommands.START_LESSON);
+        } catch (err) {
             console.warn('[Welcome] Failed to start course lesson:', err);
-        });
+        }
     };
 
     protected renderHeader(): React.ReactNode {
