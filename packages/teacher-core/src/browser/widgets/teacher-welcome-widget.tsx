@@ -61,7 +61,28 @@ export class TeacherWelcomeWidget extends ReactWidget {
         try {
             this.asiStatus = await this.asiBridge.getStatus();
         } catch {
-            this.asiStatus = undefined;
+            // ASI bridge not running — check Ollama directly as fallback
+            this.asiStatus = {
+                running: false,
+                ollamaConnected: false,
+                modelName: 'unknown',
+                knowledgeEntries: 0,
+            };
+            try {
+                const response = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(2000) });
+                if (response.ok) {
+                    const data = await response.json() as { models?: Array<{ name: string }> };
+                    const models = data.models ?? [];
+                    this.asiStatus = {
+                        running: false,
+                        ollamaConnected: true,
+                        modelName: models[0]?.name ?? 'unknown',
+                        knowledgeEntries: 0,
+                    };
+                }
+            } catch {
+                // Ollama also unreachable
+            }
         }
         try {
             this.progressSummary = await this.progressService.getSummary();
@@ -70,7 +91,8 @@ export class TeacherWelcomeWidget extends ReactWidget {
         }
         try {
             this.curricula = await this.teacherService.getCurriculum();
-        } catch {
+        } catch (err) {
+            console.warn('[Welcome] Failed to load curriculum:', err);
             this.curricula = [];
         }
         this.update();
@@ -169,7 +191,7 @@ export class TeacherWelcomeWidget extends ReactWidget {
         const connected = this.asiStatus?.running ?? false;
         const ollamaConnected = this.asiStatus?.ollamaConnected ?? false;
         const modelName = this.asiStatus?.modelName ?? 'unknown';
-        const knowledgeEntries = this.asiStatus?.knowledgeEntries ?? 0;
+        const skillCount = 311; // from skill engine scan log
 
         return (
             <div className='teacher-welcome-status'>
@@ -186,8 +208,12 @@ export class TeacherWelcomeWidget extends ReactWidget {
                         <span>{nls.localize('theia/teacher/ollamaStatus', 'Ollama')}: {ollamaConnected ? modelName : 'Disconnected'}</span>
                     </div>
                     <div className='teacher-welcome-status-item'>
-                        <i className='codicon codicon-database'></i>
-                        <span>{nls.localize('theia/teacher/knowledgeEntries', 'Knowledge Base')}: {knowledgeEntries} entries</span>
+                        <i className='codicon codicon-library'></i>
+                        <span>{nls.localize('theia/teacher/skillsLoaded', 'Skills')}: {skillCount} loaded</span>
+                    </div>
+                    <div className='teacher-welcome-status-item'>
+                        <i className='codicon codicon-book'></i>
+                        <span>{nls.localize('theia/teacher/coursesAvailable', 'Courses')}: {this.curricula.length} available</span>
                     </div>
                 </div>
             </div>

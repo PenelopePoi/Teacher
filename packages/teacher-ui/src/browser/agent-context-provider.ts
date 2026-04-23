@@ -46,6 +46,18 @@ export interface TerminalEntry {
     timestamp: number;
 }
 
+export interface LearningContext {
+    activeLesson?: string;
+    skillLevel: string;
+    streak: number;
+    conceptsLearned: number;
+    weakAreas: string[];
+    recentConcepts: string[];
+    frictionState?: string;
+    xp: number;
+    level: number;
+}
+
 export interface AgentContext {
     mode: AgentMode;
     activeFile: string | undefined;
@@ -60,6 +72,7 @@ export interface AgentContext {
     gitBranch: string | undefined;
     workspaceRoot: string | undefined;
     filesTouchedCount: number;
+    learning: LearningContext | undefined;
 }
 
 const MAX_RECENT_FILES = 20;
@@ -135,6 +148,14 @@ export class AgentContextProvider {
     }
 
     /** Collect current IDE state for agent context injection. */
+    protected learningContext: LearningContext | undefined;
+
+    /** Set the learning context (called by the orchestrator in teacher-core). */
+    setLearningContext(ctx: LearningContext): void {
+        this.learningContext = ctx;
+        this.onDidUpdateContextEmitter.fire(this.getContext());
+    }
+
     getContext(): AgentContext {
         return {
             mode: this.modeService.getMode(),
@@ -150,6 +171,7 @@ export class AgentContextProvider {
             gitBranch: this.gitBranch,
             workspaceRoot: this.workspaceRoot,
             filesTouchedCount: this.sessionManager.getFilesTouchedCount(),
+            learning: this.learningContext,
         };
     }
 
@@ -190,6 +212,26 @@ export class AgentContextProvider {
             const progress = this.sessionManager.getPlanProgress();
             lines.push(`Plan: "${ctx.currentPlan.title}" [${ctx.currentPlan.status}] ${progress}% complete`);
         }
+        if (ctx.learning) {
+            lines.push('');
+            lines.push('--- Student Profile ---');
+            lines.push(`Level: ${ctx.learning.skillLevel} (XP: ${ctx.learning.xp}, Level ${ctx.learning.level})`);
+            lines.push(`Streak: ${ctx.learning.streak} days`);
+            lines.push(`Concepts learned: ${ctx.learning.conceptsLearned}`);
+            if (ctx.learning.activeLesson) {
+                lines.push(`Active lesson: ${ctx.learning.activeLesson}`);
+            }
+            if (ctx.learning.weakAreas.length > 0) {
+                lines.push(`Weak areas: ${ctx.learning.weakAreas.join(', ')}`);
+            }
+            if (ctx.learning.recentConcepts.length > 0) {
+                lines.push(`Recent concepts: ${ctx.learning.recentConcepts.join(', ')}`);
+            }
+            if (ctx.learning.frictionState) {
+                lines.push(`Friction: ${ctx.learning.frictionState}`);
+            }
+        }
+
         if (ctx.agentsMd) {
             lines.push('');
             lines.push('--- AGENTS.md ---');

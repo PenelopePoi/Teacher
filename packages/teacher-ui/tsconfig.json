@@ -23,7 +23,13 @@
       "path": "../editor"
     },
     {
+      "path": "../filesystem"
+    },
+    {
       "path": "../monaco"
+    },
+    {
+      "path": "../workspace"
     }
   ]
 }
