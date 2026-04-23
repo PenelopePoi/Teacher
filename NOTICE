@@ -1,0 +1,36 @@
+Teacher IDE
+Copyright 2024-2026 David (reconsumeralization) and contributors.
+
+This product includes software developed by:
+
+  * The Eclipse Theia project (https://github.com/eclipse-theia/theia),
+    licensed under EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0.
+    See `NOTICE.md` and `LICENSE-EPL` in this repository.
+
+  * Microsoft VS Code (portions incorporated via Theia),
+    licensed under the MIT License. See `LICENSE-vscode.txt`.
+
+Original Teacher code — including everything under `packages/teacher-*`,
+`guardian/`, `curriculum/`, `teacher-plugins/`, and this repository's
+top-level configuration — is licensed under the Apache License, Version 2.0.
+See the `LICENSE` file for the full license text.
+
+For a per-file license breakdown and forker obligations, see `FORKING.md`.
+For contributor attributions, see `AUTHORS.md`.
+
+--
+
+Data-handling notice
+--------------------
+
+This repository's `guardian/forgetful/` subsystem (the Forgetful Agent) is
+designed to process and redact personally identifying information (PII) and
+protected health information (PHI) from content before it is published. The
+agent itself retains no values from processed content; it emits a signed
+manifest listing only the TYPES and COUNTS of detections per file, never
+the detected values.
+
+Any content derived from patient records, research subjects, or other
+identifiable source material MUST pass through the Forgetful Agent before
+landing on a public branch. See `FORKING.md` and `docs/ingest.md` for the
+full data-handling discipline.

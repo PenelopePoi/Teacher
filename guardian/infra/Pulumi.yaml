@@ -1,0 +1,32 @@
+name: guardian
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+description: Serverless Guardian — Love Invariant evaluator with append-only WAL.
+
+template:
+  config:
+    aws:region:
+      description: AWS region for the stack.
+      default: us-east-1
+    guardian:alphaMode:
+      description: calibrated | uncalibrated (see paper §9.5)
+      default: uncalibrated
+    guardian:alpha:
+      description: Safe asymmetry margin. Required iff alphaMode=calibrated.
+    guardian:stopabilityMin:
+      default: "0.5"
+    guardian:authorshipMin:
+      default: "0.5"
+    guardian:withdrawalCostMax:
+      default: "0.5"
+    guardian:driftMax:
+      default: "0.2"
+    guardian:consentMaxAgeSeconds:
+      default: "60"
+    guardian:consentSigningKey:
+      description: Secret HMAC key for consent tokens. Supply via Pulumi config secrets.
+      secret: true
+    guardian:logRetentionDays:
+      default: "90"

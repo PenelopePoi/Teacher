@@ -1,6 +1,31 @@
 # Contributing to Teacher IDE
 
-Teacher IDE is built on Eclipse Theia. All Teacher-specific code lives in `packages/teacher-core/`, `packages/teacher-ui/`, `curriculum/`, and `teacher-plugins/`. No upstream Theia files are modified.
+Teacher IDE is built on Eclipse Theia. All Teacher-specific code lives in `packages/teacher-core/`, `packages/teacher-ui/`, `curriculum/`, `teacher-plugins/`, and `guardian/`. No upstream Theia files are modified.
+
+## Licensing
+
+Teacher-specific contributions are licensed under **Apache-2.0**. Upstream Theia files remain under **EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0**. See `LICENSE`, `NOTICE`, and `FORKING.md` for the full picture. Every new `.ts`/`.tsx` file under `packages/teacher-*`, `guardian/`, or `teacher-plugins/` MUST carry the SPDX header:
+
+```ts
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2024-2026 David and contributors.
+```
+
+## CellAI and PII — mandatory scrub-before-commit
+
+If your contribution touches content derived from CellAI, patient records, research subjects, or any identifiable source material, you MUST run the Forgetful Agent before committing:
+
+```
+npx @guardian/forgetful scrub --in <source-dir> --out <scrubbed-dir>
+```
+
+The tool emits a signed manifest listing what types of identifiers were removed from which files (never the values themselves). Include the manifest in your PR. The pre-push hook (`scripts/pre-push-scrub-gate.sh`) will refuse to push any CellAI-derived file to the public remote without a matching manifest entry.
+
+The raw CellAI corpus is never committed. It lives on David's machine and in the private sister's-repo staging area (`<SISTER_REMOTE>`). Contributors without access to that corpus cannot add to CellAI-derived content directly; instead, file an issue describing the desired change and a maintainer will coordinate the scrub cycle.
+
+See `docs/ingest.md` for the full runbook and `docs/forgetful-threat-model.md` for what the scrubber protects against and what it does not.
+
+
 
 ## Teacher-Specific Contributions
 

@@ -1,0 +1,36 @@
+name: Guardian OIDC Smoke
+
+# One-click round-trip test: assume the deploy role via GitHub OIDC and
+# call sts:GetCallerIdentity. Verifies the AWS-side trust policy is
+# correctly configured for this repo + branch before running any real
+# deploys.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  verify-oidc:
+    name: sts:GetCallerIdentity
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check role is configured
+        run: |
+          if [ -z "${{ vars.GUARDIAN_AWS_DEPLOY_ROLE_ARN }}" ]; then
+            echo "::error::GUARDIAN_AWS_DEPLOY_ROLE_ARN repository variable is not set."
+            echo "::error::See guardian/README.md for the one-time AWS OIDC bootstrap procedure."
+            exit 1
+          fi
+
+      - name: Configure AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: ${{ vars.GUARDIAN_AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.GUARDIAN_AWS_REGION || 'us-east-1' }}
+          role-session-name: guardian-oidc-smoke-${{ github.run_id }}
+
+      - name: GetCallerIdentity
+        run: aws sts get-caller-identity

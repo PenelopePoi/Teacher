@@ -29,7 +29,7 @@ jobs:
       - id: compute-milestone
         run: |
           export THEIA_CORE_VERSION=$(node -p "require(\"./packages/core/package.json\").version")
-          echo "MILESTONE_NUMBER=$(npx -q semver@7 --increment minor $THEIA_CORE_VERSION)" >> $GITHUB_ENV
+          echo "MILESTONE_NUMBER=$(npx -q semver@7.6.3 --increment minor $THEIA_CORE_VERSION)" >> $GITHUB_ENV
       - id: set
         uses: actions/github-script@ffc2c79a5b2490bd33e0a41c1de74b877714d736 # v3.2.0
         with:

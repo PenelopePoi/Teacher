@@ -1,0 +1,24 @@
+{
+    "name": "@guardian/infra",
+    "version": "0.1.0",
+    "description": "Pulumi stack for the serverless Guardian: Lambda + HTTP API + DynamoDB (append-only) + KMS + CloudWatch + OIDC.",
+    "private": true,
+    "main": "index.ts",
+    "scripts": {
+        "preview": "pulumi preview",
+        "up": "pulumi up",
+        "destroy": "pulumi destroy",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@pulumi/aws": "6.52.0",
+        "@pulumi/pulumi": "3.133.0"
+    },
+    "devDependencies": {
+        "@types/node": "20.11.24",
+        "typescript": "5.4.5"
+    },
+    "engines": {
+        "node": ">=20"
+    }
+}
