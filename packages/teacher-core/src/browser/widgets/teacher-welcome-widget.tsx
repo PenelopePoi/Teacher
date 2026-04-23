@@ -115,6 +115,8 @@ export class TeacherWelcomeWidget extends ReactWidget {
         'intro-to-python': 'codicon-symbol-method',
         'web-fundamentals': 'codicon-browser',
         'git-basics': 'codicon-source-control',
+        'cs-foundations': 'codicon-symbol-class',
+        'entrepreneurship-with-ai': 'codicon-rocket',
     };
 
     protected renderCourseCards(): React.ReactNode {

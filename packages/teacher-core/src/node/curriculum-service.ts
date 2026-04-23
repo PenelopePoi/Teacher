@@ -44,6 +44,9 @@ export class CurriculumServiceImpl implements CurriculumService {
         }
         const candidates = [
             path.join(process.cwd(), 'curriculum'),
+            path.join(process.cwd(), '..', '..', 'curriculum'),  // examples/electron → monorepo root
+            path.join(process.cwd(), '..', 'curriculum'),         // examples/ → monorepo root
+            path.join(__dirname, '..', '..', '..', '..', '..', 'curriculum'), // from lib/node/ → monorepo root
             path.join(os.homedir(), '.teacher', 'curriculum'),
         ];
         for (const candidate of candidates) {
