@@ -1,0 +1,187 @@
+{
+    "id": "cs-foundations",
+    "title": "Computer Science Foundations: Think Like a Machine",
+    "description": "The concepts that don't change when the tools do. Data structures, algorithms, systems thinking, and computational reasoning — taught through building, not memorizing. When AI writes most of the code, understanding WHY it works is the skill that remains. This course makes you the person who can direct the AI, not just prompt it.",
+    "creditHours": 4,
+    "modules": [
+        {
+            "id": "data-structures",
+            "title": "Data Structures: How Computers Organize Information",
+            "lessons": [
+                {
+                    "id": "arrays-and-lists",
+                    "title": "Arrays, Lists & When Order Matters",
+                    "objectives": [
+                        "Understand contiguous vs linked memory and why it affects speed",
+                        "Implement a dynamic array that grows when full",
+                        "Know when to use arrays vs linked lists vs sets",
+                        "Analyze time complexity: O(1) access vs O(n) search"
+                    ],
+                    "hints": [
+                        "Think of an array like a row of lockers — you know exactly where locker #7 is without checking the others",
+                        "A linked list is like a scavenger hunt — each clue tells you where the next one is",
+                        "Use arrays when you need fast random access. Use linked lists when you insert/delete frequently."
+                    ],
+                    "assessmentCriteria": [
+                        "Student can explain the memory difference between arrays and linked lists",
+                        "Dynamic array implementation correctly doubles capacity when full",
+                        "Student correctly identifies which data structure to use for 3 given scenarios",
+                        "Time complexity analysis is correct for basic operations"
+                    ],
+                    "estimatedMinutes": 40,
+                    "prerequisiteSkills": ["variables", "loops"]
+                },
+                {
+                    "id": "hash-maps",
+                    "title": "Hash Maps: The Most Important Data Structure",
+                    "objectives": [
+                        "Understand how hashing converts keys to array indices",
+                        "Implement a simple hash map with collision handling",
+                        "Know why hash maps give O(1) average lookup",
+                        "Use hash maps to solve real problems: counting, caching, deduplication"
+                    ],
+                    "hints": [
+                        "A hash map is like a library catalog — instead of searching every shelf, you look up the exact location",
+                        "Collisions happen when two keys hash to the same index. Handle them with chaining (a list at each slot).",
+                        "In Python: dict. In JavaScript: object or Map. In Java: HashMap. Same idea everywhere."
+                    ],
+                    "assessmentCriteria": [
+                        "Student can trace a key through the hash function to its bucket",
+                        "Hash map implementation handles collisions correctly",
+                        "Student uses a hash map to solve a counting problem in O(n) time",
+                        "Student can explain when a hash map is NOT the right choice"
+                    ],
+                    "estimatedMinutes": 45,
+                    "prerequisiteSkills": ["arrays-and-lists"]
+                },
+                {
+                    "id": "trees-and-graphs",
+                    "title": "Trees & Graphs: Modeling Relationships",
+                    "objectives": [
+                        "Understand trees as hierarchical structures (file systems, org charts, DOM)",
+                        "Implement tree traversal: depth-first (pre/in/post) and breadth-first",
+                        "Model a real-world problem as a graph (social networks, maps, dependencies)",
+                        "Know when trees and graphs are overkill vs essential"
+                    ],
+                    "hints": [
+                        "A tree is just a graph with no cycles and a single root. Your file system is a tree.",
+                        "DFS goes deep before wide (like exploring a maze by always turning left). BFS goes wide before deep (like ripples in water).",
+                        "If your data has parent-child relationships, it's a tree. If it has peer-to-peer relationships, it's a graph."
+                    ],
+                    "assessmentCriteria": [
+                        "Student implements BFS and DFS correctly",
+                        "Student models a given scenario as a tree or graph with correct justification",
+                        "Traversal produces correct output for a sample tree",
+                        "Student can explain the DOM as a tree structure"
+                    ],
+                    "estimatedMinutes": 50,
+                    "prerequisiteSkills": ["arrays-and-lists"]
+                }
+            ]
+        },
+        {
+            "id": "algorithms",
+            "title": "Algorithms: Solving Problems Systematically",
+            "lessons": [
+                {
+                    "id": "sorting-and-searching",
+                    "title": "Sorting & Searching: The Foundation of Everything",
+                    "objectives": [
+                        "Implement binary search and understand why it's O(log n)",
+                        "Understand merge sort as a divide-and-conquer strategy",
+                        "Know when to sort first vs search linearly",
+                        "Analyze trade-offs: time vs space, simplicity vs performance"
+                    ],
+                    "hints": [
+                        "Binary search is like the number guessing game: always guess the middle, eliminate half each time",
+                        "Merge sort: split the list in half, sort each half, merge them back. The magic is in the merge step.",
+                        "If you only search once, linear search is fine. If you search many times, sort first then binary search."
+                    ],
+                    "assessmentCriteria": [
+                        "Binary search correctly handles edge cases (empty array, single element, not found)",
+                        "Student can trace merge sort step by step on a 8-element array",
+                        "Student correctly chooses between linear and binary search for 3 scenarios",
+                        "Big-O analysis is correct for both algorithms"
+                    ],
+                    "estimatedMinutes": 45,
+                    "prerequisiteSkills": ["arrays-and-lists", "functions"]
+                },
+                {
+                    "id": "recursion",
+                    "title": "Recursion: Functions That Call Themselves",
+                    "objectives": [
+                        "Understand the call stack and how recursion uses it",
+                        "Write recursive solutions with correct base cases",
+                        "Convert between recursive and iterative solutions",
+                        "Recognize when recursion is elegant vs when it's a trap"
+                    ],
+                    "hints": [
+                        "Every recursive function needs TWO things: a base case (when to stop) and a recursive case (how to get closer to stopping)",
+                        "Think of recursion like Russian nesting dolls — each one opens to reveal a smaller version of the same problem",
+                        "If your recursive function doesn't make the problem smaller each time, you'll get infinite recursion (stack overflow)"
+                    ],
+                    "assessmentCriteria": [
+                        "Recursive factorial and fibonacci are correctly implemented with base cases",
+                        "Student can trace the call stack for a recursive function with 4 levels",
+                        "Student converts a recursive solution to iterative and vice versa",
+                        "Student identifies a scenario where recursion is worse than iteration"
+                    ],
+                    "estimatedMinutes": 50,
+                    "prerequisiteSkills": ["functions", "sorting-and-searching"]
+                }
+            ]
+        },
+        {
+            "id": "systems-thinking",
+            "title": "Systems Thinking: How Software Really Works",
+            "lessons": [
+                {
+                    "id": "how-the-internet-works",
+                    "title": "How the Internet Actually Works",
+                    "objectives": [
+                        "Trace an HTTP request from browser to server and back",
+                        "Understand DNS, TCP/IP, and HTTP at a conceptual level",
+                        "Know the difference between client-side and server-side code",
+                        "Build a mental model of latency, bandwidth, and caching"
+                    ],
+                    "hints": [
+                        "DNS is like a phone book: it converts 'google.com' into an IP address (142.250.80.46)",
+                        "HTTP is a conversation: the browser asks (request), the server answers (response). That's it.",
+                        "Caching is storing a copy of something close to you so you don't have to ask the server again"
+                    ],
+                    "assessmentCriteria": [
+                        "Student can trace a URL from browser → DNS → server → response → render",
+                        "Student correctly identifies what runs in the browser vs on the server",
+                        "Student explains why a CDN makes websites faster",
+                        "Student can read a basic HTTP response and explain the status code"
+                    ],
+                    "estimatedMinutes": 35,
+                    "prerequisiteSkills": []
+                },
+                {
+                    "id": "ai-architecture",
+                    "title": "How AI Models Work (Without the PhD)",
+                    "objectives": [
+                        "Understand tokens, context windows, and why prompt engineering matters",
+                        "Know the difference between training and inference",
+                        "Understand why local models (Ollama) vs cloud models (GPT, Claude) have different trade-offs",
+                        "Build an intuition for what AI is good at and what it's terrible at"
+                    ],
+                    "hints": [
+                        "An LLM is a very sophisticated autocomplete. It predicts the next token based on all previous tokens.",
+                        "Training = teaching the model from data (expensive, slow). Inference = using the trained model (cheap, fast).",
+                        "AI is great at pattern matching and terrible at counting, math, and anything that requires ground truth"
+                    ],
+                    "assessmentCriteria": [
+                        "Student can explain why a 7B parameter model fits on a laptop but a 70B model doesn't",
+                        "Student correctly identifies 3 tasks AI excels at and 3 it fails at",
+                        "Student can explain the context window trade-off (bigger = more context, more compute, more cost)",
+                        "Student writes a prompt that demonstrates understanding of token-level processing"
+                    ],
+                    "estimatedMinutes": 40,
+                    "prerequisiteSkills": ["how-the-internet-works"]
+                }
+            ]
+        }
+    ]
+}

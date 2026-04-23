@@ -1,0 +1,187 @@
+{
+    "id": "entrepreneurship-with-ai",
+    "title": "Build a Business with AI: From Idea to Launch",
+    "description": "Learn to build a real business using AI as your co-founder. Not a toy project — a business that serves real people, solves real problems, and generates real revenue. Every lesson produces a deliverable you can ship. Because the cost of starting has dropped 99.7%, and the only thing between you and your first customer is the decision to start.",
+    "creditHours": 4,
+    "modules": [
+        {
+            "id": "find-your-problem",
+            "title": "Find Your Problem",
+            "lessons": [
+                {
+                    "id": "problem-discovery",
+                    "title": "Find a Problem Worth Solving",
+                    "objectives": [
+                        "Use AI to brainstorm problems in your daily life, community, and industry",
+                        "Evaluate problems by urgency, frequency, and willingness-to-pay",
+                        "Write a one-sentence problem statement that passes the 'mom test'",
+                        "Identify 3 people who have this problem and would talk to you about it"
+                    ],
+                    "hints": [
+                        "The best businesses solve problems the founder personally experiences",
+                        "Ask AI: 'What are 20 problems faced by [your profession/community] that nobody is solving well?'",
+                        "A good problem statement: '[Who] struggles with [what] because [why], and it costs them [how much]'"
+                    ],
+                    "assessmentCriteria": [
+                        "Problem statement is specific (not vague like 'help people')",
+                        "Target customer is clearly identified",
+                        "Problem frequency is daily or weekly (not once a year)",
+                        "Student can articulate why existing solutions fail"
+                    ],
+                    "estimatedMinutes": 30,
+                    "prerequisiteSkills": []
+                },
+                {
+                    "id": "customer-conversations",
+                    "title": "Talk to Real Humans (The Mom Test)",
+                    "objectives": [
+                        "Learn why asking 'would you use this?' gives you wrong answers",
+                        "Write interview questions that reveal real behavior, not opinions",
+                        "Use AI to analyze interview notes and extract patterns",
+                        "Build a simple customer insight document from 3 conversations"
+                    ],
+                    "hints": [
+                        "Never ask 'would you buy this?' — instead ask 'how do you solve this problem today?'",
+                        "The Mom Test: talk about their life, not your idea. Your mom will lie to you to be nice.",
+                        "After each conversation, ask AI to extract: pain level (1-10), current solution, money spent"
+                    ],
+                    "assessmentCriteria": [
+                        "Interview script avoids leading questions",
+                        "At least 3 insights come from real conversations, not assumptions",
+                        "Customer insight document separates facts from opinions",
+                        "Student identifies a willingness-to-pay signal"
+                    ],
+                    "estimatedMinutes": 45,
+                    "prerequisiteSkills": ["problem-discovery"]
+                }
+            ]
+        },
+        {
+            "id": "build-your-mvp",
+            "title": "Build Your MVP in a Weekend",
+            "lessons": [
+                {
+                    "id": "mvp-design",
+                    "title": "Design the Smallest Thing That Proves Your Idea",
+                    "objectives": [
+                        "Distinguish between an MVP and a prototype (MVP generates revenue or validated learning)",
+                        "Use AI to generate a feature list, then cut it to the 3 features that matter",
+                        "Write user stories for your MVP: 'As a [who], I want [what], so that [why]'",
+                        "Choose your stack: static site, React app, or API-first"
+                    ],
+                    "hints": [
+                        "An MVP is not a crappy version of your product. It's the smallest experiment that tests your riskiest assumption.",
+                        "Ask AI: 'I want to build [X]. What is the ONE feature that, if it doesn't work, means the whole idea fails?'",
+                        "If you can solve the problem with a spreadsheet and a phone, do that first"
+                    ],
+                    "assessmentCriteria": [
+                        "MVP scope is achievable in 1-2 days, not months",
+                        "Core value proposition is testable with the MVP",
+                        "User stories follow the correct format",
+                        "Student can explain what they'll learn from launching the MVP"
+                    ],
+                    "estimatedMinutes": 35,
+                    "prerequisiteSkills": ["customer-conversations"]
+                },
+                {
+                    "id": "build-with-ai",
+                    "title": "Build It: AI as Your Engineering Team",
+                    "objectives": [
+                        "Use AI coding assistants to generate a working landing page with signup",
+                        "Deploy your site to a free hosting platform (Vercel, Netlify, or GitHub Pages)",
+                        "Add a payment link or waitlist form that captures real intent",
+                        "Set up basic analytics to track who visits and what they click"
+                    ],
+                    "hints": [
+                        "Tell the AI: 'Build me a landing page for [product] that explains [value prop] and has a [signup/buy] button'",
+                        "You don't need to understand every line of code. You need to understand what it does and why.",
+                        "Deploy early, deploy often. A live page with 10 visitors teaches more than a perfect page with zero."
+                    ],
+                    "assessmentCriteria": [
+                        "Landing page is deployed and accessible via a real URL",
+                        "Page clearly communicates the problem and solution",
+                        "There is a working call-to-action (signup, waitlist, or purchase)",
+                        "Analytics are capturing at least page views"
+                    ],
+                    "estimatedMinutes": 60,
+                    "prerequisiteSkills": ["mvp-design"]
+                },
+                {
+                    "id": "first-customer",
+                    "title": "Get Your First Customer",
+                    "objectives": [
+                        "Share your MVP with the people you interviewed in Lesson 2",
+                        "Use AI to write outreach messages that don't sound like spam",
+                        "Track responses and iterate based on feedback",
+                        "Celebrate or pivot: did someone pay or sign up?"
+                    ],
+                    "hints": [
+                        "Your first customer is probably someone you already know. Go back to your interview list.",
+                        "Don't pitch. Share: 'Remember that problem we talked about? I built something. Want to try it?'",
+                        "If nobody signs up, that's data. Ask why. The answer is your next iteration."
+                    ],
+                    "assessmentCriteria": [
+                        "MVP was shared with at least 5 real people",
+                        "At least one person took a meaningful action (signup, payment, or detailed feedback)",
+                        "Student documented what worked and what didn't",
+                        "Student has a clear next step: double down or pivot"
+                    ],
+                    "estimatedMinutes": 40,
+                    "prerequisiteSkills": ["build-with-ai"]
+                }
+            ]
+        },
+        {
+            "id": "grow-with-ai",
+            "title": "Grow with AI as Your Team",
+            "lessons": [
+                {
+                    "id": "ai-operations",
+                    "title": "Run Your Business with AI Agents",
+                    "objectives": [
+                        "Set up AI for customer support (answering FAQs, routing issues)",
+                        "Use AI to write marketing content that sounds like you, not a robot",
+                        "Automate repetitive tasks: invoicing, scheduling, follow-ups",
+                        "Build a simple dashboard to track your key metrics"
+                    ],
+                    "hints": [
+                        "Start with the task you do most often that doesn't require judgment. Automate that first.",
+                        "AI customer support should escalate to you for anything it's not 95% confident about",
+                        "Your key metrics are: visitors, signups, active users, revenue. Track nothing else at first."
+                    ],
+                    "assessmentCriteria": [
+                        "At least one operational task is automated with AI",
+                        "Marketing content passes the anti-AI-language test",
+                        "Student can explain their unit economics (cost to serve one customer)",
+                        "Dashboard shows real data, not demo data"
+                    ],
+                    "estimatedMinutes": 50,
+                    "prerequisiteSkills": ["first-customer"]
+                },
+                {
+                    "id": "scale-or-pivot",
+                    "title": "Scale What Works, Kill What Doesn't",
+                    "objectives": [
+                        "Use data to decide: scale, pivot, or stop",
+                        "Write a one-page business plan using AI (not a 50-page deck nobody reads)",
+                        "Identify your next 3 growth experiments",
+                        "Plan your path: bootstrap, raise capital, or stay small by design"
+                    ],
+                    "hints": [
+                        "If you have paying customers and positive unit economics, scale. If not, pivot or stop.",
+                        "A one-page business plan: Problem, Solution, Customer, Revenue Model, Next 3 Moves.",
+                        "Most successful businesses started as side projects. You don't have to quit your job."
+                    ],
+                    "assessmentCriteria": [
+                        "Decision to scale/pivot/stop is backed by data, not feelings",
+                        "One-page business plan is complete and coherent",
+                        "Growth experiments are specific and measurable",
+                        "Student has a realistic 90-day action plan"
+                    ],
+                    "estimatedMinutes": 40,
+                    "prerequisiteSkills": ["ai-operations"]
+                }
+            ]
+        }
+    ]
+}
