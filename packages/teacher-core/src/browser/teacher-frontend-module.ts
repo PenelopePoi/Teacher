@@ -32,6 +32,10 @@ import { ASIBridgeService, ASI_BRIDGE_SERVICE_PATH } from '../common/asi-bridge-
 import { ProgressTrackingService, PROGRESS_SERVICE_PATH } from '../common/progress-protocol';
 import { TeacherService, TEACHER_SERVICE_PATH } from '../common/teacher-protocol';
 import { SkillEngineService, SKILL_ENGINE_PATH } from '../common/skill-engine-protocol';
+import { GamificationService, GAMIFICATION_PATH } from '../common/gamification-protocol';
+import { IntentService, INTENT_SERVICE_PATH } from '../common/intent-protocol';
+import { MilestoneService } from '../common/milestone-protocol';
+import { ModelRouterService, MODEL_ROUTER_SERVICE_PATH } from '../common/model-router-protocol';
 import { TeacherPreferencesSchema } from '../common/teacher-preferences';
 import { TeacherWelcomeWidget } from './widgets/teacher-welcome-widget';
 import { TeacherWelcomeContribution } from './widgets/teacher-welcome-contribution';
@@ -116,11 +120,28 @@ import { ChallengesContribution } from './widgets/challenges-contribution';
 import { StudentFrictionService } from './friction/student-friction-service';
 import { FrictionNotificationBridge } from './friction/friction-notification-bridge';
 import { FrictionAnalyticsWidget } from './friction/friction-analytics-widget';
+import { TeacherOrchestrator } from './teacher-orchestrator';
+import { OllamaModelContribution } from './ollama-model-contribution';
+import { TeacherEditorActionsContribution } from './editor/teacher-editor-actions';
 
 export default new ContainerModule(bind => {
     // Agent Handoff Service — manages inter-agent communication and handoffs
     bind(AgentHandoffService).toSelf().inSingletonScope();
     bind(AgentCommunicationService).toService(AgentHandoffService);
+
+    // Teacher Orchestrator — central nervous system wiring all subsystems
+    bind(TeacherOrchestrator).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(TeacherOrchestrator);
+
+    // Ollama model registration — ensures qwen2.5:7b is available to agents
+    bind(OllamaModelContribution).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(OllamaModelContribution);
+
+    // Inline AI editor actions — right-click explain, review, debug, ask why
+    bind(TeacherEditorActionsContribution).toSelf().inSingletonScope();
+    bind(CommandContribution).toService(TeacherEditorActionsContribution);
+    bind(KeybindingContribution).toService(TeacherEditorActionsContribution);
+    bind(FrontendApplicationContribution).toService(TeacherEditorActionsContribution);
 
     // Tutor Agent
     bind(TutorAgent).toSelf().inSingletonScope();
@@ -189,6 +210,30 @@ export default new ContainerModule(bind => {
     bind(SkillEngineService).toDynamicValue(ctx => {
         const provider = ctx.container.get<ServiceConnectionProvider>(RemoteConnectionProvider);
         return provider.createProxy<SkillEngineService>(SKILL_ENGINE_PATH);
+    }).inSingletonScope();
+
+    // Gamification Service (frontend proxy to backend service)
+    bind(GamificationService).toDynamicValue(ctx => {
+        const provider = ctx.container.get<ServiceConnectionProvider>(RemoteConnectionProvider);
+        return provider.createProxy<GamificationService>(GAMIFICATION_PATH);
+    }).inSingletonScope();
+
+    // Intent Service (frontend proxy to backend service)
+    bind(IntentService).toDynamicValue(ctx => {
+        const provider = ctx.container.get<ServiceConnectionProvider>(RemoteConnectionProvider);
+        return provider.createProxy<IntentService>(INTENT_SERVICE_PATH);
+    }).inSingletonScope();
+
+    // Milestone Service (frontend proxy to backend service)
+    bind(MilestoneService).toDynamicValue(ctx => {
+        const provider = ctx.container.get<ServiceConnectionProvider>(RemoteConnectionProvider);
+        return provider.createProxy<MilestoneService>('/services/milestones');
+    }).inSingletonScope();
+
+    // Model Router Service (frontend proxy to backend — model selection + training data)
+    bind(ModelRouterService).toDynamicValue(ctx => {
+        const provider = ctx.container.get<ServiceConnectionProvider>(RemoteConnectionProvider);
+        return provider.createProxy<ModelRouterService>(MODEL_ROUTER_SERVICE_PATH);
     }).inSingletonScope();
 
     // Preferences

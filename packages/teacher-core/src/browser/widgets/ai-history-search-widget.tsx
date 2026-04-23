@@ -1,7 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import * as React from '@theia/core/shared/react';
+import { TimelineService } from '../ghost-timeline/timeline-service';
 
 interface ConversationEntry {
     id: string;
@@ -63,6 +64,9 @@ export class AIHistorySearchWidget extends ReactWidget {
     protected selectedAgent: string = 'All';
     protected selectedDate: string = '';
     protected expandedConversation: string | undefined;
+    @inject(TimelineService)
+    protected readonly timelineService: TimelineService;
+
     protected conversations: ConversationEntry[] = DEMO_CONVERSATIONS;
 
     @postConstruct()
@@ -73,7 +77,47 @@ export class AIHistorySearchWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-search';
         this.addClass('teacher-ai-history-search');
+        this.loadFromTimeline();
+        this.timelineService.onDidChange(() => this.loadFromTimeline());
         this.update();
+    }
+
+    protected loadFromTimeline(): void {
+        const clips = this.timelineService.getClips();
+        if (clips.length === 0) {
+            return;
+        }
+        const agentNames: Record<string, string> = {
+            'teacher-tutor': 'Teacher Tutor',
+            'teacher-explain': 'Explain This',
+            'teacher-review': 'Teaching Review',
+            'teacher-debugger': 'Teacher Debugger',
+            'teacher-growth-tracker': 'Growth Tracker',
+            'teacher-motivator': 'Teacher Coach',
+            'teacher-project-builder': 'Project Builder',
+            'teacher-strategic-planner': 'Life Planner',
+            'teacher-thinking-debugger': 'Thinking Coach',
+            'teacher-orchestrator': 'Orchestrator',
+        };
+        const liveConversations: ConversationEntry[] = clips
+            .filter(c => !c.muted && c.category !== 'assessment')
+            .map(clip => {
+                const d = new Date(clip.timestamp);
+                return {
+                    id: clip.id,
+                    question: clip.action,
+                    answerPreview: `${clip.agentName}: ${clip.action}`,
+                    fullAnswer: clip.action,
+                    agent: agentNames[clip.agentId] || clip.agentName,
+                    date: d.toISOString().split('T')[0],
+                    time: d.toTimeString().substring(0, 5),
+                };
+            })
+            .reverse();
+        if (liveConversations.length > 0) {
+            this.conversations = liveConversations;
+            this.update();
+        }
     }
 
     protected render(): React.ReactNode {

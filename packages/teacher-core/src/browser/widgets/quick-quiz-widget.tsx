@@ -1,7 +1,10 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
+import { TeacherService } from '../../common/teacher-protocol';
+import { TeachableMomentService } from '../teachable-moments/teachable-moment-service';
+import { TeachableMomentDetector } from '../teachable-moments/teachable-moment-detector';
 
 type QuestionType = 'multiple-choice' | 'code-completion';
 
@@ -73,6 +76,15 @@ export class QuickQuizWidget extends ReactWidget {
     static readonly ID = 'teacher-quick-quiz';
     static readonly LABEL = nls.localize('theia/teacher/quickQuiz', 'Quick Quiz');
 
+    @inject(TeacherService)
+    protected readonly teacherService: TeacherService;
+
+    @inject(TeachableMomentService)
+    protected readonly teachable: TeachableMomentService;
+
+    @inject(TeachableMomentDetector)
+    protected readonly detector: TeachableMomentDetector;
+
     protected questions: QuizQuestion[] = DEMO_QUESTIONS;
     protected quizStates: Map<string, QuizState> = new Map();
     protected currentIndex: number = 0;
@@ -85,7 +97,71 @@ export class QuickQuizWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-beaker';
         this.addClass('teacher-quick-quiz');
+        this.generateFromConcepts();
         this.update();
+    }
+
+    protected generateFromConcepts(): void {
+        try {
+            const library = this.teachable.getLibrary();
+            const allConcepts = this.detector.getAllConcepts();
+            if (library.size === 0 || allConcepts.length === 0) {
+                return;
+            }
+
+            // Generate quiz questions from encountered but unmastered concepts
+            const generated: QuizQuestion[] = [];
+            let idx = 0;
+
+            for (const [id, encountered] of library) {
+                if (encountered.dismissed || idx >= 5) {
+                    continue;
+                }
+                const def = this.detector.getConcept(id);
+                if (!def) {
+                    continue;
+                }
+
+                // Build a multiple-choice question from the concept
+                const otherConcepts = allConcepts
+                    .filter(c => c.id !== id && c.category === def.category)
+                    .slice(0, 3);
+
+                if (otherConcepts.length < 2) {
+                    continue;
+                }
+
+                const correctAnswer = def.oneLineExplanation;
+                const wrongAnswers = otherConcepts.map(c => c.oneLineExplanation);
+                const allOptions = [correctAnswer, ...wrongAnswers.slice(0, 3)];
+                // Shuffle
+                for (let i = allOptions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [allOptions[i], allOptions[j]] = [allOptions[j], allOptions[i]];
+                }
+                const correctIndex = allOptions.indexOf(correctAnswer);
+
+                generated.push({
+                    id: `gen-${idx}`,
+                    type: 'multiple-choice',
+                    question: `What best describes "${def.name}"?`,
+                    options: allOptions,
+                    correctIndex,
+                    explanation: def.fullExplanation,
+                    concept: def.category,
+                });
+                idx++;
+            }
+
+            if (generated.length > 0) {
+                this.questions = generated;
+                this.quizStates.clear();
+                this.currentIndex = 0;
+                this.update();
+            }
+        } catch {
+            // Keep demo questions
+        }
     }
 
     protected getState(questionId: string): QuizState {

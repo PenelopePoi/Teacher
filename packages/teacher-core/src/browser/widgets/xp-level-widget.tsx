@@ -1,8 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import * as React from '@theia/core/shared/react';
-import { PlayerProfile, LevelDefinition } from '../../common/gamification-protocol';
+import { GamificationService, PlayerProfile, LevelDefinition } from '../../common/gamification-protocol';
 
 /** Level title map — level number to title string. */
 const LEVEL_TITLES: Record<number, string> = {
@@ -63,6 +63,9 @@ export class XPLevelWidget extends ReactWidget {
     static readonly ID = 'teacher-xp-level';
     static readonly LABEL = nls.localize('theia/teacher/playerProfile', 'Player Profile');
 
+    @inject(GamificationService)
+    protected readonly gamificationService: GamificationService;
+
     protected profile: PlayerProfile;
     protected weeklyXPBars: number[] = [45, 80, 120, 60, 95, 150, 340];
 
@@ -75,6 +78,31 @@ export class XPLevelWidget extends ReactWidget {
         this.title.iconClass = 'codicon codicon-star-full';
         this.addClass('teacher-xp-level');
         this.loadDemoData();
+        this.loadFromBackend();
+    }
+
+    protected async loadFromBackend(): Promise<void> {
+        try {
+            const profile = await this.gamificationService.getProfile();
+            if (profile && profile.xp > 0) {
+                this.profile = profile;
+                const history = await this.gamificationService.getXPHistory(7);
+                if (history.length > 0) {
+                    const dayBuckets = new Array(7).fill(0);
+                    const now = Date.now();
+                    for (const event of history) {
+                        const daysAgo = Math.floor((now - new Date(event.timestamp).getTime()) / 86400000);
+                        if (daysAgo >= 0 && daysAgo < 7) {
+                            dayBuckets[6 - daysAgo] += event.amount;
+                        }
+                    }
+                    this.weeklyXPBars = dayBuckets;
+                }
+                this.update();
+            }
+        } catch {
+            // Backend unavailable, keep demo data
+        }
     }
 
     protected loadDemoData(): void {

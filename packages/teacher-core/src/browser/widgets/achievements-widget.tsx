@@ -1,8 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import * as React from '@theia/core/shared/react';
-import { Achievement } from '../../common/gamification-protocol';
+import { GamificationService, Achievement } from '../../common/gamification-protocol';
 
 type FilterMode = 'all' | 'unlocked' | 'locked' | 'rarity';
 
@@ -60,6 +60,9 @@ export class AchievementsWidget extends ReactWidget {
     static readonly ID = 'teacher-achievements';
     static readonly LABEL = nls.localize('theia/teacher/achievements', 'Achievements');
 
+    @inject(GamificationService)
+    protected readonly gamificationService: GamificationService;
+
     protected achievements: Achievement[] = ALL_ACHIEVEMENTS;
     protected filter: FilterMode = 'all';
 
@@ -71,7 +74,28 @@ export class AchievementsWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-trophy';
         this.addClass('teacher-achievements');
+        this.loadFromBackend();
         this.update();
+    }
+
+    protected async loadFromBackend(): Promise<void> {
+        try {
+            const earned = await this.gamificationService.getAchievements();
+            if (earned && earned.length > 0) {
+                // Merge backend achievements into the full list
+                for (const achievement of earned) {
+                    const existing = this.achievements.find(a => a.id === achievement.id);
+                    if (existing && achievement.unlockedAt) {
+                        existing.unlockedAt = achievement.unlockedAt;
+                    } else if (!existing) {
+                        this.achievements.push(achievement);
+                    }
+                }
+                this.update();
+            }
+        } catch {
+            // Backend unavailable, keep demo data
+        }
     }
 
     protected setFilter = (mode: FilterMode): void => {

@@ -21,9 +21,9 @@ export class TeacherChatWelcomeProvider implements ChatWelcomeMessageProvider {
             }, 'Start Learning'),
 
             React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' } },
-                courseCard('Intro to Python', '5 lessons', 'Variables, loops, functions, classes, and file I/O', 'codicon-symbol-method'),
-                courseCard('Web Fundamentals', '6 lessons', 'HTML structure, CSS styling, JavaScript basics', 'codicon-globe'),
-                courseCard('Git Basics', '4 lessons', 'Init, staging, branching, merging', 'codicon-git-branch'),
+                courseCard('Intro to Python', '5 lessons \u00b7 3 credits', 'Your first program, variables, conditionals, loops, functions', 'codicon-symbol-method'),
+                courseCard('Web Fundamentals', '6 lessons \u00b7 3 credits', 'HTML structure, headings & lists, CSS colors & layout, JS variables & functions', 'codicon-globe'),
+                courseCard('Git Basics', '4 lessons \u00b7 2 credits', 'Init & commit, staging & status, branching, merging & conflicts', 'codicon-git-branch'),
             ),
 
             React.createElement('h3', {

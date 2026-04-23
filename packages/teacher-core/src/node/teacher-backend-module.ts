@@ -41,6 +41,23 @@ import { StreakTracker } from './streak-tracker';
 import { AutoReviewService } from './auto-review-service';
 import { UserProfileService, USER_PROFILE_SERVICE_PATH } from '../common/user-profile-protocol';
 import { UserProfileServiceImpl } from './user-profile-service';
+import { TeacherService, TEACHER_SERVICE_PATH } from '../common/teacher-protocol';
+import { TeacherServiceImpl } from './teacher-service-impl';
+import { GamificationService, GAMIFICATION_PATH } from '../common/gamification-protocol';
+import { GamificationServiceImpl } from './gamification-service-impl';
+import { IntentService, INTENT_SERVICE_PATH } from '../common/intent-protocol';
+import { CelebrationServiceSymbol } from '../common/celebration-protocol';
+import { CelebrationServiceImpl, CELEBRATION_SERVICE_PATH } from './celebration-service-impl';
+import { RecommendationEngineSymbol, RECOMMENDATION_ENGINE_PATH } from '../common/recommendation-engine-protocol';
+import { RecommendationEngineImpl } from './recommendation-engine-impl';
+import { TeachingStyleServiceSymbol } from '../common/teaching-style-protocol';
+import { TeachingStyleServiceImpl, TEACHING_STYLE_SERVICE_PATH } from './teaching-style-service-impl';
+import { OllamaBootstrapService } from './ollama-bootstrap-service';
+import { ModelRouter } from './model-router';
+import { TrainingDataCollector } from './training-data-collector';
+import { ModelRouterService, MODEL_ROUTER_SERVICE_PATH } from '../common/model-router-protocol';
+import { ModelRouterServiceImpl } from './model-router-service-impl';
+import { IntentServiceImpl } from './intent-service-impl';
 
 const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
     bind(ASIBridgeServiceImpl).toSelf().inSingletonScope();
@@ -109,6 +126,48 @@ const teacherConnectionModule = ConnectionContainerModule.create(({ bind }) => {
             return svc;
         })
     ).inSingletonScope();
+
+    // TeacherService — lesson lifecycle orchestrator
+    bind(TeacherServiceImpl).toSelf().inSingletonScope();
+    bind(TeacherService).toService(TeacherServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(TEACHER_SERVICE_PATH, () => ctx.container.get(TeacherService))
+    ).inSingletonScope();
+
+    // GamificationService — XP, levels, achievements, challenges
+    bind(GamificationServiceImpl).toSelf().inSingletonScope();
+    bind(GamificationService).toService(GamificationServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(GAMIFICATION_PATH, () => ctx.container.get(GamificationService))
+    ).inSingletonScope();
+
+    // IntentService — voice/text/gesture intent capture and persistence
+    bind(IntentServiceImpl).toSelf().inSingletonScope();
+    bind(IntentService).toService(IntentServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(INTENT_SERVICE_PATH, () => ctx.container.get(IntentService))
+    ).inSingletonScope();
+
+    // CelebrationService — milestone celebration events
+    bind(CelebrationServiceImpl).toSelf().inSingletonScope();
+    bind(CelebrationServiceSymbol).toService(CelebrationServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(CELEBRATION_SERVICE_PATH, () => ctx.container.get(CelebrationServiceSymbol))
+    ).inSingletonScope();
+
+    // RecommendationEngine — personalized learning recommendations
+    bind(RecommendationEngineImpl).toSelf().inSingletonScope();
+    bind(RecommendationEngineSymbol).toService(RecommendationEngineImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(RECOMMENDATION_ENGINE_PATH, () => ctx.container.get(RecommendationEngineSymbol))
+    ).inSingletonScope();
+
+    // TeachingStyleService — student teaching preference management
+    bind(TeachingStyleServiceImpl).toSelf().inSingletonScope();
+    bind(TeachingStyleServiceSymbol).toService(TeachingStyleServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(TEACHING_STYLE_SERVICE_PATH, () => ctx.container.get(TeachingStyleServiceSymbol))
+    ).inSingletonScope();
 });
 
 /*
@@ -158,4 +217,20 @@ export default new ContainerModule(bind => {
     bind(SessionLogger).toSelf().inSingletonScope();
     bind(StreakTracker).toSelf().inSingletonScope();
     bind(AutoReviewService).toSelf().inSingletonScope();
+
+    // Ollama auto-start — ensures Ollama is running + model available
+    bind(OllamaBootstrapService).toSelf().inSingletonScope();
+
+    // Model Router — intelligent model selection per prompt category
+    bind(ModelRouter).toSelf().inSingletonScope();
+
+    // Training Data Collector — logs interactions for custom model fine-tuning
+    bind(TrainingDataCollector).toSelf().inSingletonScope();
+
+    // Model Router RPC Service — exposes routing + training to frontend
+    bind(ModelRouterServiceImpl).toSelf().inSingletonScope();
+    bind(ModelRouterService).toService(ModelRouterServiceImpl);
+    bind(ConnectionHandler).toDynamicValue(ctx =>
+        new RpcConnectionHandler(MODEL_ROUTER_SERVICE_PATH, () => ctx.container.get(ModelRouterService))
+    ).inSingletonScope();
 });

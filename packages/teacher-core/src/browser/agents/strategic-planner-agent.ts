@@ -110,7 +110,7 @@ export class StrategicPlannerAgent extends AbstractStreamParsingChatAgent {
     id = StrategicPlannerAgentId;
     languageModelRequirements: LanguageModelRequirement[] = [{
         purpose: 'chat',
-        identifier: 'default/code',
+        identifier: 'ollama/qwen2.5:7b',
     }];
     protected defaultLanguageModelPurpose: string = 'chat';
 

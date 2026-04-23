@@ -16,7 +16,6 @@ import { StudentFrictionService } from './student-friction-service';
 import {
     FrictionEvent,
     FrictionType,
-    FrictionSeverity,
     SessionHealthScore,
 } from '../../common/friction-protocol';
 

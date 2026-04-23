@@ -240,20 +240,77 @@ export class AssessmentServiceImpl implements AssessmentService {
         lesson: LessonManifest,
         config: AssessmentType
     ): Promise<AssessmentResult> {
-        // AI evaluation sends code to the LLM with a rubric
-        // For now, return a placeholder that the tutor agent can fill in
-        const result: AssessmentResult = {
-            lessonId,
-            passed: false,
-            score: 0,
-            feedback: [
-                'AI evaluation requested. Please use the "Submit for Review" command to have the tutor agent evaluate your work.',
-                `Rubric: ${config.rubric || lesson.assessmentCriteria.join(', ')}`
-            ],
-            timestamp: new Date().toISOString()
-        };
-        await this.saveResult(lessonId, result);
-        return result;
+        const rubric = config.rubric || lesson.assessmentCriteria.join('\n- ');
+        const prompt = [
+            'You are a code assessment AI. Evaluate the student\'s work against the rubric below.',
+            'Return ONLY valid JSON with this shape: { "score": <0-100>, "passed": <boolean>, "feedback": ["..."] }',
+            '',
+            `Lesson: ${lesson.title}`,
+            `Objectives: ${lesson.objectives.join(', ')}`,
+            `Rubric:\n- ${rubric}`,
+            '',
+            'If you cannot see student code, score 0 and explain that code was not provided.',
+        ].join('\n');
+
+        try {
+            const ollamaHost = process.env.OLLAMA_HOST || 'http://localhost:11434';
+            const model = process.env.TEACHER_MODEL || 'qwen2.5:7b';
+            const response = await fetch(`${ollamaHost}/api/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model, prompt, stream: false }),
+                signal: AbortSignal.timeout(60_000),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ollama returned ${response.status}`);
+            }
+
+            const body = await response.json() as { response?: string };
+            const text = body.response || '';
+
+            // Extract JSON from response
+            const jsonMatch = text.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                const parsed = JSON.parse(jsonMatch[0]);
+                const score = Math.max(0, Math.min(100, Number(parsed.score) || 0));
+                const result: AssessmentResult = {
+                    lessonId,
+                    passed: score >= 70,
+                    score,
+                    feedback: Array.isArray(parsed.feedback) ? parsed.feedback : [String(parsed.feedback || 'No feedback.')],
+                    timestamp: new Date().toISOString(),
+                };
+                await this.saveResult(lessonId, result);
+                console.info(`[Assessment] AI evaluation ${lessonId}: ${score}% (${result.passed ? 'PASSED' : 'FAILED'})`);
+                return result;
+            }
+
+            // Fallback if JSON not parseable
+            const result: AssessmentResult = {
+                lessonId,
+                passed: false,
+                score: 0,
+                feedback: ['AI evaluation returned non-structured response. Use "Submit for Review" for manual agent evaluation.', text.slice(0, 500)],
+                timestamp: new Date().toISOString(),
+            };
+            await this.saveResult(lessonId, result);
+            return result;
+        } catch (err) {
+            console.warn(`[Assessment] AI evaluation failed for ${lessonId}:`, err);
+            const result: AssessmentResult = {
+                lessonId,
+                passed: false,
+                score: 0,
+                feedback: [
+                    'AI evaluation unavailable. Ensure Ollama is running (ollama serve).',
+                    `Rubric for manual review: ${rubric}`,
+                ],
+                timestamp: new Date().toISOString(),
+            };
+            await this.saveResult(lessonId, result);
+            return result;
+        }
     }
 
     protected async runQuiz(

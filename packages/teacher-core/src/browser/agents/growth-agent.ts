@@ -92,7 +92,7 @@ export class GrowthTrackerAgent extends AbstractStreamParsingChatAgent {
     id = GrowthTrackerAgentId;
     languageModelRequirements: LanguageModelRequirement[] = [{
         purpose: 'chat',
-        identifier: 'default/code',
+        identifier: 'ollama/qwen2.5:7b',
     }];
     protected defaultLanguageModelPurpose: string = 'chat';
 

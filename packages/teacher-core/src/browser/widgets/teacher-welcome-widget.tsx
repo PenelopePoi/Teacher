@@ -4,6 +4,8 @@ import { inject, injectable, postConstruct } from '@theia/core/shared/inversify'
 import * as React from '@theia/core/shared/react';
 import { ASIBridgeService, ASIStatus } from '../../common/asi-bridge-protocol';
 import { ProgressTrackingService, ProgressSummary } from '../../common/progress-protocol';
+import { TeacherService, CurriculumDefinition } from '../../common/teacher-protocol';
+import { TeacherOrchestrator } from '../teacher-orchestrator';
 import { PulseService } from '../pulse/pulse-service';
 import { PulseIndicator } from '../pulse/pulse-indicator';
 
@@ -34,8 +36,15 @@ export class TeacherWelcomeWidget extends ReactWidget {
     @inject(PulseService)
     protected readonly pulseService: PulseService;
 
+    @inject(TeacherService)
+    protected readonly teacherService: TeacherService;
+
+    @inject(TeacherOrchestrator)
+    protected readonly orchestrator: TeacherOrchestrator;
+
     protected asiStatus: ASIStatus | undefined;
     protected progressSummary: ProgressSummary | undefined;
+    protected curricula: CurriculumDefinition[] = [];
 
     @postConstruct()
     protected init(): void {
@@ -59,6 +68,11 @@ export class TeacherWelcomeWidget extends ReactWidget {
         } catch {
             this.progressSummary = undefined;
         }
+        try {
+            this.curricula = await this.teacherService.getCurriculum();
+        } catch {
+            this.curricula = [];
+        }
         this.update();
     }
 
@@ -66,6 +80,7 @@ export class TeacherWelcomeWidget extends ReactWidget {
         return (
             <div className='teacher-welcome-container'>
                 {this.renderHeader()}
+                {this.renderCourseCards()}
                 {this.renderConnectionStatus()}
                 {this.renderQuickActions()}
                 {this.renderProgressSummary()}
@@ -73,6 +88,63 @@ export class TeacherWelcomeWidget extends ReactWidget {
             </div>
         );
     }
+
+    protected readonly COURSE_ICONS: Record<string, string> = {
+        'intro-to-python': 'codicon-symbol-method',
+        'web-fundamentals': 'codicon-browser',
+        'git-basics': 'codicon-source-control',
+    };
+
+    protected renderCourseCards(): React.ReactNode {
+        if (this.curricula.length === 0) {
+            return null;
+        }
+        return (
+            <div className='teacher-welcome-courses'>
+                <h2 className='teacher-welcome-section-title'>
+                    {nls.localize('theia/teacher/availableCourses', 'Available Courses')}
+                </h2>
+                <div className='teacher-welcome-course-grid'>
+                    {this.curricula.map(course => {
+                        const totalLessons = course.modules.reduce((sum, m) => sum + m.lessons.length, 0);
+                        const firstLesson = course.modules[0]?.lessons[0];
+                        const icon = this.COURSE_ICONS[course.id] || 'codicon-book';
+                        return (
+                            <button
+                                key={course.id}
+                                className='teacher-welcome-course-card'
+                                onClick={() => this.onStartCourse(course.id, firstLesson?.id)}
+                                aria-label={`Start ${course.title}`}
+                            >
+                                <div className='teacher-welcome-course-card-icon'>
+                                    <i className={`codicon ${icon}`} aria-hidden='true'></i>
+                                </div>
+                                <div className='teacher-welcome-course-card-info'>
+                                    <span className='teacher-welcome-course-card-title'>{course.title}</span>
+                                    <span className='teacher-welcome-course-card-meta'>
+                                        {nls.localize('theia/teacher/courseMeta', '{0} lessons \u00b7 {1} credit hours', totalLessons, course.creditHours ?? 0)}
+                                    </span>
+                                </div>
+                                <i className='codicon codicon-play teacher-welcome-course-card-play' aria-hidden='true'></i>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    protected onStartCourse = (courseId: string, firstLessonId?: string): void => {
+        if (!firstLessonId) {
+            this.commandRegistry.executeCommand(TeacherWelcomeCommands.START_LESSON);
+            return;
+        }
+        this.teacherService.startLesson(firstLessonId).then(() => {
+            this.orchestrator.onLessonStart(firstLessonId);
+        }).catch(err => {
+            console.warn('[Welcome] Failed to start course lesson:', err);
+        });
+    };
 
     protected renderHeader(): React.ReactNode {
         return (

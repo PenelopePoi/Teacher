@@ -1,9 +1,9 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import { Emitter, Event } from '@theia/core/lib/common/event';
 import * as React from '@theia/core/shared/react';
-import { IntentObject } from '../../common/intent-protocol';
+import { IntentObject, IntentService } from '../../common/intent-protocol';
 
 /**
  * Intent Dock (A5/A6) — sidebar widget showing pending intent cards.
@@ -17,6 +17,9 @@ export class IntentDockWidget extends ReactWidget {
 
     static readonly ID = 'teacher-intent-dock';
     static readonly LABEL = nls.localize('theia/teacher/intentDock', 'Intent Dock');
+
+    @inject(IntentService)
+    protected readonly intentService: IntentService;
 
     protected intents: IntentObject[] = [];
     protected refiningId: string | undefined;
@@ -39,6 +42,27 @@ export class IntentDockWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-lightbulb';
         this.addClass('teacher-intent-dock');
+        this.loadFromBackend();
+
+        // Wire apply/dismiss to backend
+        this.onApply(id => {
+            try { this.intentService.applyIntent(id); } catch { /* ignore */ }
+        });
+        this.onDismiss(id => {
+            try { this.intentService.dismissIntent(id); } catch { /* ignore */ }
+        });
+    }
+
+    protected async loadFromBackend(): Promise<void> {
+        try {
+            const pending = await this.intentService.getPendingIntents();
+            if (pending && pending.length > 0) {
+                this.intents = pending;
+                this.update();
+            }
+        } catch {
+            // Backend unavailable
+        }
     }
 
     setIntents(intents: IntentObject[]): void {

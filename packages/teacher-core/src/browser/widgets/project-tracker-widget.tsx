@@ -1,7 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
+import { MilestoneService } from '../../common/milestone-protocol';
 
 type MilestoneStatus = 'done' | 'current' | 'upcoming';
 
@@ -64,6 +65,9 @@ export class ProjectTrackerWidget extends ReactWidget {
     static readonly ID = 'teacher-project-tracker';
     static readonly LABEL = nls.localize('theia/teacher/projectTracker', 'Project Tracker');
 
+    @inject(MilestoneService)
+    protected readonly milestoneService: MilestoneService;
+
     protected milestones: Milestone[] = DEMO_MILESTONES;
 
     @postConstruct()
@@ -74,7 +78,26 @@ export class ProjectTrackerWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-milestone';
         this.addClass('teacher-project-tracker');
+        this.loadFromBackend();
         this.update();
+    }
+
+    protected async loadFromBackend(): Promise<void> {
+        try {
+            const backendMilestones = await this.milestoneService.getMilestones();
+            if (backendMilestones && backendMilestones.length > 0) {
+                this.milestones = backendMilestones.map((m, i) => ({
+                    id: m.id,
+                    title: m.title,
+                    status: m.completedAt ? 'done' as MilestoneStatus : (i === backendMilestones.findIndex(bm => !bm.completedAt) ? 'current' as MilestoneStatus : 'upcoming' as MilestoneStatus),
+                    skills: m.requiredConcepts,
+                    description: m.description,
+                }));
+                this.update();
+            }
+        } catch {
+            // Keep demo data
+        }
     }
 
     protected render(): React.ReactNode {

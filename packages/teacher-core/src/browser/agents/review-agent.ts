@@ -60,7 +60,7 @@ export class TeachingReviewAgent extends AbstractStreamParsingChatAgent {
     id = TeachingReviewAgentId;
     languageModelRequirements: LanguageModelRequirement[] = [{
         purpose: 'chat',
-        identifier: 'default/code',
+        identifier: 'ollama/qwen2.5:7b',
     }];
     protected defaultLanguageModelPurpose: string = 'chat';
 

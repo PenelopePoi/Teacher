@@ -1,7 +1,9 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
+import { TeachableMomentService } from '../teachable-moments/teachable-moment-service';
+import { TeachableMomentDetector } from '../teachable-moments/teachable-moment-detector';
 
 /**
  * §2 item #6 — Teachable Moments panel.
@@ -50,6 +52,12 @@ export class TeachableMomentsWidget extends ReactWidget {
     static readonly ID = 'teacher-teachable-moments';
     static readonly LABEL = nls.localize('theia/teacher/teachableMoments', 'Learned Concepts');
 
+    @inject(TeachableMomentService)
+    protected readonly teachableService: TeachableMomentService;
+
+    @inject(TeachableMomentDetector)
+    protected readonly detector: TeachableMomentDetector;
+
     protected concepts: TeachableConcept[] = DEMO_CONCEPTS.map(c => ({ ...c }));
     protected searchQuery: string = '';
     protected revisitId: string | undefined;
@@ -66,6 +74,40 @@ export class TeachableMomentsWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-lightbulb';
         this.addClass('teacher-teachable-moments');
+        this.loadFromLibrary();
+        this.teachableService.onDidChange(() => this.loadFromLibrary());
+    }
+
+    protected loadFromLibrary(): void {
+        try {
+            const library = this.teachableService.getLibrary();
+            const allConcepts = this.detector.getAllConcepts();
+
+            if (library.size === 0 && allConcepts.length === 0) {
+                return;
+            }
+
+            const liveConcepts: TeachableConcept[] = [];
+            for (const [id, encountered] of library) {
+                const def = this.detector.getConcept(id);
+                liveConcepts.push({
+                    id,
+                    name: def?.name || id,
+                    explanation: def?.oneLineExplanation || '',
+                    category: def?.category || 'General',
+                    timesSeen: encountered.encounterCount,
+                    firstSeen: encountered.firstEncountered,
+                    mastered: encountered.dismissed,
+                });
+            }
+
+            if (liveConcepts.length > 0) {
+                this.concepts = liveConcepts;
+                this.update();
+            }
+        } catch {
+            // Keep demo data
+        }
     }
 
     protected getConfidence(timesSeen: number): ConfidenceLevel {

@@ -122,6 +122,89 @@
 
 /* Quick Actions */
 
+/* Course Cards */
+
+.teacher-welcome-courses {
+    width: 100%;
+}
+
+.teacher-welcome-course-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teacher-welcome-course-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid var(--theia-panel-border);
+    border-radius: 8px;
+    background: var(--theia-sideBar-background);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    color: inherit;
+    font-size: inherit;
+}
+
+.teacher-welcome-course-card:hover {
+    border-color: var(--theia-focusBorder);
+    background: var(--theia-list-hoverBackground);
+}
+
+.teacher-welcome-course-card:active {
+    background: var(--theia-list-activeSelectionBackground);
+}
+
+.teacher-welcome-course-card-icon {
+    font-size: 22px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(232, 169, 72, 0.12);
+    color: var(--theia-focusBorder);
+    flex-shrink: 0;
+}
+
+.teacher-welcome-course-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.teacher-welcome-course-card-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--theia-foreground);
+}
+
+.teacher-welcome-course-card-meta {
+    font-size: 11px;
+    color: var(--theia-descriptionForeground);
+}
+
+.teacher-welcome-course-card-play {
+    font-size: 16px;
+    color: var(--theia-descriptionForeground);
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.teacher-welcome-course-card:hover .teacher-welcome-course-card-play {
+    color: var(--theia-focusBorder);
+}
+
+/* Quick Actions */
+
 .teacher-welcome-actions {
     width: 100%;
 }

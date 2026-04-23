@@ -11,25 +11,8 @@ interface SkillEntry {
     type: string;
 }
 
-const AI_RELEVANCE: Record<string, number> = {
-    'Variables & Types': 78, 'Control Flow': 82, 'Functions': 88, 'Array Methods': 91,
-    'Object Destructuring': 74, 'Promises & Async/Await': 65, 'DOM Manipulation': 87,
-    'Event Handling': 83, 'REST API Calls': 59, 'Error Handling': 92,
-    'TypeScript Generics': 45, 'React Components': 71, 'State Management': 68,
-    'CSS Flexbox': 86, 'CSS Grid': 84, 'Git Branching': 77,
-    'Unit Testing': 63, 'Dependency Injection': 52, 'Accessibility (a11y)': 79,
-    'WebSocket Communication': 41,
-};
-
-const USED_BY_COUNT: Record<string, number> = {
-    'Variables & Types': 4521, 'Control Flow': 3987, 'Functions': 5102, 'Array Methods': 3456,
-    'Object Destructuring': 2891, 'Promises & Async/Await': 2234, 'DOM Manipulation': 3778,
-    'Event Handling': 3201, 'REST API Calls': 1876, 'Error Handling': 4102,
-    'TypeScript Generics': 1234, 'React Components': 2567, 'State Management': 1998,
-    'CSS Flexbox': 3654, 'CSS Grid': 3102, 'Git Branching': 2789,
-    'Unit Testing': 1567, 'Dependency Injection': 987, 'Accessibility (a11y)': 2345,
-    'WebSocket Communication': 756,
-};
+/** Skill execution metrics loaded from backend. Populated by loadRealSkills(). */
+const skillMetrics: Map<string, { score: number; executions: number }> = new Map();
 
 const DEMO_SKILLS: SkillEntry[] = [
     { name: 'Variables & Types', description: 'Declare, assign, and use variables with primitive and complex types.', category: 'Fundamentals', type: 'concept' },
@@ -97,6 +80,23 @@ export class SkillBrowserWidget extends ReactWidget {
                     category: d.domain || 'general',
                     type: d.type || d.intent || 'skill',
                 }));
+
+                // Load real metrics
+                try {
+                    const metrics = await this.skillEngine.getMetrics();
+                    if (metrics) {
+                        for (const [name, data] of Object.entries(metrics)) {
+                            const m = data as { avgScore?: number; totalExecutions?: number };
+                            skillMetrics.set(name, {
+                                score: Math.round((m.avgScore ?? 5) * 10),
+                                executions: m.totalExecutions ?? 0,
+                            });
+                        }
+                    }
+                } catch {
+                    // metrics unavailable
+                }
+
                 this.update();
             }
         } catch (err) {
@@ -172,12 +172,12 @@ export class SkillBrowserWidget extends ReactWidget {
                 <p className='teacher-skill-browser-card-desc'>{skill.description}</p>
                 <div className='teacher-ai-relevance'>
                     <span className='teacher-ai-relevance-label'>
-                        {nls.localize('theia/teacher/aiRelevance', 'AI Relevance')}
+                        {nls.localize('theia/teacher/qualityScore', 'Quality Score')}
                     </span>
                     <div className='teacher-ai-relevance-bar'>
-                        <div className='teacher-ai-relevance-bar-fill' style={{ width: `${AI_RELEVANCE[skill.name] ?? 50}%` }}></div>
+                        <div className='teacher-ai-relevance-bar-fill' style={{ width: `${skillMetrics.get(skill.name)?.score ?? 50}%` }}></div>
                     </div>
-                    <span className='teacher-ai-relevance-pct'>{AI_RELEVANCE[skill.name] ?? 50}%</span>
+                    <span className='teacher-ai-relevance-pct'>{skillMetrics.get(skill.name)?.score ?? 50}%</span>
                 </div>
                 <div className='teacher-skill-browser-card-bottom'>
                     <span className='teacher-skill-browser-card-category'>
@@ -185,8 +185,8 @@ export class SkillBrowserWidget extends ReactWidget {
                         {skill.category}
                     </span>
                     <span className='teacher-skill-browser-card-used-by'>
-                        <i className='codicon codicon-person'></i>
-                        {nls.localize('theia/teacher/usedByLearners', 'Used by {0} learners', (USED_BY_COUNT[skill.name] ?? 500).toLocaleString())}
+                        <i className='codicon codicon-play-circle'></i>
+                        {nls.localize('theia/teacher/executions', '{0} executions', (skillMetrics.get(skill.name)?.executions ?? 0).toLocaleString())}
                     </span>
                 </div>
             </div>

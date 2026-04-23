@@ -1,8 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
 import { nls } from '@theia/core/lib/common';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import * as React from '@theia/core/shared/react';
-import { Challenge } from '../../common/gamification-protocol';
+import { GamificationService, Challenge } from '../../common/gamification-protocol';
 
 const DEMO_CHALLENGES: Challenge[] = [
     // Daily
@@ -32,6 +32,9 @@ export class ChallengesWidget extends ReactWidget {
     static readonly ID = 'teacher-challenges';
     static readonly LABEL = nls.localize('theia/teacher/challenges', 'Challenges');
 
+    @inject(GamificationService)
+    protected readonly gamificationService: GamificationService;
+
     protected challenges: Challenge[] = DEMO_CHALLENGES;
 
     @postConstruct()
@@ -42,7 +45,20 @@ export class ChallengesWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-flame';
         this.addClass('teacher-challenges');
+        this.loadFromBackend();
         this.update();
+    }
+
+    protected async loadFromBackend(): Promise<void> {
+        try {
+            const challenges = await this.gamificationService.getChallenges();
+            if (challenges && challenges.length > 0) {
+                this.challenges = challenges;
+                this.update();
+            }
+        } catch {
+            // Backend unavailable, keep demo data
+        }
     }
 
     protected render(): React.ReactNode {

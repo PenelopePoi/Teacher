@@ -15,8 +15,8 @@ export class ProgressDashboardWidget extends ReactWidget {
 
     protected summary: ProgressSummary | undefined;
     protected skillMastery: Map<string, number> = new Map();
-    protected streakDays: number = 12;
-    protected streakHistory: boolean[] = [true, true, true, false, true, true, true, true, true, true, true, true, true, true];
+    protected streakDays: number = 0;
+    protected streakHistory: boolean[] = [];
 
     @postConstruct()
     protected init(): void {
@@ -39,6 +39,14 @@ export class ProgressDashboardWidget extends ReactWidget {
             this.skillMastery = await this.progressService.getSkillMastery();
         } catch {
             this.skillMastery = new Map();
+        }
+        try {
+            this.streakDays = await this.progressService.getStreak();
+            // Build 14-day history from streak count
+            this.streakHistory = Array.from({ length: 14 }, (_, i) => i < this.streakDays);
+        } catch {
+            this.streakDays = 0;
+            this.streakHistory = [];
         }
         this.update();
     }

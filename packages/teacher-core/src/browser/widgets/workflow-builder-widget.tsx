@@ -1,7 +1,10 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
+import { MessageService } from '@theia/core/lib/common/message-service';
 import * as React from '@theia/core/shared/react';
+import { SkillEngineService } from '../../common/skill-engine-protocol';
+import { PulseService } from '../pulse/pulse-service';
 
 /**
  * Workflow Builder — visual pipeline editor for chaining skills.
@@ -101,8 +104,19 @@ export class WorkflowBuilderWidget extends ReactWidget {
     static readonly ID = 'teacher-workflow-builder';
     static readonly LABEL = nls.localize('theia/teacher/workflowBuilder', 'Workflows');
 
+    @inject(SkillEngineService)
+    protected readonly skillEngine: SkillEngineService;
+
+    @inject(MessageService)
+    protected readonly messageService: MessageService;
+
+    @inject(PulseService)
+    protected readonly pulse: PulseService;
+
+    protected workflows: Workflow[] = [...PREBUILT_WORKFLOWS];
     protected expandedWorkflow: string | null = null;
     protected newWorkflowName: string = '';
+    protected runningWorkflow: string | undefined;
 
     @postConstruct()
     protected init(): void {
@@ -119,12 +133,40 @@ export class WorkflowBuilderWidget extends ReactWidget {
         this.update();
     };
 
-    protected handleRunWorkflow = (workflow: Workflow): void => {
-        console.log(`[Skill Engine] Running workflow: ${workflow.name} (${workflow.steps.length} steps)`);
+    protected handleRunWorkflow = async (workflow: Workflow): Promise<void> => {
+        this.runningWorkflow = workflow.id;
+        this.pulse.set('thinking', { label: `Running: ${workflow.name}` });
+        this.update();
+
+        try {
+            const input = JSON.stringify({ workflowId: workflow.id, trigger: 'manual' });
+            for (let i = 0; i < workflow.steps.length; i++) {
+                const step = workflow.steps[i];
+                this.pulse.set('thinking', { label: `Step ${i + 1}/${workflow.steps.length}: ${step.skillName}` });
+                await this.skillEngine.executeSkill(step.skillName, input);
+            }
+            this.messageService.info(nls.localize('theia/teacher/workflowComplete',
+                'Workflow "{0}" completed ({1} steps)', workflow.name, workflow.steps.length));
+            this.pulse.flashSuggestion(2000, 'Workflow done');
+        } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            this.messageService.warn(nls.localize('theia/teacher/workflowFailed',
+                'Workflow "{0}" failed: {1}', workflow.name, msg));
+            this.pulse.reset();
+        }
+        this.runningWorkflow = undefined;
+        this.update();
     };
 
     protected handleRemoveStep = (workflowId: string, stepIndex: number): void => {
-        console.log(`[Skill Engine] Remove step ${stepIndex} from workflow: ${workflowId}`);
+        const wf = this.workflows.find(w => w.id === workflowId);
+        if (wf) {
+            const newSteps = wf.steps.filter((_, i) => i !== stepIndex);
+            this.workflows = this.workflows.map(w =>
+                w.id === workflowId ? { ...w, steps: newSteps } : w
+            );
+            this.update();
+        }
     };
 
     protected handleNewWorkflowNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -134,8 +176,16 @@ export class WorkflowBuilderWidget extends ReactWidget {
 
     protected handleCreateWorkflow = (): void => {
         if (this.newWorkflowName.trim()) {
-            console.log(`[Skill Engine] Creating workflow: ${this.newWorkflowName}`);
+            const newWorkflow: Workflow = {
+                id: `custom-${Date.now()}`,
+                name: this.newWorkflowName.trim(),
+                description: 'Custom workflow',
+                steps: [],
+                trigger: 'manual',
+            };
+            this.workflows = [...this.workflows, newWorkflow];
             this.newWorkflowName = '';
+            this.expandedWorkflow = newWorkflow.id;
             this.update();
         }
     };
@@ -171,7 +221,7 @@ export class WorkflowBuilderWidget extends ReactWidget {
                 </div>
 
                 <div className='teacher-workflow-builder-list'>
-                    {PREBUILT_WORKFLOWS.map(wf => (
+                    {this.workflows.map(wf => (
                         <div key={wf.id} className='teacher-workflow-builder-card'>
                             <div
                                 className='teacher-workflow-builder-card-header'

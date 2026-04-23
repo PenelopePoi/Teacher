@@ -1,7 +1,10 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
+import { MessageService } from '@theia/core/lib/common/message-service';
 import * as React from '@theia/core/shared/react';
+import { SkillEngineService } from '../../common/skill-engine-protocol';
+import { PulseService } from '../pulse/pulse-service';
 
 /**
  * Improvement Dashboard — skill metrics and self-improvement loop status.
@@ -61,6 +64,18 @@ export class ImprovementDashboardWidget extends ReactWidget {
     static readonly ID = 'teacher-improvement-dashboard';
     static readonly LABEL = nls.localize('theia/teacher/improvementDashboard', 'Skill Health');
 
+    @inject(SkillEngineService)
+    protected readonly skillEngine: SkillEngineService;
+
+    @inject(MessageService)
+    protected readonly messageService: MessageService;
+
+    @inject(PulseService)
+    protected readonly pulse: PulseService;
+
+    protected topPerformers: SkillMetric[] = TOP_PERFORMERS;
+    protected needsImprovement: SkillMetric[] = NEEDS_IMPROVEMENT;
+    protected recentExecutions: ExecutionEntry[] = RECENT_EXECUTIONS;
     protected loopStatus: LoopStatus = 'idle';
     protected lastLoopRun: number = Date.now() - 7200000;
     protected improvementsMade: number = 14;
@@ -74,22 +89,71 @@ export class ImprovementDashboardWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-dashboard';
         this.addClass('teacher-improvement-dashboard');
+        this.loadFromBackend();
     }
 
-    protected handleRunLoop = (): void => {
+    protected async loadFromBackend(): Promise<void> {
+        try {
+            const metrics = await this.skillEngine.getTopSkills(5);
+            if (metrics && metrics.length > 0) {
+                this.topPerformers = metrics.map(m => ({
+                    name: m.skillName,
+                    score: m.avgScore,
+                    executions: m.executionCount,
+                    domain: 'meta',
+                }));
+            }
+            const lowPerformers = await this.skillEngine.getLowPerformers(5.0);
+            if (lowPerformers && lowPerformers.length > 0) {
+                this.needsImprovement = lowPerformers.slice(0, 5).map(m => ({
+                    name: m.skillName,
+                    score: m.avgScore,
+                    executions: m.executionCount,
+                    domain: 'meta',
+                }));
+            }
+            this.update();
+        } catch {
+            // Keep demo data
+        }
+    }
+
+    protected handleRunLoop = async (): Promise<void> => {
         this.loopStatus = 'running';
+        this.pulse.set('thinking', { label: 'Self-improvement loop running...' });
         this.update();
-        console.log('[Skill Engine] Self-improvement loop started');
-        setTimeout(() => {
+
+        try {
+            const loopSkills = ['skill-metrics', 'skill-improve', 'skill-quality-gate'];
+            for (const skill of loopSkills) {
+                await this.skillEngine.executeSkill(skill, JSON.stringify({ trigger: 'manual-loop' }));
+            }
             this.loopStatus = 'completed';
             this.lastLoopRun = Date.now();
             this.improvementsMade += 3;
-            this.update();
-        }, 5000);
+            this.pulse.flashSuggestion(2000, 'Improvement loop complete');
+            this.messageService.info(nls.localize('theia/teacher/loopDone', 'Self-improvement loop completed'));
+            this.loadFromBackend(); // Refresh metrics
+        } catch (err) {
+            this.loopStatus = 'idle';
+            this.pulse.reset();
+            const msg = err instanceof Error ? err.message : String(err);
+            this.messageService.warn(nls.localize('theia/teacher/loopError', 'Improvement loop failed: {0}', msg));
+        }
+        this.update();
     };
 
-    protected handleImproveSkill = (skillName: string): void => {
-        console.log(`[Skill Engine] Improving skill: ${skillName}`);
+    protected handleImproveSkill = async (skillName: string): Promise<void> => {
+        this.pulse.set('thinking', { label: `Improving: ${skillName}` });
+        try {
+            await this.skillEngine.executeSkill('skill-improve', JSON.stringify({ target: skillName }));
+            this.messageService.info(nls.localize('theia/teacher/skillImproved', 'Skill "{0}" improved', skillName));
+            this.pulse.flashSuggestion(1500, 'Skill improved');
+            this.loadFromBackend();
+        } catch {
+            this.messageService.warn(nls.localize('theia/teacher/skillImproveError', 'Could not improve "{0}"', skillName));
+            this.pulse.reset();
+        }
     };
 
     protected scoreColorClass = (score: number): string => {

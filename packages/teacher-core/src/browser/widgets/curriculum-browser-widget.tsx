@@ -3,6 +3,7 @@ import { nls } from '@theia/core/lib/common';
 import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import * as React from '@theia/core/shared/react';
 import { TeacherService, CurriculumDefinition, CurriculumModule, LessonManifest } from '../../common/teacher-protocol';
+import { TeacherOrchestrator } from '../teacher-orchestrator';
 
 @injectable()
 export class CurriculumBrowserWidget extends ReactWidget {
@@ -12,6 +13,9 @@ export class CurriculumBrowserWidget extends ReactWidget {
 
     @inject(TeacherService)
     protected readonly teacherService: TeacherService;
+
+    @inject(TeacherOrchestrator)
+    protected readonly orchestrator: TeacherOrchestrator;
 
     protected curricula: CurriculumDefinition[] = [];
     protected expandedCourses: Set<string> = new Set();
@@ -193,9 +197,13 @@ export class CurriculumBrowserWidget extends ReactWidget {
         this.update();
     }
 
-    protected onStartLesson(lessonId: string): void {
-        this.teacherService.startLesson(lessonId);
-    }
+    protected onStartLesson = (lessonId: string): void => {
+        this.teacherService.startLesson(lessonId).then(() => {
+            this.orchestrator.onLessonStart(lessonId);
+        }).catch(err => {
+            console.warn('[CurriculumBrowser] Failed to start lesson:', err);
+        });
+    };
 
     protected onRefresh = (): void => {
         this.loadCurricula();

@@ -1,7 +1,9 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
+import { TeachableMomentService } from '../teachable-moments/teachable-moment-service';
+import { TeachableMomentDetector } from '../teachable-moments/teachable-moment-detector';
 
 interface ConceptNode {
     readonly id: string;
@@ -63,6 +65,12 @@ export class ConceptMapWidget extends ReactWidget {
     static readonly ID = 'teacher-concept-map';
     static readonly LABEL = nls.localize('theia/teacher/conceptMap', 'Concept Map');
 
+    @inject(TeachableMomentService)
+    protected readonly teachableService: TeachableMomentService;
+
+    @inject(TeachableMomentDetector)
+    protected readonly detector: TeachableMomentDetector;
+
     protected nodes: ConceptNode[] = DEMO_NODES;
     protected edges: ConceptEdge[] = DEMO_EDGES;
     protected selectedNode: string | undefined;
@@ -75,7 +83,54 @@ export class ConceptMapWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-type-hierarchy-sub';
         this.addClass('teacher-concept-map');
+        this.loadFromLibrary();
+        this.teachableService.onDidChange(() => this.loadFromLibrary());
         this.update();
+    }
+
+    protected loadFromLibrary(): void {
+        try {
+            const allConcepts = this.detector.getAllConcepts();
+            if (allConcepts.length === 0) {
+                return;
+            }
+            const library = this.teachableService.getLibrary();
+            const liveNodes: ConceptNode[] = [];
+            const liveEdges: ConceptEdge[] = [];
+            const clusters = new Set<string>();
+
+            for (let i = 0; i < allConcepts.length; i++) {
+                const def = allConcepts[i];
+                const cat = def.category;
+                clusters.add(cat);
+                const encountered = library.get(def.id);
+                const mastery = encountered?.dismissed ? 1.0 : encountered ? Math.min(0.9, encountered.encounterCount * 0.15) : 0;
+                const col = [...clusters].indexOf(cat);
+                liveNodes.push({
+                    id: def.id,
+                    name: def.name,
+                    cluster: cat,
+                    x: 80 + (col % 3) * 180 + (i % 5) * 30,
+                    y: 40 + Math.floor(col / 3) * 160 + (i % 4) * 50,
+                    mastery,
+                });
+            }
+
+            // Build edges between concepts in same category
+            for (let i = 0; i < liveNodes.length; i++) {
+                for (let j = i + 1; j < liveNodes.length && j <= i + 2; j++) {
+                    if (liveNodes[i].cluster === liveNodes[j].cluster) {
+                        liveEdges.push({ from: liveNodes[i].id, to: liveNodes[j].id });
+                    }
+                }
+            }
+
+            this.nodes = liveNodes;
+            this.edges = liveEdges;
+            this.update();
+        } catch {
+            // Keep demo data
+        }
     }
 
     protected handleNodeClick = (nodeId: string): void => {

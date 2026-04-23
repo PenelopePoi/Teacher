@@ -1,6 +1,7 @@
 import { ReactWidget } from '@theia/core/lib/browser';
 import { injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
+import { Emitter, Event } from '@theia/core/lib/common/event';
 import * as React from '@theia/core/shared/react';
 
 /**
@@ -30,7 +31,14 @@ export class PlanModeWidget extends ReactWidget {
     static readonly ID = 'teacher-plan-mode';
     static readonly LABEL = nls.localize('theia/teacher/planMode', 'Plan Mode');
 
-    protected planState: PlanState = 'reviewing';
+    protected readonly _onDidRequestApprove = new Emitter<void>();
+    readonly onDidRequestApprove: Event<void> = this._onDidRequestApprove.event;
+
+    protected readonly _onDidRequestReject = new Emitter<void>();
+    readonly onDidRequestReject: Event<void> = this._onDidRequestReject.event;
+
+    protected planTitle: string = 'No active plan';
+    protected planState: PlanState = 'drafting';
     protected steps: PlanStep[] = [];
     protected executingIndex: number = -1;
 
@@ -42,21 +50,43 @@ export class PlanModeWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-map';
         this.addClass('teacher-plan-mode');
-
-        this.loadDemoData();
     }
 
-    protected loadDemoData(): void {
-        this.steps = [
-            { id: 1, description: 'Create auth service', files: ['src/auth/service.ts'], risk: 'low', estimatedMinutes: 5, dependsOn: [], enabled: true, status: 'completed' },
-            { id: 2, description: 'Add login component', files: ['src/components/Login.tsx'], risk: 'low', estimatedMinutes: 8, dependsOn: [1], enabled: true, status: 'approved' },
-            { id: 3, description: 'Set up JWT middleware', files: ['src/middleware/auth.ts'], risk: 'medium', estimatedMinutes: 12, dependsOn: [1], enabled: true, status: 'executing' },
-            { id: 4, description: 'Update database schema', files: ['migrations/004_users.sql'], risk: 'high', estimatedMinutes: 15, dependsOn: [1, 3], enabled: true, status: 'pending' },
-            { id: 5, description: 'Add route guards', files: ['src/router/guards.ts'], risk: 'low', estimatedMinutes: 6, dependsOn: [3], enabled: true, status: 'pending' },
-            { id: 6, description: 'Write integration tests', files: ['tests/auth.spec.ts'], risk: 'low', estimatedMinutes: 10, dependsOn: [2, 3, 4, 5], enabled: true, status: 'pending' },
-        ];
-        this.executingIndex = 2;
-        this.planState = 'executing';
+    /**
+     * Called externally (by orchestrator or session manager) to load a plan.
+     */
+    setPlan(title: string, state: PlanState, steps: PlanStep[]): void {
+        this.planTitle = title;
+        this.planState = state;
+        this.steps = steps;
+        this.executingIndex = steps.findIndex(s => s.status === 'executing');
+        this.update();
+    }
+
+    /**
+     * Update the state of the plan (e.g., from reviewing → executing).
+     */
+    setPlanState(state: PlanState): void {
+        this.planState = state;
+        this.update();
+    }
+
+    /**
+     * Update a single step's status.
+     */
+    updateStepStatus(stepId: number, status: PlanStep['status']): void {
+        const step = this.steps.find(s => s.id === stepId);
+        if (step) {
+            step.status = status;
+            if (status === 'executing') {
+                this.executingIndex = this.steps.indexOf(step);
+            }
+            this.update();
+        }
+    }
+
+    hasPlan(): boolean {
+        return this.steps.length > 0;
     }
 
     protected handleToggleStep = (stepId: number): void => {
@@ -75,6 +105,7 @@ export class PlanModeWidget extends ReactWidget {
             }
         });
         this.update();
+        this._onDidRequestApprove.fire();
     };
 
     protected handleReject = (): void => {
@@ -83,6 +114,7 @@ export class PlanModeWidget extends ReactWidget {
             s.status = 'pending';
         });
         this.update();
+        this._onDidRequestReject.fire();
     };
 
     protected stateLabel(state: PlanState): string {
@@ -112,7 +144,7 @@ export class PlanModeWidget extends ReactWidget {
                     {this.stateLabel(this.planState)}
                 </span>
                 <span className='teacher-plan-mode-plan-title'>
-                    {nls.localize('theia/teacher/planTitle', 'Add user authentication')}
+                    {this.planTitle}
                 </span>
                 <div className='teacher-plan-mode-actions'>
                     <button

@@ -3,6 +3,7 @@ import { Command, CommandContribution, CommandRegistry, nls } from '@theia/core'
 import { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser';
 import { TeacherService } from '../../common/teacher-protocol';
 import { MessageService } from '@theia/core/lib/common/message-service';
+import { TeacherOrchestrator } from '../teacher-orchestrator';
 
 export namespace LessonCommands {
 
@@ -38,6 +39,9 @@ export class LessonCommandContribution implements CommandContribution, Keybindin
     @inject(MessageService)
     protected readonly messageService: MessageService;
 
+    @inject(TeacherOrchestrator)
+    protected readonly orchestrator: TeacherOrchestrator;
+
     protected hintLevel: number = 0;
 
     registerCommands(registry: CommandRegistry): void {
@@ -53,6 +57,7 @@ export class LessonCommandContribution implements CommandContribution, Keybindin
                     const firstLesson = curriculum[0]?.modules?.[0]?.lessons?.[0];
                     if (firstLesson) {
                         await this.teacherService.startLesson(firstLesson.id);
+                        await this.orchestrator.onLessonStart(firstLesson.id);
                         this.hintLevel = 0;
                         this.messageService.info(nls.localize('theia/teacher/lessonStarted',
                             'Lesson started: {0}', firstLesson.title));
@@ -80,6 +85,7 @@ export class LessonCommandContribution implements CommandContribution, Keybindin
                     this.messageService.info(nls.localize('theia/teacher/checkingWork',
                         'Assessing your work on "{0}"...', lesson.title));
                     const result = await this.teacherService.checkWork(lesson.id);
+                    await this.orchestrator.onLessonComplete(lesson.id, result.score);
                     if (result.passed) {
                         const feedbackSummary = result.feedback.length > 0
                             ? ' ' + result.feedback.slice(0, 3).join(' | ')

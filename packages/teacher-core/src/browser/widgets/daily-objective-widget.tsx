@@ -1,7 +1,8 @@
 import { ReactWidget } from '@theia/core/lib/browser';
-import { injectable, postConstruct } from '@theia/core/shared/inversify';
+import { inject, injectable, postConstruct } from '@theia/core/shared/inversify';
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
+import { ProgressTrackingService } from '../../common/progress-protocol';
 
 interface DailyObjective {
     readonly goal: string;
@@ -10,7 +11,7 @@ interface DailyObjective {
     readonly tasksTotal: number;
 }
 
-const DEMO_OBJECTIVE: DailyObjective = {
+const FALLBACK_OBJECTIVE: DailyObjective = {
     goal: 'Learn CSS Grid',
     progressPercent: 40,
     tasksCompleted: 2,
@@ -23,7 +24,10 @@ export class DailyObjectiveWidget extends ReactWidget {
     static readonly ID = 'teacher-daily-objective';
     static readonly LABEL = nls.localize('theia/teacher/dailyObjective', 'Daily Objective');
 
-    protected objective: DailyObjective = DEMO_OBJECTIVE;
+    @inject(ProgressTrackingService)
+    protected readonly progressService: ProgressTrackingService;
+
+    protected objective: DailyObjective = FALLBACK_OBJECTIVE;
     protected isEditing: boolean = false;
     protected editValue: string = '';
 
@@ -35,7 +39,30 @@ export class DailyObjectiveWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-target';
         this.addClass('teacher-daily-objective');
+        this.loadFromBackend();
         this.update();
+    }
+
+    protected async loadFromBackend(): Promise<void> {
+        try {
+            const summary = await this.progressService.getSummary();
+            const weakAreas = await this.progressService.getWeakAreas();
+            const recommended = await this.progressService.getRecommendedNext();
+
+            const goal = recommended ? recommended.title : (weakAreas.length > 0 ? `Practice: ${weakAreas[0]}` : 'Complete your next lesson');
+            const completed = summary.completedLessons || 0;
+            const total = Math.max(summary.totalLessons || completed + 1, 5);
+
+            this.objective = {
+                goal,
+                progressPercent: Math.min(100, Math.round((completed / total) * 100)),
+                tasksCompleted: completed,
+                tasksTotal: total,
+            };
+            this.update();
+        } catch (err) {
+            console.warn('[DailyObjectiveWidget] Backend unavailable, using fallback:', err);
+        }
     }
 
     protected handleUpdateGoal = (): void => {

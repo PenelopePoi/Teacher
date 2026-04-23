@@ -52,7 +52,53 @@ export class LearningPathWidget extends ReactWidget {
         this.title.closable = true;
         this.title.iconClass = 'codicon codicon-type-hierarchy';
         this.addClass('teacher-learning-path');
+        this.loadFromCurriculum();
         this.update();
+    }
+
+    protected async loadFromCurriculum(): Promise<void> {
+        try {
+            const curricula = await this.teacherService.getCurriculum();
+            if (!curricula || curricula.length === 0) {
+                return;
+            }
+            const progress = await this.progressService.getProgress();
+            const liveNodes: PathNode[] = [];
+
+            for (const course of curricula) {
+                const courseProgress = progress.enrolledCourses?.find(c => c.courseId === course.id);
+                let lessonIndex = 0;
+
+                for (const mod of course.modules) {
+                    for (const lesson of mod.lessons) {
+                        let status: PathNodeStatus = 'upcoming';
+                        if (courseProgress) {
+                            if (courseProgress.currentLessonId === lesson.id) {
+                                status = 'current';
+                            } else if (lessonIndex < courseProgress.lessonsCompleted) {
+                                status = 'completed';
+                            }
+                        }
+                        lessonIndex++;
+
+                        liveNodes.push({
+                            id: lesson.id,
+                            title: lesson.title,
+                            status,
+                            estimatedMinutes: lesson.estimatedMinutes,
+                            skills: lesson.prerequisiteSkills,
+                        });
+                    }
+                }
+            }
+
+            if (liveNodes.length > 0) {
+                this.pathNodes = liveNodes;
+                this.update();
+            }
+        } catch {
+            // Keep demo data
+        }
     }
 
     protected render(): React.ReactNode {

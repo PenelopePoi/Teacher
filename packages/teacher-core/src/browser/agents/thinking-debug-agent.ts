@@ -98,7 +98,7 @@ export class ThinkingDebugAgent extends AbstractStreamParsingChatAgent {
     id = ThinkingDebugAgentId;
     languageModelRequirements: LanguageModelRequirement[] = [{
         purpose: 'chat',
-        identifier: 'default/code',
+        identifier: 'ollama/qwen2.5:7b',
     }];
     protected defaultLanguageModelPurpose: string = 'chat';
 

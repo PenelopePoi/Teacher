@@ -3,6 +3,7 @@ import { inject, injectable, postConstruct } from '@theia/core/shared/inversify'
 import { nls } from '@theia/core/lib/common';
 import * as React from '@theia/core/shared/react';
 import { TimelineService, TimelineClip } from '../ghost-timeline/timeline-service';
+import { CheckpointService } from '../checkpoint/checkpoint-service';
 
 /**
  * C7 Ghost Timeline Widget
@@ -29,6 +30,7 @@ export class GhostTimelineWidget extends ReactWidget {
     static readonly LABEL = nls.localize('theia/teacher/ghostTimeline', 'AI Timeline');
 
     @inject(TimelineService) protected readonly timelineService: TimelineService;
+    @inject(CheckpointService) protected readonly checkpointService: CheckpointService;
 
     protected selectedId: string | undefined;
     protected expanded = false;
@@ -61,6 +63,8 @@ export class GhostTimelineWidget extends ReactWidget {
             this.timelineService.unmuteClip(clipId);
         } else {
             this.timelineService.muteClip(clipId);
+            // Revert code to the checkpoint before this clip
+            this.revertToCheckpointBefore(clip);
         }
     };
 
@@ -76,6 +80,18 @@ export class GhostTimelineWidget extends ReactWidget {
             if (!clips[i].muted) {
                 this.timelineService.muteClip(clips[i].id);
             }
+        }
+        // Revert to the checkpoint at this clip's timestamp
+        const targetClip = clips[idx];
+        this.revertToCheckpointBefore(targetClip);
+    };
+
+    protected revertToCheckpointBefore(clip: TimelineClip): void {
+        const checkpoints = this.checkpointService.getCheckpoints();
+        // Find the checkpoint created just before this clip's timestamp
+        const before = checkpoints.find(cp => cp.timestamp < clip.timestamp);
+        if (before) {
+            this.checkpointService.rewindTo(before.id);
         }
     };
 
