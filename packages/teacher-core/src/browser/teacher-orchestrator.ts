@@ -28,6 +28,7 @@ import { SkillEngineService } from '../common/skill-engine-protocol';
 import { ProgressTrackingService } from '../common/progress-protocol';
 import { FrictionType } from '../common/friction-protocol';
 import { ModelRouterService } from '../common/model-router-protocol';
+import { BinaryImageGuard } from './guards/binary-image-guard';
 
 /** Maps friction types to the best agent to handle them. */
 const FRICTION_TO_AGENT: Record<string, string> = {
@@ -106,6 +107,9 @@ export class TeacherOrchestrator implements FrontendApplicationContribution {
 
     @inject(ModelRouterService)
     protected readonly modelRouter: ModelRouterService;
+
+    @inject(BinaryImageGuard)
+    protected readonly binaryGuard: BinaryImageGuard;
 
     protected sessionStartTime: number = Date.now();
 
@@ -397,6 +401,32 @@ export class TeacherOrchestrator implements FrontendApplicationContribution {
     async onFrictionResolved(frictionId: string): Promise<void> {
         this.friction.resolveFriction(frictionId);
         await this.gamification.addXP('friction-resolved', XP_AWARDS.frictionResolved).catch(() => { /* ignore */ });
+    }
+
+    // ── 8. Binary Image Guard ──────────────────────────────────────────
+
+    /**
+     * Check if user input contains raw binary/base64 image data.
+     * Call this before sending input to an agent.
+     * Returns the block message if blocked, or undefined if safe to proceed.
+     */
+    guardInput(input: string, agentId?: string): string | undefined {
+        const result = this.binaryGuard.check(input, agentId);
+        if (result.blocked) {
+            this.messageService.info(result.blockMessage || 'Binary data detected and filtered.', { timeout: 10000 });
+            this.timeline.addClip({
+                agentId: 'teacher-orchestrator',
+                agentName: 'Guard',
+                action: `Blocked binary data (${result.cleanedInput.length} chars stripped)`,
+                category: 'assessment',
+            });
+            return result.blockMessage;
+        }
+        if (result.metadata?.teachingOpportunity) {
+            // It's intentional — inject teaching context
+            console.info(`[Guard] Binary data allowed as teaching opportunity: ${result.metadata.detectedType}`);
+        }
+        return undefined;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────

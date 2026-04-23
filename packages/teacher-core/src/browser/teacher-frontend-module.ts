@@ -123,6 +123,7 @@ import { FrictionAnalyticsWidget } from './friction/friction-analytics-widget';
 import { TeacherOrchestrator } from './teacher-orchestrator';
 import { OllamaModelContribution } from './ollama-model-contribution';
 import { TeacherEditorActionsContribution } from './editor/teacher-editor-actions';
+import { BinaryImageGuard } from './guards/binary-image-guard';
 
 export default new ContainerModule(bind => {
     // Agent Handoff Service — manages inter-agent communication and handoffs
@@ -136,6 +137,9 @@ export default new ContainerModule(bind => {
     // Ollama model registration — ensures qwen2.5:7b is available to agents
     bind(OllamaModelContribution).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toService(OllamaModelContribution);
+
+    // Binary Image Guard — prevents agents from wasting tokens on raw binary
+    bind(BinaryImageGuard).toSelf().inSingletonScope();
 
     // Inline AI editor actions — right-click explain, review, debug, ask why
     bind(TeacherEditorActionsContribution).toSelf().inSingletonScope();
